@@ -20,14 +20,13 @@ export type ConfigKeyType =
   | 'desktop.calling.raiseHand'
   | 'desktop.clientExpiration'
   | 'desktop.backup.credentialFetch'
-  | 'desktop.deleteSync.send'
-  | 'desktop.deleteSync.receive'
   | 'desktop.internalUser'
   | 'desktop.mediaQuality.levels'
   | 'desktop.messageCleanup'
   | 'desktop.retryRespondMaxAge'
   | 'desktop.senderKey.retry'
   | 'desktop.senderKeyMaxAge'
+  | 'desktop.experimentalTransport.enableAuth'
   | 'desktop.experimentalTransportEnabled.alpha'
   | 'desktop.experimentalTransportEnabled.beta'
   | 'desktop.experimentalTransportEnabled.prod'
@@ -58,8 +57,12 @@ type ConfigListenersMapType = {
 let config: ConfigMapType = {};
 const listeners: ConfigListenersMapType = {};
 
-export async function initRemoteConfig(server: WebAPIType): Promise<void> {
+export function restoreRemoteConfigFromStorage(): void {
   config = window.storage.get('remoteConfig') || {};
+}
+
+export async function initRemoteConfig(server: WebAPIType): Promise<void> {
+  restoreRemoteConfigFromStorage();
   await maybeRefreshRemoteConfig(server);
 }
 

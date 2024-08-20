@@ -6,7 +6,6 @@ import { ipcRenderer } from 'electron';
 import type {
   AudioDevice,
   CallId,
-  CallLinkState as RingRTCCallLinkState,
   DeviceId,
   GroupCallObserver,
   PeekInfo,
@@ -69,11 +68,11 @@ import type {
   PresentedSource,
 } from '../types/Calling';
 import {
-  CallMode,
   GroupCallConnectionState,
   GroupCallJoinState,
   ScreenShareStatus,
 } from '../types/Calling';
+import { CallMode, LocalCallEvent } from '../types/CallDisposition';
 import {
   findBestMatchingAudioDeviceIndex,
   findBestMatchingCameraId,
@@ -105,12 +104,13 @@ import { callingMessageToProto } from '../util/callingMessageToProto';
 import { requestMicrophonePermissions } from '../util/requestMicrophonePermissions';
 import OS from '../util/os/osMain';
 import { SignalService as Proto } from '../protobuf';
-import dataInterface from '../sql/Client';
+import { DataReader, DataWriter } from '../sql/Client';
 import {
   notificationService,
   NotificationSetting,
   FALLBACK_NOTIFICATION_TITLE,
   NotificationType,
+  shouldSaveNotificationAvatarToDisk,
 } from './notifications';
 import * as log from '../logging/log';
 import { assertDev, strictAssert } from '../util/assert';
@@ -135,35 +135,36 @@ import {
   getCallDetailsForAdhocCall,
 } from '../util/callDisposition';
 import { isNormalNumber } from '../util/isNormalNumber';
-import { LocalCallEvent } from '../types/CallDisposition';
 import type { AciString, ServiceIdString } from '../types/ServiceId';
 import { isServiceIdString } from '../types/ServiceId';
 import { isInSystemContacts } from '../util/isInSystemContacts';
+import { toAdminKeyBytes } from '../util/callLinks';
 import {
-  getRoomIdFromRootKey,
   getCallLinkAuthCredentialPresentation,
-  toAdminKeyBytes,
+  getRoomIdFromRootKey,
   callLinkRestrictionsToRingRTC,
   callLinkStateFromRingRTC,
-} from '../util/callLinks';
+} from '../util/callLinksRingrtc';
 import { isAdhocCallingEnabled } from '../util/isAdhocCallingEnabled';
 import {
   conversationJobQueue,
   conversationQueueJobEnum,
 } from '../jobs/conversationJobQueue';
-import type {
-  CallLinkType,
-  CallLinkStateType,
-  ReadCallLinkState,
-} from '../types/CallLink';
+import type { CallLinkType, CallLinkStateType } from '../types/CallLink';
 import { CallLinkRestrictions } from '../types/CallLink';
 import { getConversationIdForLogging } from '../util/idForLogging';
+import {
+  sendCallLinkDeleteSync,
+  sendCallLinkUpdateSync,
+} from '../util/sendCallLinkUpdateSync';
+import { createIdenticon } from '../util/createIdenticon';
+import { getColorForCallLink } from '../util/getColorForCallLink';
 
+const { wasGroupCallRingPreviouslyCanceled } = DataReader;
 const {
   processGroupCallRingCancellation,
   cleanExpiredGroupCallRingCancellations,
-  wasGroupCallRingPreviouslyCanceled,
-} = dataInterface;
+} = DataWriter;
 
 const RINGRTC_HTTP_METHOD_TO_OUR_HTTP_METHOD: Map<
   HttpMethod,
@@ -659,7 +660,8 @@ export class CallingClass {
       credentialPresentation,
       rootKey,
       adminKey,
-      serializedPublicParams
+      serializedPublicParams,
+      CallLinkRestrictions.AdminApproval
     );
 
     if (!result.success) {
@@ -671,12 +673,51 @@ export class CallingClass {
     log.info(`${logId}: success`);
     const state = callLinkStateFromRingRTC(result.value);
 
-    return {
+    const callLink: CallLinkType = {
       roomId: roomIdHex,
       rootKey: rootKey.toString(),
       adminKey: adminKey.toString('base64'),
       ...state,
     };
+
+    drop(sendCallLinkUpdateSync(callLink));
+
+    return callLink;
+  }
+
+  async deleteCallLink(callLink: CallLinkType): Promise<void> {
+    strictAssert(
+      this._sfuUrl,
+      'createCallLink() missing SFU URL; not deleting call link'
+    );
+
+    const sfuUrl = this._sfuUrl;
+    const logId = `deleteCallLink(${callLink.roomId})`;
+
+    const callLinkRootKey = CallLinkRootKey.parse(callLink.rootKey);
+    strictAssert(callLink.adminKey, 'Missing admin key');
+    const callLinkAdminKey = toAdminKeyBytes(callLink.adminKey);
+    const authCredentialPresentation =
+      await getCallLinkAuthCredentialPresentation(callLinkRootKey);
+
+    const result = await RingRTC.deleteCallLink(
+      sfuUrl,
+      authCredentialPresentation.serialize(),
+      callLinkRootKey,
+      callLinkAdminKey
+    );
+
+    if (!result.success) {
+      if (result.errorStatusCode === 404) {
+        log.info(`${logId}: Call link not found, already deleted`);
+        return;
+      }
+      const message = `Failed to delete call link: ${result.errorStatusCode}`;
+      log.error(`${logId}: ${message}`);
+      throw new Error(message);
+    }
+
+    drop(sendCallLinkDeleteSync(callLink));
   }
 
   async updateCallLinkName(
@@ -710,6 +751,8 @@ export class CallingClass {
       log.error(`${logId}: ${message}`);
       throw new Error(message);
     }
+
+    drop(sendCallLinkUpdateSync(callLink));
 
     log.info(`${logId}: success`);
     return callLinkStateFromRingRTC(result.value);
@@ -754,24 +797,15 @@ export class CallingClass {
       throw new Error(message);
     }
 
+    drop(sendCallLinkUpdateSync(callLink));
+
     log.info(`${logId}: success`);
     return callLinkStateFromRingRTC(result.value);
   }
 
-  async readCallLink({
-    callLinkRootKey,
-  }: Readonly<{
-    callLinkRootKey: CallLinkRootKey;
-  }>): Promise<
-    | {
-        callLinkState: ReadCallLinkState;
-        errorStatusCode: undefined;
-      }
-    | {
-        callLinkState: undefined;
-        errorStatusCode: number;
-      }
-  > {
+  async readCallLink(
+    callLinkRootKey: CallLinkRootKey
+  ): Promise<CallLinkStateType | null> {
     if (!this._sfuUrl) {
       throw new Error('readCallLink() missing SFU URL; not handling call link');
     }
@@ -787,18 +821,15 @@ export class CallingClass {
       callLinkRootKey
     );
     if (!result.success) {
-      log.warn(`${logId}: failed`);
-      return {
-        callLinkState: undefined,
-        errorStatusCode: result.errorStatusCode,
-      };
+      log.warn(`${logId}: failed with status ${result.errorStatusCode}`);
+      if (result.errorStatusCode === 404) {
+        return null;
+      }
+      throw new Error(`Failed to read call link: ${result.errorStatusCode}`);
     }
 
     log.info(`${logId}: success`);
-    return {
-      callLinkState: this.formatCallLinkStateForRedux(result.value),
-      errorStatusCode: undefined,
-    };
+    return callLinkStateFromRingRTC(result.value);
   }
 
   async startCallLinkLobby({
@@ -933,7 +964,7 @@ export class CallingClass {
   }
 
   public async cleanupStaleRingingCalls(): Promise<void> {
-    const calls = await dataInterface.getRecentStaleRingsAndMarkOlderMissed();
+    const calls = await DataWriter.getRecentStaleRingsAndMarkOlderMissed();
 
     const results = await Promise.all(
       calls.map(async call => {
@@ -950,7 +981,7 @@ export class CallingClass {
         return result.callId;
       });
 
-    await dataInterface.markCallHistoryMissed(staleCallIds);
+    await DataWriter.markCallHistoryMissed(staleCallIds);
   }
 
   public async peekGroupCall(conversationId: string): Promise<PeekInfo> {
@@ -1745,18 +1776,6 @@ export class CallingClass {
     };
   }
 
-  public formatCallLinkStateForRedux(
-    callLinkState: RingRTCCallLinkState
-  ): ReadCallLinkState {
-    const { name, restrictions, expiration, revoked } = callLinkState;
-    return {
-      name,
-      restrictions,
-      expiration: expiration.getTime(),
-      revoked,
-    };
-  }
-
   public getGroupCallVideoFrameSource(
     conversationId: string,
     demuxId: number
@@ -2048,7 +2067,8 @@ export class CallingClass {
   async setPresenting(
     conversationId: string,
     hasLocalVideo: boolean,
-    source?: PresentedSource
+    source?: PresentedSource,
+    callLinkRootKey?: string
   ): Promise<void> {
     const call = getOwn(this.callsLookup, conversationId);
     if (!call) {
@@ -2083,18 +2103,33 @@ export class CallingClass {
     if (source) {
       ipcRenderer.send('show-screen-share', source.name);
 
-      // TODO: DESKTOP-7068
+      let url: string;
+      let absolutePath: string | undefined;
+
       if (
         call instanceof GroupCall &&
         call.getKind() === GroupCallKind.CallLink
       ) {
-        return;
+        strictAssert(callLinkRootKey, 'If call is adhoc, we need rootKey');
+        const color = getColorForCallLink(callLinkRootKey);
+        const saveToDisk = shouldSaveNotificationAvatarToDisk();
+        const result = await createIdenticon(
+          color,
+          { type: 'call-link' },
+          { saveToDisk }
+        );
+        url = result.url;
+        absolutePath = result.path
+          ? window.Signal.Migrations.getAbsoluteTempPath(result.path)
+          : undefined;
+      } else {
+        const conversation = window.ConversationController.get(conversationId);
+        strictAssert(conversation, 'setPresenting: conversation not found');
+
+        const result = await conversation.getAvatarOrIdenticon();
+        url = result.url;
+        absolutePath = result.absolutePath;
       }
-
-      const conversation = window.ConversationController.get(conversationId);
-      strictAssert(conversation, 'setPresenting: conversation not found');
-
-      const { url, absolutePath } = await conversation.getAvatarOrIdenticon();
 
       notificationService.notify({
         conversationId,
@@ -2971,6 +3006,11 @@ export class CallingClass {
     };
 
     // eslint-disable-next-line no-param-reassign
+    call.handleRemoteAudioEnabled = () => {
+      // TODO: Implement handling for the remote audio state using call.remoteAudioEnabled
+    };
+
+    // eslint-disable-next-line no-param-reassign
     call.handleRemoteVideoEnabled = () => {
       reduxInterface.remoteVideoChange({
         conversationId: conversation.id,
@@ -3281,11 +3321,10 @@ export class CallingClass {
       return;
     }
 
-    const prevMessageId =
-      await window.Signal.Data.getCallHistoryMessageByCallId({
-        conversationId: conversation.id,
-        callId: groupCallMeta.callId,
-      });
+    const prevMessageId = await DataReader.getCallHistoryMessageByCallId({
+      conversationId: conversation.id,
+      callId: groupCallMeta.callId,
+    });
 
     const isNewCall = prevMessageId == null;
 
@@ -3387,9 +3426,8 @@ export class CallingClass {
   // https://bugs.chromium.org/p/chromium/issues/detail?id=1287628
   private async enumerateMediaDevices(): Promise<void> {
     try {
-      const microphoneStatus = await window.IPC.getMediaAccessStatus(
-        'microphone'
-      );
+      const microphoneStatus =
+        await window.IPC.getMediaAccessStatus('microphone');
       if (microphoneStatus !== 'granted') {
         return;
       }

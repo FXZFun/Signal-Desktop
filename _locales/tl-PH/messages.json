@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "Hindi magka-match ang version ng database mo at ang version na ito ng Signal. Siguraduhing buksan ang pinakabagong version ng Signal sa computer mo."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "Hindi ma-access ang database encryption key dahil nagbago ang OS encryption keyring backend mula {previousBackend} sa {currentBackend}. Nangyayari ito kapag nagbago ang desktop environment, halimbawa gaya ng GNOME at KDE.\n\nMag-switch pabalik sa dating desktop environment."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "Hindi ma-access ang database encryption key dahil nagbago ang OS encryption keyring backend mula {previousBackend} at naging {currentBackend}. Nangyayari ito kapag nagbago ang desktop environment, halimbawa ay sa pagitan ng GNOME at KDE.\n\nBumalik sa dating desktop environment o subukang patakbuhin ang Signal gamit ang command line flag --password-store=\"{previousBackendFlag}\""
+  },
   "icu:mainMenuFile": {
     "messageformat": "&File"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Hindi ma-update ang Signal. {retry} o i-visit ang {url} para ma-install ito manually. Pagkatapos, {support} tungkol sa problem na ito."
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Hindi ma-update ang Signal. <retryUpdateButton>Subukan ulit ang pag-update</retryUpdateButton> o pumunta ang {url} para i-install ito manually. Pagkatapos, <contactSupportLink>kontakin ang support</contactSupportLink> tungkol sa problemang ito"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Hindi ma-update ang Signal. I-visit ang {url} para ma-install ito manually. Pagkatapos, {support} tungkol sa problem na ito."
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Hindi ma-update ang Signal. Puntahan ang {url} para i-install ito manually. Pagkatapos, <contactSupportLink>kontakin ang support</contactSupportLink> tungkol sa problemang ito"
   },
   "icu:readOnlyVolume": {
     "messageformat": "Ang Signal Desktop ay maaaring nasa macOS quarantine, at hindi pwedeng mag-auto update. Subukang i-move ang {app} sa {folder} with Finder."
@@ -990,7 +1002,7 @@
     "messageformat": "Buburahin mula sa device na ito ang lahat ng messages sa chat na ito. Pwede mo pa ring i-search ang chat na ito pagkatapos mong magbura ng messages."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "Buburahin mula sa lahat ng devices mo ang lahat ng messages sa chat na ito. Pwede mo pa ring hanapin ang chat na ito pagkatapos mong magbura ng messages."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Umalis sa group"
@@ -1113,25 +1125,22 @@
     "messageformat": "Settings"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "I-tap ang {plusButton} (Android) o {linkNewDevice} (iPhone)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "Hindi ma-load ang QR code. I-check ang iyong internet at subukan ulit. <retry>Subukan ulit</retry>"
+    "messageformat": "I-tap ang {linkNewDevice}"
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "Hindi ma-load ang QR code. I-check ang iyong connection at subukan ulit."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>Nagkaroon ng hindi inaasahang error.</paragraph><paragraph>Subukan ulit.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "Hindi ma-link ng Signal ang device na ito gamit ang iyong current network."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "Subukang muli"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "Humingi ng tulong"
   },
   "icu:Install__support-link": {
     "messageformat": "Kailangan mo ba ng tulong?"
@@ -1191,10 +1200,10 @@
     "messageformat": "Muling Tumawag"
   },
   "icu:calling__join": {
-    "messageformat": "Mag-join sa Call"
+    "messageformat": "Mag-join sa call"
   },
   "icu:calling__return": {
-    "messageformat": "Return to call"
+    "messageformat": "Bumalik sa call"
   },
   "icu:calling__lobby-automatically-muted-because-there-are-a-lot-of-people": {
     "messageformat": "Naka-mute ang microphone dahil sa marami ang nasa call"
@@ -1305,34 +1314,34 @@
     "messageformat": "I-deny ang request na sumali"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "Aprubahan lahat"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "Tanggihan lahat"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Gusto mo bang aprubahan ang {count,number} request?} other {Gusto mo bang aprubahan ang {count,number} requests?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Gusto mo bang tanggihan ang {count,number} request?} other {Gusto mo bang tanggihan ang {count,number} requests?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} tao ang isasama sa tawag.} other {{count,number} tao ang isasama sa tawag.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} tao ang hindi isasama sa tawag.} other {{count,number} tao ang hindi isasama sa tawag.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, one {May {count,number} request na sumali sa call} other {May {count,number} requests na sumali sa call}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "Gustong sumali…"
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
     "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, one {{count,number} tao ang nadagdag sa call} other {{count,number} tao ang nadagdag sa call}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, one {{count,number} ang nagtaas ng kamay} other {{count,number} ang nagtaas ng kamay}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, one {In this call · {people,number} person} other {In this call · {people,number} people}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "Binlock mo si {name}"
+  "icu:calling__blocked-participant": {
+    "messageformat": "Naka-block si {name}"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "Naka-block si {name}"
   },
   "icu:calling__block-info": {
-    "messageformat": "Hindi ninyo matatanggap ang voice o video ng isa't-isa."
+    "messageformat": "Hindi ninyo matatanggap ang audio o video ng isa't-isa."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "Hindi ma-receive ang audio at video galing kay {name}"
@@ -2613,10 +2625,10 @@
     "messageformat": "I-decline"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "Nag-decline ka sa voice call"
+    "messageformat": "Declined voice call"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "Nag-decline ka sa video call"
+    "messageformat": "Declined video call"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "Incoming voice call"
@@ -2649,10 +2661,10 @@
     "messageformat": "Patuloy na tatakbo ang Signal sa notification area. Pwede mo itong baguhin sa Signal settings."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "Incoming voice call..."
+    "messageformat": "Incoming voice call"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "Incoming video call…"
+    "messageformat": "Incoming video call"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "Outgoing voice call"
@@ -2697,7 +2709,7 @@
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} people}}"
   },
   "icu:CallControls__InfoDisplay--audio-call": {
-    "messageformat": "Audio call"
+    "messageformat": "Voice call"
   },
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Call link"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, one {{people,number} ang nasa call} other {{people,number} ang nasa call}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "Natapos na ang group call"
+    "messageformat": "Tapos na ang video call"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "Nagsimula ang group call"
+    "messageformat": "Nagsimula ng video call"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "Sinimulan mo ang group call"
+    "messageformat": "Nagsimula ka ng video call"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "Sinimulan ni {name} ang group call"
+    "messageformat": "Si {name} ay nagsimula ng video call"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "Nasa call ka na"
@@ -2829,13 +2841,13 @@
     "messageformat": "Tanggalin ang taong ito sa call"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "Gusto mo bang tanggalin si {name} mula sa tawag?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "Tanggalin"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "I-block mula sa tawag"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} people}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "compose button"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "I-forward Kay"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "Ang mga username ay hindi puwedeng magsimula sa numero."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "Ang mga username ay dapat may hindi bababa sa {min,number} characters."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "Ang maximum characters ng isang username ay {max,number}."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, one {Ang usernames ay hindi dapat bababa sa {min,number} character.} other {Ang usernames ay hindi dapat bababa sa {min,number} characters.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "Burahin"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "Para tanggalin ang iyong username, buksan ang Signal sa iyong cellphone at pumunta sa Settings > Profile."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "Kopyahin o burahin ang username"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "Walang recent stories na mapakita sa ngayon"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "Sine-send…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "I-click para makita ang story"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} para sa {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "I-click para makita o magsimula ng call"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Maghanap"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "Walang recent calls. Magsimula sa pamamagitan ng pagtawag sa kaibigan mo."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Walang resulta para sa \"{query}\""
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "Missed"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "Hindi sinagot"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "Group call"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "Gusto mo bang umalis sa current call?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "Kailangan mong umalis sa current call bago sumali sa bagong call"
+    "messageformat": "Kailangan mong umalis sa current call bago ka magsimula ng o sumali sa panibagong call."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "Umalis sa call"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Call link"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {Outgoing video call} other {Incoming video call}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "Missed video call"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "Unanswered video call"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "Declined video call"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "Sumali"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "Maglagay ng pangalan ng call"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "I-edit ang pangalan ng call"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "I-approve ang lahat ng members"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopyahin ang link"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "I-share ang link via Signal"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "Burahin ang link"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "Gusto mo bang burahin ang call link?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "Hindi na gagana ang link na ito para sa mga taong may kopya nito."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "I-cancel"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "Burahin"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Detalye ng call link"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "Maglagay ng pangalan ng call"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "I-edit ang pangalan ng call"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "I-approve ang lahat ng members"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Off"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "On"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "Maglagay ng pangalan ng call"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "I-edit ang pangalan ng call"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "Pangalan ng call"
@@ -5539,16 +5617,22 @@
     "messageformat": "Dagdag na maliliit na pag-aayos, pag-alis ng bugs, at pagpapaganda ng takbo ng app. Maraming salamat sa paggamit ng Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "Pwede mo nang i-forward ang contact cards na galing sa isang mobile device."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "Pinabilis ng release na ito ang proseso ng pagbubura ng malalaking size ng message threads."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "Sinusuportahan na ang high-resolution emoji para mas mapaganda ang pag-display ng malalaking emoji characters."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "Nagdagdag kami ng shortcut para makaalis at makasali sa bagong call kapag may iba pang call na in-progress pa."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "Inupdate rin namin ang Sticker Creator para suportahan ang latest Emoji characters."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "Inaayos din ng update na ito ang startup crash sa Linux para sa users na may locale na `POSIX`."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "May improved contrast ang stories na may mahabang captions para mas madaling basahin ang text."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "Mas pinaganda ng release na ito ang performance ng paggawa ng link preview at inayos ang minor display bug sa pagsara ng Settings window."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

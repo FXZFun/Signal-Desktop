@@ -23,6 +23,8 @@ import type { UnreadStats } from '../util/countUnreadStats';
 import type { WidthBreakpoint } from './_util';
 import type { CallLinkType } from '../types/CallLink';
 import type { CallStateType } from '../state/selectors/calling';
+import type { StartCallData } from './ConfirmLeaveCallModal';
+import { I18n } from './I18n';
 
 enum CallsTabSidebarView {
   CallsListView,
@@ -61,7 +63,8 @@ type CallsTabProps = Readonly<{
   preferredLeftPaneWidth: number;
   renderCallLinkDetails: (
     roomId: string,
-    callHistoryGroup: CallHistoryGroup
+    callHistoryGroup: CallHistoryGroup,
+    onClose: () => void
   ) => JSX.Element;
   renderConversationDetails: (
     conversationId: string,
@@ -72,7 +75,8 @@ type CallsTabProps = Readonly<{
   }) => JSX.Element;
   regionCode: string | undefined;
   savePreferredLeftPaneWidth: (preferredLeftPaneWidth: number) => void;
-  startCallLinkLobbyByRoomId: (roomId: string) => void;
+  startCallLinkLobbyByRoomId: (options: { roomId: string }) => void;
+  toggleConfirmLeaveCallModal: (options: StartCallData | null) => void;
   togglePip: () => void;
 }>;
 
@@ -119,6 +123,7 @@ export function CallsTab({
   regionCode,
   savePreferredLeftPaneWidth,
   startCallLinkLobbyByRoomId,
+  toggleConfirmLeaveCallModal,
   togglePip,
 }: CallsTabProps): JSX.Element {
   const [sidebarView, setSidebarView] = useState(
@@ -148,6 +153,10 @@ export function CallsTab({
     },
     [updateSelectedView]
   );
+
+  const onCloseSelectedView = useCallback(() => {
+    updateSelectedView(null);
+  }, [updateSelectedView]);
 
   useEscapeHandling(
     sidebarView === CallsTabSidebarView.NewCallView
@@ -241,10 +250,11 @@ export function CallsTab({
                     }}
                     portalToRoot
                   >
-                    {({ openMenu, onKeyDown }) => {
+                    {({ onClick, onKeyDown, ref }) => {
                       return (
                         <NavSidebarActionButton
-                          onClick={openMenu}
+                          ref={ref}
+                          onClick={onClick}
                           onKeyDown={onKeyDown}
                           icon={<span className="CallsTab__MoreActionsIcon" />}
                           label={i18n('icu:CallsTab__MoreActionsLabel')}
@@ -282,6 +292,7 @@ export function CallsTab({
               }
               peekNotConnectedGroupCall={peekNotConnectedGroupCall}
               startCallLinkLobbyByRoomId={startCallLinkLobbyByRoomId}
+              toggleConfirmLeaveCallModal={toggleConfirmLeaveCallModal}
               togglePip={togglePip}
             />
           )}
@@ -306,7 +317,26 @@ export function CallsTab({
           <div className="CallsTab__EmptyState">
             <div className="CallsTab__EmptyStateIcon" />
             <p className="CallsTab__EmptyStateLabel">
-              {i18n('icu:CallsTab__EmptyStateText')}
+              <I18n
+                i18n={i18n}
+                id="icu:CallsTab__EmptyStateText--with-icon"
+                components={{
+                  // eslint-disable-next-line react/no-unstable-nested-components
+                  newCallIcon: children => {
+                    let label: string | undefined;
+                    const first = children[0];
+                    if (typeof first === 'string') {
+                      label = first;
+                    }
+                    return (
+                      <span
+                        className="CallsTab__EmptyState__ActionIcon"
+                        aria-label={label}
+                      />
+                    );
+                  },
+                }}
+              />
             </p>
           </div>
         ) : (
@@ -323,7 +353,8 @@ export function CallsTab({
             {selectedView.type === 'callLink' &&
               renderCallLinkDetails(
                 selectedView.roomId,
-                selectedView.callHistoryGroup
+                selectedView.callHistoryGroup,
+                onCloseSelectedView
               )}
           </div>
         )}

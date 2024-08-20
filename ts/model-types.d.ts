@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import * as Backbone from 'backbone';
+import type { ReadonlyDeep } from 'type-fest';
 
 import type { GroupV2ChangeType } from './groups';
 import type { DraftBodyRanges, RawBodyRange } from './types/BodyRange';
@@ -291,6 +292,8 @@ export type MessageAttributesType = {
   deletedForEveryoneFailed?: boolean;
 };
 
+export type ReadonlyMessageAttributesType = ReadonlyDeep<MessageAttributesType>;
+
 export type ConversationAttributesTypeType = 'private' | 'group';
 
 export type ConversationLastProfileType = Readonly<{
@@ -329,6 +332,12 @@ export type ConversationAttributesType = {
   conversationColor?: ConversationColorType;
   customColor?: CustomColorType;
   customColorId?: string;
+
+  // Set at backup import time, exported as is.
+  wallpaperPhotoPointerBase64?: string;
+  wallpaperPreset?: number;
+  dimWallpaperInDarkMode?: boolean;
+
   discoveredUnregisteredAt?: number;
   firstUnregisteredAt?: number;
   draftChanged?: boolean;

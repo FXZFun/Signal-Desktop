@@ -7,9 +7,16 @@ import type { BackupLevel } from '@signalapp/libsignal-client/zkgroup';
 import pMap from 'p-map';
 import pTimeout from 'p-timeout';
 import { Readable } from 'stream';
+import { isNumber } from 'lodash';
+import { CallLinkRootKey } from '@signalapp/ringrtc';
 
 import { Backups, SignalService } from '../../protobuf';
-import Data from '../../sql/Client';
+import {
+  DataReader,
+  DataWriter,
+  pauseWriteAccess,
+  resumeWriteAccess,
+} from '../../sql/Client';
 import type { PageMessagesCursorType } from '../../sql/Interface';
 import * as log from '../../logging/log';
 import { GiftBadgeStates } from '../../components/conversation/Message';
@@ -22,6 +29,7 @@ import {
 import type { RawBodyRange } from '../../types/BodyRange';
 import { LONG_ATTACHMENT_LIMIT } from '../../types/Message';
 import { PaymentEventKind } from '../../types/Payment';
+import { MessageRequestResponseEvent } from '../../types/MessageRequestResponseEvent';
 import type {
   ConversationAttributesType,
   MessageAttributesType,
@@ -41,7 +49,7 @@ import { isConversationUnregistered } from '../../util/isConversationUnregistere
 import { uuidToBytes } from '../../util/uuidToBytes';
 import { assertDev, strictAssert } from '../../util/assert';
 import { getSafeLongFromTimestamp } from '../../util/timestampLongUtils';
-import { MINUTE, SECOND, DurationInSeconds } from '../../util/durations';
+import { DAY, MINUTE, SECOND, DurationInSeconds } from '../../util/durations';
 import {
   PhoneNumberDiscoverability,
   parsePhoneNumberDiscoverability,
@@ -73,6 +81,7 @@ import {
   isChangeNumberNotification,
   isJoinedSignalNotification,
   isTitleTransitionNotification,
+  isMessageRequestResponse,
 } from '../../state/selectors/message';
 import * as Bytes from '../../Bytes';
 import { canBeSynced as canPreferredReactionEmojiBeSynced } from '../../reactions/preferredReactionEmoji';
@@ -82,9 +91,21 @@ import { BACKUP_VERSION } from './constants';
 import { getMessageIdForLogging } from '../../util/idForLogging';
 import { getCallsHistoryForRedux } from '../callHistoryLoader';
 import { makeLookup } from '../../util/makeLookup';
-import type { CallHistoryDetails } from '../../types/CallDisposition';
+import type {
+  CallHistoryDetails,
+  CallStatus,
+} from '../../types/CallDisposition';
+import {
+  CallMode,
+  CallDirection,
+  CallType,
+  DirectCallStatus,
+  GroupCallStatus,
+  AdhocCallStatus,
+} from '../../types/CallDisposition';
 import { isAciString } from '../../util/isAciString';
-import type { AboutMe } from './types';
+import { hslToRGB } from '../../util/hslToRGB';
+import type { AboutMe, LocalChatStyle } from './types';
 import { messageHasPaymentEvent } from '../../messages/helpers';
 import {
   numberToAddressType,
@@ -103,7 +124,12 @@ import {
 import type { CoreAttachmentBackupJobType } from '../../types/AttachmentBackup';
 import { AttachmentBackupManager } from '../../jobs/AttachmentBackupManager';
 import { getBackupCdnInfo } from './util/mediaId';
+import { calculateExpirationTimestamp } from '../../util/expirationTimer';
 import { ReadStatus } from '../../messages/MessageReadStatus';
+import { CallLinkRestrictions } from '../../types/CallLink';
+import { toAdminKeyBytes } from '../../util/callLinks';
+import { getRoomIdFromRootKey } from '../../util/callLinksRingrtc';
+import { SeenStatus } from '../../MessageSeenStatus';
 
 const MAX_CONCURRENCY = 10;
 
@@ -166,28 +192,39 @@ type NonBubbleResultType = Readonly<
 >;
 
 export class BackupExportStream extends Readable {
-  private readonly backupTimeMs = getSafeLongFromTimestamp(Date.now());
+  // Shared between all methods for consistency.
+  private now = Date.now();
+
+  private readonly backupTimeMs = getSafeLongFromTimestamp(this.now);
   private readonly convoIdToRecipientId = new Map<string, number>();
+  private readonly roomIdToRecipientId = new Map<string, number>();
   private attachmentBackupJobs: Array<CoreAttachmentBackupJobType> = [];
   private buffers = new Array<Uint8Array>();
   private nextRecipientId = 0;
   private flushResolve: (() => void) | undefined;
 
+  // Map from custom color uuid to an index in accountSettings.customColors
+  // array.
+  private customColorIdByUuid = new Map<string, Long>();
+
   public run(backupLevel: BackupLevel): void {
     drop(
       (async () => {
         log.info('BackupExportStream: starting...');
-
-        await Data.pauseWriteAccess();
+        drop(AttachmentBackupManager.stop());
+        await pauseWriteAccess();
         try {
           await this.unsafeRun(backupLevel);
         } catch (error) {
           this.emit('error', error);
         } finally {
-          await Data.resumeWriteAccess();
+          await resumeWriteAccess();
+
+          // TODO (DESKTOP-7344): Clear & add backup jobs in a single transaction
+          await DataWriter.clearAllAttachmentBackupJobs();
           await Promise.all(
             this.attachmentBackupJobs.map(job =>
-              AttachmentBackupManager.addJob(job)
+              AttachmentBackupManager.addJobAndMaybeThumbnailJob(job)
             )
           );
           drop(AttachmentBackupManager.start());
@@ -211,6 +248,8 @@ export class BackupExportStream extends Readable {
     await this.flush();
 
     const stats = {
+      adHocCalls: 0,
+      callLinks: 0,
       conversations: 0,
       chats: 0,
       distributionLists: 0,
@@ -241,7 +280,8 @@ export class BackupExportStream extends Readable {
       stats.conversations += 1;
     }
 
-    const distributionLists = await Data.getAllStoryDistributionsWithMembers();
+    const distributionLists =
+      await DataReader.getAllStoryDistributionsWithMembers();
 
     for (const list of distributionLists) {
       const { PrivacyMode } = Backups.DistributionList;
@@ -263,7 +303,7 @@ export class BackupExportStream extends Readable {
 
       this.pushFrame({
         recipient: {
-          id: this.getDistributionListRecipientId(),
+          id: Long.fromNumber(this.getNextRecipientId()),
           distributionList: {
             distributionId: uuidToBytes(list.id),
             deletionTimestamp: list.deletedAtTimestamp
@@ -289,7 +329,49 @@ export class BackupExportStream extends Readable {
       stats.distributionLists += 1;
     }
 
-    const stickerPacks = await Data.getInstalledStickerPacks();
+    const callLinks = await DataReader.getAllCallLinks();
+
+    for (const link of callLinks) {
+      const {
+        rootKey: rootKeyString,
+        adminKey,
+        name,
+        restrictions,
+        revoked,
+        expiration,
+      } = link;
+
+      if (revoked) {
+        continue;
+      }
+
+      const id = this.getNextRecipientId();
+      const rootKey = CallLinkRootKey.parse(rootKeyString);
+      const roomId = getRoomIdFromRootKey(rootKey);
+
+      this.roomIdToRecipientId.set(roomId, id);
+
+      this.pushFrame({
+        recipient: {
+          id: Long.fromNumber(id),
+          callLink: {
+            rootKey: rootKey.bytes,
+            adminKey: adminKey ? toAdminKeyBytes(adminKey) : null,
+            name,
+            restrictions: toCallLinkRestrictionsProto(restrictions),
+            expirationMs: isNumber(expiration)
+              ? Long.fromNumber(expiration)
+              : null,
+          },
+        },
+      });
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.flush();
+      stats.callLinks += 1;
+    }
+
+    const stickerPacks = await DataReader.getInstalledStickerPacks();
 
     for (const { id, key } of stickerPacks) {
       this.pushFrame({
@@ -338,12 +420,53 @@ export class BackupExportStream extends Readable {
           markedUnread: attributes.markedUnread === true,
           dontNotifyForMentionsIfMuted:
             attributes.dontNotifyForMentionsIfMuted === true,
+
+          style: this.toChatStyle({
+            wallpaperPhotoPointer: attributes.wallpaperPhotoPointerBase64
+              ? Bytes.fromBase64(attributes.wallpaperPhotoPointerBase64)
+              : undefined,
+            wallpaperPreset: attributes.wallpaperPreset,
+            color: attributes.conversationColor,
+            customColorId: attributes.customColorId,
+            dimWallpaperInDarkMode: attributes.dimWallpaperInDarkMode,
+          }),
         },
       });
 
       // eslint-disable-next-line no-await-in-loop
       await this.flush();
       stats.chats += 1;
+    }
+
+    const allCallHistoryItems = await DataReader.getAllCallHistory();
+
+    for (const item of allCallHistoryItems) {
+      const { callId, type, peerId: roomId, status, timestamp } = item;
+
+      if (type !== CallType.Adhoc) {
+        continue;
+      }
+
+      const recipientId = this.roomIdToRecipientId.get(roomId);
+      if (!recipientId) {
+        log.warn(
+          `backups: Dropping ad-hoc call; recipientId for roomId ${roomId.slice(-2)} not found`
+        );
+        continue;
+      }
+
+      this.pushFrame({
+        adHocCall: {
+          callId: Long.fromString(callId),
+          recipientId: Long.fromNumber(recipientId),
+          state: toAdHocCallStateProto(status),
+          callTimestamp: Long.fromNumber(timestamp),
+        },
+      });
+
+      // eslint-disable-next-line no-await-in-loop
+      await this.flush();
+      stats.adHocCalls += 1;
     }
 
     let cursor: PageMessagesCursorType | undefined;
@@ -362,8 +485,9 @@ export class BackupExportStream extends Readable {
 
     try {
       while (!cursor?.done) {
-        // eslint-disable-next-line no-await-in-loop
-        const { messages, cursor: newCursor } = await Data.pageMessages(cursor);
+        const { messages, cursor: newCursor } =
+          // eslint-disable-next-line no-await-in-loop
+          await DataReader.pageMessages(cursor);
 
         // eslint-disable-next-line no-await-in-loop
         const items = await pMap(
@@ -397,7 +521,7 @@ export class BackupExportStream extends Readable {
       }
     } finally {
       if (cursor !== undefined) {
-        await Data.finishPageMessages(cursor);
+        await DataReader.finishPageMessages(cursor);
       }
     }
 
@@ -530,7 +654,7 @@ export class BackupExportStream extends Readable {
             storage.get('phoneNumberDiscoverability')
           ) === PhoneNumberDiscoverability.NotDiscoverable,
         preferContactAvatars: storage.get('preferContactAvatars'),
-        universalExpireTimer: storage.get('universalExpireTimer'),
+        universalExpireTimerSeconds: storage.get('universalExpireTimer'),
         preferredReactionEmoji,
         displayBadgesOnProfile: storage.get('displayBadgesOnProfile'),
         keepMutedChatsArchived: storage.get('keepMutedChatsArchived'),
@@ -545,6 +669,10 @@ export class BackupExportStream extends Readable {
           'hasSeenGroupStoryEducationSheet'
         ),
         phoneNumberSharingMode,
+        // Note that this should be called before `toDefaultChatStyle` because
+        // it builds `customColorIdByUuid`
+        customChatColors: this.toCustomChatColors(),
+        defaultChatStyle: this.toDefaultChatStyle(),
       },
     };
   }
@@ -605,11 +733,11 @@ export class BackupExportStream extends Readable {
     return result;
   }
 
-  private getDistributionListRecipientId(): Long {
+  private getNextRecipientId(): number {
     const recipientId = this.nextRecipientId;
     this.nextRecipientId += 1;
 
-    return Long.fromNumber(recipientId);
+    return recipientId;
   }
 
   private toRecipient(
@@ -791,6 +919,12 @@ export class BackupExportStream extends Readable {
     const chatId = this.getRecipientId({ id: message.conversationId });
     if (chatId === undefined) {
       log.warn('backups: message chat not found');
+      return undefined;
+    }
+
+    const expirationTimestamp = calculateExpirationTimestamp(message);
+    if (expirationTimestamp != null && expirationTimestamp <= this.now + DAY) {
+      // Message expires too soon
       return undefined;
     }
 
@@ -1041,7 +1175,7 @@ export class BackupExportStream extends Readable {
   async toChatItemUpdate(
     options: NonBubbleOptionsType
   ): Promise<NonBubbleResultType> {
-    const { authorId, message } = options;
+    const { authorId, callHistoryByCallId, message } = options;
     const logId = `toChatItemUpdate(${getMessageIdForLogging(message)})`;
 
     const updateMessage = new Backups.ChatUpdateMessage();
@@ -1051,102 +1185,91 @@ export class BackupExportStream extends Readable {
     };
 
     if (isCallHistory(message)) {
-      // TODO (DESKTOP-6964)
-      // const callingMessage = new Backups.CallChatUpdate();
-      // const { callId } = message;
-      // if (!callId) {
-      //   throw new Error(
-      //     `${logId}: Message was callHistory, but missing callId!`
-      //   );
-      // }
-      // const callHistory = callHistoryByCallId[callId];
-      // if (!callHistory) {
-      //   throw new Error(
-      //     `${logId}: Message had callId, but no call history details were found!`
-      //   );
-      // }
-      // callingMessage.callId = Long.fromString(callId);
-      // if (callHistory.mode === CallMode.Group) {
-      //   const groupCall = new Backups.GroupCallChatUpdate();
-      //   const { ringerId } = callHistory;
-      //   if (!ringerId) {
-      //     throw new Error(
-      //       `${logId}: Message had missing ringerId for a group call!`
-      //     );
-      //   }
-      //   groupCall.startedCallAci = this.aciToBytes(ringerId);
-      //   groupCall.startedCallTimestamp = Long.fromNumber(callHistory.timestamp);
-      //   // Note: we don't store inCallACIs, instead relying on RingRTC in-memory state
-      //   callingMessage.groupCall = groupCall;
-      // } else {
-      //   const callMessage = new Backups.IndividualCallChatUpdate();
-      //   const { direction, type, status } = callHistory;
-      //   if (
-      //     status === DirectCallStatus.Accepted ||
-      //     status === DirectCallStatus.Pending
-      //   ) {
-      //     if (type === CallType.Audio) {
-      //       callMessage.type =
-      //         direction === CallDirection.Incoming
-      //           ? Backups.IndividualCallChatUpdate.Type.INCOMING_AUDIO_CALL
-      //           : Backups.IndividualCallChatUpdate.Type.OUTGOING_AUDIO_CALL;
-      //     } else if (type === CallType.Video) {
-      //       callMessage.type =
-      //         direction === CallDirection.Incoming
-      //           ? Backups.IndividualCallChatUpdate.Type.INCOMING_VIDEO_CALL
-      //           : Backups.IndividualCallChatUpdate.Type.OUTGOING_VIDEO_CALL;
-      //     } else {
-      //       throw new Error(
-      //         `${logId}: Message direct status '${status}' call had type ${type}`
-      //       );
-      //     }
-      //   } else if (status === DirectCallStatus.Declined) {
-      //     if (direction === CallDirection.Incoming) {
-      //       // question: do we really not call declined calls things that we decline?
-      //       throw new Error(
-      //         `${logId}: Message direct call was declined but incoming`
-      //       );
-      //     }
-      //     if (type === CallType.Audio) {
-      //       callMessage.type =
-      //         Backups.IndividualCallChatUpdate.Type.UNANSWERED_OUTGOING_AUDIO_CALL;
-      //     } else if (type === CallType.Video) {
-      //       callMessage.type =
-      //         Backups.IndividualCallChatUpdate.Type.UNANSWERED_OUTGOING_VIDEO_CALL;
-      //     } else {
-      //       throw new Error(
-      //         `${logId}: Message direct status '${status}' call had type ${type}`
-      //       );
-      //     }
-      //   } else if (status === DirectCallStatus.Missed) {
-      //     if (direction === CallDirection.Outgoing) {
-      //       throw new Error(
-      //         `${logId}: Message direct call was missed but outgoing`
-      //       );
-      //     }
-      //     if (type === CallType.Audio) {
-      //       callMessage.type =
-      //         Backups.IndividualCallChatUpdate.Type.MISSED_INCOMING_AUDIO_CALL;
-      //     } else if (type === CallType.Video) {
-      //       callMessage.type =
-      //         Backups.IndividualCallChatUpdate.Type.MISSED_INCOMING_VIDEO_CALL;
-      //     } else {
-      //       throw new Error(
-      //         `${logId}: Message direct status '${status}' call had type ${type}`
-      //       );
-      //     }
-      //   } else {
-      //     throw new Error(`${logId}: Message direct call had status ${status}`);
-      //   }
-      //   callingMessage.callMessage = callMessage;
-      // }
-      // updateMessage.callingMessage = callingMessage;
-      // return chatItem;
+      const conversation = window.ConversationController.get(
+        message.conversationId
+      );
+
+      if (!conversation) {
+        throw new Error(
+          `${logId}: callHistory message had unknown conversationId!`
+        );
+      }
+
+      const { callId } = message;
+      if (!callId) {
+        throw new Error(`${logId}: callHistory message was missing callId!`);
+      }
+
+      const callHistory = callHistoryByCallId[callId];
+      if (!callHistory) {
+        throw new Error(
+          `${logId}: callHistory message had callId, but no call history details were found!`
+        );
+      }
+
+      if (isGroup(conversation.attributes)) {
+        const groupCall = new Backups.GroupCall();
+
+        strictAssert(
+          callHistory.mode === CallMode.Group,
+          'in group, should be group call'
+        );
+
+        if (callHistory.status === GroupCallStatus.Deleted) {
+          return { kind: NonBubbleResultKind.Drop };
+        }
+
+        const { ringerId } = callHistory;
+        if (ringerId) {
+          const ringerConversation =
+            window.ConversationController.get(ringerId);
+          if (!ringerConversation) {
+            throw new Error(
+              'toChatItemUpdate/callHistory: ringerId conversation not found!'
+            );
+          }
+
+          const recipientId = this.getRecipientId(
+            ringerConversation.attributes
+          );
+          groupCall.ringerRecipientId = recipientId;
+          groupCall.startedCallRecipientId = recipientId;
+        }
+
+        groupCall.callId = Long.fromString(callId);
+        groupCall.state = toGroupCallStateProto(callHistory.status);
+        groupCall.startedCallTimestamp = Long.fromNumber(callHistory.timestamp);
+        groupCall.endedCallTimestamp = Long.fromNumber(0);
+        groupCall.read = message.seenStatus === SeenStatus.Seen;
+
+        updateMessage.groupCall = groupCall;
+        return { kind: NonBubbleResultKind.Directionless, patch };
+      }
+
+      const individualCall = new Backups.IndividualCall();
+      const { direction, type, status, timestamp } = callHistory;
+
+      if (status === GroupCallStatus.Deleted) {
+        return { kind: NonBubbleResultKind.Drop };
+      }
+
+      individualCall.callId = Long.fromString(callId);
+      individualCall.type = toIndividualCallTypeProto(type);
+      individualCall.direction = toIndividualCallDirectionProto(direction);
+      individualCall.state = toIndividualCallStateProto(status);
+      individualCall.startedCallTimestamp = Long.fromNumber(timestamp);
+      individualCall.read = message.seenStatus === SeenStatus.Seen;
+
+      updateMessage.individualCall = individualCall;
+      return { kind: NonBubbleResultKind.Directionless, patch };
     }
 
     if (isExpirationTimerUpdate(message)) {
       const expiresInSeconds = message.expirationTimerUpdate?.expireTimer;
-      const expiresInMs = (expiresInSeconds ?? 0) * 1000;
+      const expiresInMs =
+        expiresInSeconds == null
+          ? 0
+          : DurationInSeconds.toMillis(expiresInSeconds);
 
       const conversation = window.ConversationController.get(
         message.conversationId
@@ -1156,7 +1279,7 @@ export class BackupExportStream extends Readable {
         const groupChatUpdate = new Backups.GroupChangeChatUpdate();
 
         const timerUpdate = new Backups.GroupExpirationTimerUpdate();
-        timerUpdate.expiresInMs = expiresInMs;
+        timerUpdate.expiresInMs = Long.fromNumber(expiresInMs);
 
         const sourceServiceId = message.expirationTimerUpdate?.sourceServiceId;
         if (sourceServiceId && Aci.parseFromServiceIdString(sourceServiceId)) {
@@ -1184,7 +1307,7 @@ export class BackupExportStream extends Readable {
       }
 
       const expirationTimerChange = new Backups.ExpirationTimerChatUpdate();
-      expirationTimerChange.expiresInMs = expiresInMs;
+      expirationTimerChange.expiresInMs = Long.fromNumber(expiresInMs);
 
       updateMessage.expirationTimerChange = expirationTimerChange;
 
@@ -1292,6 +1415,31 @@ export class BackupExportStream extends Readable {
         );
         updateMessage.learnedProfileChange = { username: renderInfo.username };
       }
+
+      return { kind: NonBubbleResultKind.Directionless, patch };
+    }
+
+    if (isMessageRequestResponse(message)) {
+      const { messageRequestResponseEvent: event } = message;
+      if (event == null) {
+        return { kind: NonBubbleResultKind.Drop };
+      }
+
+      let type: Backups.SimpleChatUpdate.Type;
+      const { Type } = Backups.SimpleChatUpdate;
+      switch (event) {
+        case MessageRequestResponseEvent.ACCEPT:
+        case MessageRequestResponseEvent.BLOCK:
+        case MessageRequestResponseEvent.UNBLOCK:
+          return { kind: NonBubbleResultKind.Drop };
+        case MessageRequestResponseEvent.SPAM:
+          type = Type.REPORTED_SPAM;
+          break;
+        default:
+          throw missingCaseError(event);
+      }
+
+      updateMessage.simpleUpdate = { type };
 
       return { kind: NonBubbleResultKind.Directionless, patch };
     }
@@ -2237,6 +2385,167 @@ export class BackupExportStream extends Readable {
         .reverse()
     );
   }
+
+  private toCustomChatColors(): Array<Backups.ChatStyle.ICustomChatColor> {
+    const customColors = window.storage.get('customColors');
+    if (!customColors) {
+      return [];
+    }
+
+    const result = new Array<Backups.ChatStyle.ICustomChatColor>();
+    for (const [uuid, color] of Object.entries(customColors.colors)) {
+      const id = Long.fromNumber(result.length);
+      this.customColorIdByUuid.set(uuid, id);
+
+      const start = hslToRGBInt(color.start.hue, color.start.saturation);
+
+      if (color.end == null) {
+        result.push({
+          id,
+          solid: start,
+        });
+      } else {
+        const end = hslToRGBInt(color.end.hue, color.end.saturation);
+
+        result.push({
+          id,
+          gradient: {
+            colors: [start, end],
+            positions: [0, 1],
+            angle: color.deg,
+          },
+        });
+      }
+    }
+
+    return result;
+  }
+
+  private toDefaultChatStyle(): Backups.IChatStyle {
+    const defaultColor = window.storage.get('defaultConversationColor');
+
+    return this.toChatStyle({
+      wallpaperPhotoPointer: window.storage.get('defaultWallpaperPhotoPointer'),
+      wallpaperPreset: window.storage.get('defaultWallpaperPreset'),
+      color: defaultColor?.color,
+      customColorId: defaultColor?.customColorData?.id,
+      dimWallpaperInDarkMode: window.storage.get(
+        'defaultDimWallpaperInDarkMode',
+        false
+      ),
+    });
+  }
+
+  private toChatStyle({
+    wallpaperPhotoPointer,
+    wallpaperPreset,
+    color,
+    customColorId,
+    dimWallpaperInDarkMode,
+  }: LocalChatStyle): Backups.IChatStyle {
+    const result: Backups.IChatStyle = {
+      dimWallpaperInDarkMode,
+    };
+
+    if (Bytes.isNotEmpty(wallpaperPhotoPointer)) {
+      result.wallpaperPhoto = Backups.FilePointer.decode(wallpaperPhotoPointer);
+    } else if (wallpaperPreset) {
+      result.wallpaperPreset = wallpaperPreset;
+    }
+
+    if (color == null) {
+      result.autoBubbleColor = {};
+      return result;
+    }
+
+    if (color === 'custom') {
+      strictAssert(
+        customColorId != null,
+        'No custom color id for custom color'
+      );
+
+      const index = this.customColorIdByUuid.get(customColorId);
+      strictAssert(index != null, 'Missing custom color');
+
+      result.customColorId = index;
+      return result;
+    }
+
+    const { BubbleColorPreset } = Backups.ChatStyle;
+
+    switch (color) {
+      case 'ultramarine':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_ULTRAMARINE;
+        break;
+      case 'crimson':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_CRIMSON;
+        break;
+      case 'vermilion':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_VERMILION;
+        break;
+      case 'burlap':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_BURLAP;
+        break;
+      case 'forest':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_FOREST;
+        break;
+      case 'wintergreen':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_WINTERGREEN;
+        break;
+      case 'teal':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_TEAL;
+        break;
+      case 'blue':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_BLUE;
+        break;
+      case 'indigo':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_INDIGO;
+        break;
+      case 'violet':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_VIOLET;
+        break;
+      case 'plum':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_PLUM;
+        break;
+      case 'taupe':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_TAUPE;
+        break;
+      case 'steel':
+        result.bubbleColorPreset = BubbleColorPreset.SOLID_STEEL;
+        break;
+      case 'ember':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_EMBER;
+        break;
+      case 'midnight':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_MIDNIGHT;
+        break;
+      case 'infrared':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_INFRARED;
+        break;
+      case 'lagoon':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_LAGOON;
+        break;
+      case 'fluorescent':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_FLUORESCENT;
+        break;
+      case 'basil':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_BASIL;
+        break;
+      case 'sublime':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_SUBLIME;
+        break;
+      case 'sea':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_SEA;
+        break;
+      case 'tangerine':
+        result.bubbleColorPreset = BubbleColorPreset.GRADIENT_TANGERINE;
+        break;
+      default:
+        throw missingCaseError(color);
+    }
+
+    return result;
+  }
 }
 
 function checkServiceIdEquivalence(
@@ -2247,4 +2556,134 @@ function checkServiceIdEquivalence(
   const rightConvo = window.ConversationController.get(right);
 
   return leftConvo && rightConvo && leftConvo === rightConvo;
+}
+
+function hslToRGBInt(hue: number, saturation: number): number {
+  const { r, g, b } = hslToRGB(hue, saturation, 1);
+  // eslint-disable-next-line no-bitwise
+  return ((0xff << 24) | (r << 16) | (g << 8) | b) >>> 0;
+}
+
+function toGroupCallStateProto(state: CallStatus): Backups.GroupCall.State {
+  const values = Backups.GroupCall.State;
+
+  if (state === GroupCallStatus.GenericGroupCall) {
+    return values.GENERIC;
+  }
+  if (state === GroupCallStatus.OutgoingRing) {
+    return values.OUTGOING_RING;
+  }
+  if (state === GroupCallStatus.Ringing) {
+    return values.RINGING;
+  }
+  if (state === GroupCallStatus.Joined) {
+    return values.JOINED;
+  }
+  if (state === GroupCallStatus.Accepted) {
+    return values.ACCEPTED;
+  }
+  if (state === GroupCallStatus.Missed) {
+    return values.MISSED;
+  }
+  if (state === GroupCallStatus.MissedNotificationProfile) {
+    return values.MISSED_NOTIFICATION_PROFILE;
+  }
+  if (state === GroupCallStatus.Declined) {
+    return values.DECLINED;
+  }
+  if (state === GroupCallStatus.Deleted) {
+    throw new Error(
+      'groupCallStatusToGroupCallState: Never back up deleted items!'
+    );
+  }
+
+  return values.UNKNOWN_STATE;
+}
+
+function toIndividualCallDirectionProto(
+  direction: CallDirection
+): Backups.IndividualCall.Direction {
+  const values = Backups.IndividualCall.Direction;
+
+  if (direction === CallDirection.Incoming) {
+    return values.INCOMING;
+  }
+  if (direction === CallDirection.Outgoing) {
+    return values.OUTGOING;
+  }
+
+  return values.UNKNOWN_DIRECTION;
+}
+
+function toIndividualCallTypeProto(
+  type: CallType
+): Backups.IndividualCall.Type {
+  const values = Backups.IndividualCall.Type;
+
+  if (type === CallType.Audio) {
+    return values.AUDIO_CALL;
+  }
+  if (type === CallType.Video) {
+    return values.VIDEO_CALL;
+  }
+
+  return values.UNKNOWN_TYPE;
+}
+
+function toIndividualCallStateProto(
+  status: CallStatus
+): Backups.IndividualCall.State {
+  const values = Backups.IndividualCall.State;
+
+  if (status === DirectCallStatus.Accepted) {
+    return values.ACCEPTED;
+  }
+  if (status === DirectCallStatus.Declined) {
+    return values.NOT_ACCEPTED;
+  }
+  if (status === DirectCallStatus.Missed) {
+    return values.MISSED;
+  }
+  if (status === DirectCallStatus.MissedNotificationProfile) {
+    return values.MISSED_NOTIFICATION_PROFILE;
+  }
+
+  if (status === DirectCallStatus.Deleted) {
+    throw new Error(
+      'statusToIndividualCallProtoEnum: Never back up deleted items!'
+    );
+  }
+
+  return values.UNKNOWN_STATE;
+}
+
+function toAdHocCallStateProto(status: CallStatus): Backups.AdHocCall.State {
+  const values = Backups.AdHocCall.State;
+
+  if (status === AdhocCallStatus.Generic) {
+    return values.GENERIC;
+  }
+  if (status === AdhocCallStatus.Joined) {
+    return values.GENERIC;
+  }
+  if (status === AdhocCallStatus.Pending) {
+    return values.GENERIC;
+  }
+
+  return values.UNKNOWN_STATE;
+}
+
+function toCallLinkRestrictionsProto(
+  restrictions: CallLinkRestrictions
+): Backups.CallLink.Restrictions {
+  const values = Backups.CallLink.Restrictions;
+
+  if (restrictions === CallLinkRestrictions.None) {
+    return values.NONE;
+  }
+  if (restrictions === CallLinkRestrictions.AdminApproval) {
+    return values.ADMIN_APPROVAL;
+  }
+
+  return values.UNKNOWN;
 }

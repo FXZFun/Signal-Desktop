@@ -28,6 +28,7 @@ import {
   DirectCallStatus,
   GroupCallStatus,
   isSameCallHistoryGroup,
+  CallMode,
 } from '../types/CallDisposition';
 import { formatDateTimeShort, isMoreRecentThan } from '../util/timestamp';
 import type { ConversationType } from '../state/ducks/conversations';
@@ -37,7 +38,7 @@ import { drop } from '../util/drop';
 import { strictAssert } from '../util/assert';
 import { UserText } from './UserText';
 import { I18n } from './I18n';
-import { NavSidebarSearchHeader } from './NavSidebar';
+import { NavSidebarSearchHeader, NavSidebarEmpty } from './NavSidebar';
 import { SizeObserver } from '../hooks/useSizeObserver';
 import {
   formatCallHistoryGroup,
@@ -47,7 +48,6 @@ import { CallsNewCallButton } from './CallsNewCall';
 import { Tooltip, TooltipPlacement } from './Tooltip';
 import { Theme } from '../util/theme';
 import type { CallingConversationType } from '../types/Calling';
-import { CallMode } from '../types/Calling';
 import type { CallLinkType } from '../types/CallLink';
 import {
   callLinkToConversation,
@@ -65,7 +65,7 @@ import type {
   PeekNotConnectedGroupCallType,
 } from '../state/ducks/calling';
 import { DAY, MINUTE, SECOND } from '../util/durations';
-import { ConfirmationDialog } from './ConfirmationDialog';
+import type { StartCallData } from './ConfirmLeaveCallModal';
 
 function Timestamp({
   i18n,
@@ -148,7 +148,8 @@ type CallsListProps = Readonly<{
   onOutgoingVideoCallInConversation: (conversationId: string) => void;
   onChangeCallsTabSelectedView: (selectedView: CallsTabSelectedView) => void;
   peekNotConnectedGroupCall: (options: PeekNotConnectedGroupCallType) => void;
-  startCallLinkLobbyByRoomId: (roomId: string) => void;
+  startCallLinkLobbyByRoomId: (options: { roomId: string }) => void;
+  toggleConfirmLeaveCallModal: (options: StartCallData | null) => void;
   togglePip: () => void;
 }>;
 
@@ -179,7 +180,6 @@ export function CallsList({
   getCall,
   getCallLink,
   getConversation,
-  hangUpActiveCall,
   i18n,
   selectedCallHistoryGroup,
   onCreateCallLink,
@@ -188,6 +188,7 @@ export function CallsList({
   onChangeCallsTabSelectedView,
   peekNotConnectedGroupCall,
   startCallLinkLobbyByRoomId,
+  toggleConfirmLeaveCallModal,
   togglePip,
 }: CallsListProps): JSX.Element {
   const infiniteLoaderRef = useRef<InfiniteLoader>(null);
@@ -195,8 +196,6 @@ export function CallsList({
   const [queryInput, setQueryInput] = useState('');
   const [statusInput, setStatusInput] = useState(CallHistoryFilterStatus.All);
   const [searchState, setSearchState] = useState(defaultInitState);
-  const [isLeaveCallDialogVisible, setIsLeaveCallDialogVisible] =
-    useState(false);
 
   const prevOptionsRef = useRef<CallHistoryFilterOptions | null>(null);
 
@@ -206,21 +205,27 @@ export function CallsList({
   const searchStateQuery = searchState.options?.query ?? '';
   const searchStateStatus =
     searchState.options?.status ?? CallHistoryFilterStatus.All;
+  const hasSearchStateQuery = searchStateQuery !== '';
   const searchFiltering =
-    searchStateQuery !== '' ||
-    searchStateStatus !== CallHistoryFilterStatus.All;
+    hasSearchStateQuery || searchStateStatus !== CallHistoryFilterStatus.All;
   const searchPending = searchState.state === 'pending';
+  const isEmpty = !searchState.results?.items?.length;
 
   const rows = useMemo(() => {
     let results: ReadonlyArray<Row> = searchState.results?.items ?? [];
-    if (results.length === 0) {
+    if (results.length === 0 && hasSearchStateQuery) {
       results = ['EmptyState'];
     }
     if (!searchFiltering && canCreateCallLinks) {
       results = ['CreateCallLink', ...results];
     }
     return results;
-  }, [searchState.results?.items, searchFiltering, canCreateCallLinks]);
+  }, [
+    searchState.results?.items,
+    hasSearchStateQuery,
+    searchFiltering,
+    canCreateCallLinks,
+  ]);
 
   const rowCount = rows.length;
 
@@ -330,7 +335,7 @@ export function CallsList({
         return true;
       }
 
-      // Direct is not supported currently
+      // We can't tell from CallHistory alone whether a 1:1 call is active
       return false;
     },
     [getCallByPeerId]
@@ -358,12 +363,14 @@ export function CallsList({
         return peerId === activeCallConversationId;
       }
 
-      // Not supported currently
+      // For direct conversations, we know the call is active if it's the active call!
       if (mode === CallMode.Direct) {
-        return false;
+        return Boolean(
+          conversation && conversation?.id === activeCallConversationId
+        );
       }
 
-      // Group
+      // For group and adhoc calls, a call has to have members in it (see getIsCallActive)
       return Boolean(
         isActive &&
           conversation &&
@@ -697,17 +704,13 @@ export function CallsList({
       if (item === 'EmptyState') {
         return (
           <div key={key} className="CallsList__EmptyState" style={style}>
-            {searchStateQuery === '' ? (
-              i18n('icu:CallsList__EmptyState--noQuery')
-            ) : (
-              <I18n
-                i18n={i18n}
-                id="icu:CallsList__EmptyState--hasQuery"
-                components={{
-                  query: <UserText text={searchStateQuery} />,
-                }}
-              />
-            )}
+            <I18n
+              i18n={i18n}
+              id="icu:CallsList__EmptyState--hasQuery"
+              components={{
+                query: <UserText text={searchStateQuery} />,
+              }}
+            />
           </div>
         );
       }
@@ -757,14 +760,18 @@ export function CallsList({
         item.direction === CallDirection.Incoming &&
         (item.status === DirectCallStatus.Missed ||
           item.status === GroupCallStatus.Missed);
+      const wasDeclined =
+        item.direction === CallDirection.Incoming &&
+        (item.status === DirectCallStatus.Declined ||
+          item.status === GroupCallStatus.Declined);
 
       let statusText;
       if (wasMissed) {
         statusText = i18n('icu:CallsList__ItemCallInfo--Missed');
+      } else if (wasDeclined) {
+        statusText = i18n('icu:CallsList__ItemCallInfo--Declined');
       } else if (isAdhoc) {
         statusText = i18n('icu:CallsList__ItemCallInfo--CallLink');
-      } else if (item.type === CallType.Group) {
-        statusText = i18n('icu:CallsList__ItemCallInfo--GroupCall');
       } else if (item.direction === CallDirection.Outgoing) {
         statusText = i18n('icu:CallsList__ItemCallInfo--Outgoing');
       } else if (item.direction === CallDirection.Incoming) {
@@ -772,6 +779,43 @@ export function CallsList({
       } else {
         strictAssert(false, 'Cannot format call');
       }
+
+      const inCallAndNotThisOne = !isInCall && activeCall;
+      const callButton = (
+        <CallsNewCallButton
+          callType={item.type}
+          isActive={isActiveVisible}
+          isInCall={isInCall}
+          isEnabled={!inCallAndNotThisOne}
+          onClick={() => {
+            if (isInCall) {
+              togglePip();
+            } else if (activeCall) {
+              if (isAdhoc) {
+                toggleConfirmLeaveCallModal({
+                  type: 'adhoc-roomId',
+                  roomId: item.peerId,
+                });
+              } else {
+                toggleConfirmLeaveCallModal({
+                  type: 'conversation',
+                  conversationId: conversation.id,
+                  isVideoCall: item.type !== CallType.Audio,
+                });
+              }
+            } else if (isAdhoc) {
+              startCallLinkLobbyByRoomId({ roomId: item.peerId });
+            } else if (conversation) {
+              if (item.type === CallType.Audio) {
+                onOutgoingAudioCallInConversation(conversation.id);
+              } else {
+                onOutgoingVideoCallInConversation(conversation.id);
+              }
+            }
+          }}
+          i18n={i18n}
+        />
+      );
 
       return (
         <div
@@ -781,6 +825,7 @@ export function CallsList({
           className={classNames('CallsList__Item', {
             'CallsList__Item--selected': isSelected,
             'CallsList__Item--missed': wasMissed,
+            'CallsList__Item--declined': wasDeclined,
           })}
         >
           <ListTile
@@ -801,34 +846,7 @@ export function CallsList({
                 className="CallsList__ItemAvatar"
               />
             }
-            trailing={
-              isCallButtonVisible ? (
-                <CallsNewCallButton
-                  callType={item.type}
-                  isActive={isActiveVisible}
-                  isInCall={isInCall}
-                  isEnabled={isInCall || !activeCall}
-                  onClick={() => {
-                    if (isInCall) {
-                      togglePip();
-                    } else if (activeCall) {
-                      if (isActiveVisible) {
-                        setIsLeaveCallDialogVisible(true);
-                      }
-                    } else if (isAdhoc) {
-                      startCallLinkLobbyByRoomId(item.peerId);
-                    } else if (conversation) {
-                      if (item.type === CallType.Audio) {
-                        onOutgoingAudioCallInConversation(conversation.id);
-                      } else {
-                        onOutgoingVideoCallInConversation(conversation.id);
-                      }
-                    }
-                  }}
-                  i18n={i18n}
-                />
-              ) : undefined
-            }
+            trailing={isCallButtonVisible ? callButton : undefined}
             title={
               <span
                 className="CallsList__ItemTitle"
@@ -887,6 +905,7 @@ export function CallsList({
       onOutgoingAudioCallInConversation,
       onOutgoingVideoCallInConversation,
       startCallLinkLobbyByRoomId,
+      toggleConfirmLeaveCallModal,
       togglePip,
       i18n,
     ]
@@ -913,31 +932,22 @@ export function CallsList({
 
   return (
     <>
-      {isLeaveCallDialogVisible && (
-        <ConfirmationDialog
-          dialogName="GroupCallRemoteParticipant.blockInfo"
-          cancelText={i18n('icu:cancel')}
-          i18n={i18n}
-          onClose={() => {
-            setIsLeaveCallDialogVisible(false);
-          }}
-          title={i18n('icu:CallsList__LeaveCallDialogTitle')}
-          actions={[
-            {
-              text: i18n('icu:CallsList__LeaveCallDialogButton--leave'),
-              style: 'affirmative',
-              action: () => {
-                hangUpActiveCall(
-                  'Calls Tab leave active call to join different call'
-                );
-              },
-            },
-          ]}
-        >
-          {i18n('icu:CallsList__LeaveCallDialogBody')}
-        </ConfirmationDialog>
+      {isEmpty && !searchFiltering && (
+        <NavSidebarEmpty
+          title={i18n('icu:CallsList__EmptyState--noQuery__title')}
+          subtitle={i18n('icu:CallsList__EmptyState--noQuery__subtitle')}
+        />
       )}
-
+      {isEmpty &&
+        statusInput === CallHistoryFilterStatus.Missed &&
+        !hasSearchStateQuery && (
+          <NavSidebarEmpty
+            title={i18n('icu:CallsList__EmptyState--noQuery--missed__title')}
+            subtitle={i18n(
+              'icu:CallsList__EmptyState--noQuery--missed__subtitle'
+            )}
+          />
+        )}
       <NavSidebarSearchHeader>
         <SearchInput
           i18n={i18n}

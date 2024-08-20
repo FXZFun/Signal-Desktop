@@ -16,6 +16,7 @@ import * as Errors from '../types/errors';
 import type { StickerPackType as StickerPackDBType } from '../sql/Interface';
 import type { MIMEType } from '../types/MIME';
 import * as Bytes from '../Bytes';
+import { sha256 } from '../Crypto';
 import * as LinkPreview from '../types/LinkPreview';
 import * as Stickers from '../types/Stickers';
 import * as VisualAttachment from '../types/VisualAttachment';
@@ -364,6 +365,7 @@ async function getPreview(
         data,
         size: data.byteLength,
         ...dimensions,
+        plaintextHash: Bytes.toHex(sha256(data)),
         contentType: stringToMIMEType(withBlob.file.type),
         blurHash,
       };
@@ -581,9 +583,8 @@ async function getCallLinkPreview(
   }
 
   const callLinkRootKey = CallLinkRootKey.parse(parsedUrl.args.key);
-  const readResult = await calling.readCallLink({ callLinkRootKey });
-  const { callLinkState } = readResult;
-  if (!callLinkState || callLinkState.revoked) {
+  const callLinkState = await calling.readCallLink(callLinkRootKey);
+  if (callLinkState == null || callLinkState.revoked) {
     return null;
   }
 

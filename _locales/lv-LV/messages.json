@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "Jūsu datubāzes versija neatbilst šai Signal versijai. Pārliecinieties, vai datorā atvērta jaunākā Signal versija."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "Nevar piekļūt datu bāzes šifrēšanas atslēgai, jo OS šifrēšanas atslēgu turētāja aizmugursistēma ir mainīta no {previousBackend} uz {currentBackend}. Tas var notikt, ja mainās darbvirsmas vide, piemēram, no GNOME uz KDE.\n\nLūdzu, pārslēdzieties uz iepriekšējo darbvirsmas vidi."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "Nevar piekļūt datu bāzes šifrēšanas atslēgai, jo OS šifrēšanas atslēgu turētāja aizmugursistēma ir mainīta no {previousBackend} uz {currentBackend}. Tas var notikt, ja mainās darbvirsmas vide, piemēram, no GNOME uz KDE.\n\nLūdzu, pārslēdzieties uz iepriekšējo darbvirsmas vidi vai mēģiniet palaist Signal ar komandrindas karogu --password-store=\"{previousBackendFlag}\"."
+  },
   "icu:mainMenuFile": {
     "messageformat": "&Fails"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Signal nevarēja atjaunināt. {retry} vai apmeklējiet{url}, lai instalētu atjauninājumu manuāli. Pēc tam {support} par šo problēmu"
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Signal nevarēja atjaunināt. <retryUpdateButton>Mēģiniet atjaunināt vēlreiz</retryUpdateButton> vai apmeklējiet {url}, lai instalētu atjauninājumu manuāli. Pēc tam informējiet <contactSupportLink>atbalsta dienestu</contactSupportLink> par problēmu, sazinoties ar to"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Signal nevarēja atjaunināt. Apmeklējiet {url}, lai instalētu atjauninājumu manuāli. Pēc tam {support} informējiet par šo problēmu"
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Signal nevarēja atjaunināt. Apmeklējiet {url}, lai instalētu atjauninājumu manuāli. Pēc tam informējiet <contactSupportLink>atbalsta dienestu</contactSupportLink> par problēmu, sazinoties ar to."
   },
   "icu:readOnlyVolume": {
     "messageformat": "Signal Desktop, visticamāk, atrodas macOS karantīnā, un šo lietotnes versiju nevarēs automātiski atjaunināt. Pārvietojiet {app}uz {folder}, izmantojot meklētāju."
@@ -990,7 +1002,7 @@
     "messageformat": "Visas ziņas šajā sarunā tiks dzēstas no šīs ierīces. Pēc ziņu dzēšanas joprojām varēsiet atrast šo sarunu, izmantojot meklēšanas funkciju."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "Visas ziņas šajā sarunā tiks dzēstas no visām jūsu ierīcēm. Pēc ziņu dzēšanas joprojām varēsiet atrast šo sarunu, izmantojot meklēšanas funkciju."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Pamest grupu"
@@ -1095,7 +1107,7 @@
     "messageformat": "Saistītās ierīces"
   },
   "icu:linkNewDevice": {
-    "messageformat": "Pievienot jaunu ierīci"
+    "messageformat": "Piesaistīt jaunu ierīci"
   },
   "icu:Install__learn-more": {
     "messageformat": "Lasīt vairāk"
@@ -1113,25 +1125,22 @@
     "messageformat": "Iestatījumi"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "Pieskarieties {plusButton} (Android) vai {linkNewDevice} (iPhone)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "QR kodu nevarēja ielādēt. Pārbaudiet interneta savienojumu un mēģiniet vēlreiz. Mēģināt vēlreiz"
+    "messageformat": "Pieskarieties pie {linkNewDevice}."
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "QR kodu nevarēja ielādēt. Pārbaudiet savienojumu un mēģiniet vēlreiz."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>Radās neparedzēta kļūda.</paragraph><paragraph>Lūdzu, mēģiniet vēlreiz.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "Signal nevar piesaistīt šo ierīci, izmantojot jūsu pašreizējo tīklu."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "Mēģināt vēlreiz"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "Saņemt palīdzību"
   },
   "icu:Install__support-link": {
     "messageformat": "Nepieciešama palīdzība?"
@@ -1191,10 +1200,10 @@
     "messageformat": "Zvanīt vēlreiz"
   },
   "icu:calling__join": {
-    "messageformat": "Pievienoties zvanam/sarunai"
+    "messageformat": "Pievienoties sarunai"
   },
   "icu:calling__return": {
-    "messageformat": "Atgriezties zvanā"
+    "messageformat": "Atgriezties pie zvana"
   },
   "icu:calling__lobby-automatically-muted-because-there-are-a-lot-of-people": {
     "messageformat": "Mikrofons izslēgts zvana dalībnieku skaita dēļ"
@@ -1305,34 +1314,34 @@
     "messageformat": "Noraidīt pieprasījumu pievienoties"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "Apstiprināt visus"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "Noraidīt visus"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, zero {Vai apstiprināt {count,number} pieprasījumus?} one {Vai apstiprināt {count,number} pieprasījumu?} other {Vai apstiprināt {count,number} pieprasījumus?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, zero {Vai noraidīt {count,number} pieprasījumus?} one {Vai noraidīt {count,number} pieprasījumu?} other {Vai noraidīt {count,number} pieprasījumus?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, zero {{count,number} personas tiks pievienotas zvanam.} one {{count,number} persona tiks pievienota zvanam.} other {{count,number} personas tiks pievienotas zvanam.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, zero {{count,number} personas netiks pievienotas zvanam.} one {{count,number} persona netiks pievienota zvanam.} other {{count,number} personas netiks pievienotas zvanam.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, zero {{count,number} pieprasījumu pievienoties zvanam} one {{count,number} pieprasījums pievienoties zvanam} other {{count,number} pieprasījumi pievienoties zvanam}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "vēlas pievienoties…"
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, zero {+{count,number} pieprasījumu} one {+{count,number} pieprasījums} other {+{count,number} pieprasījumi}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, zero {{count,number} personas pievienotas zvanam} one {{count,number} persona pievienota zvanam} other {{count,number} personas pievienotas zvanam}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, zero {{count,number} paceltu roku} one {{count,number} pacelta roka} other {{count,number} paceltas rokas}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, zero {Šajā zvanā · {people,number} cilvēks} one {Šajā zvanā · {people,number} cilvēks} other {Šajā zvanā · {people,number} cilvēki}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "Jūs bloķējāt {name}"
+  "icu:calling__blocked-participant": {
+    "messageformat": "{name} ir bloķēts"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "{name} ir bloķēts"
   },
   "icu:calling__block-info": {
-    "messageformat": "Jūs nesaņemsiet dalībnieku audio vai video zvanu un viņi nesaņems jūsu zvanus."
+    "messageformat": "Jūs nesaņemsiet dalībnieku audio vai video zvanu, un viņi nesaņems jūsu zvanus."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "Nevar saņemt audio un video no {name}"
@@ -2613,10 +2625,10 @@
     "messageformat": "Atteikt"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "Jūs noraidījāt balss zvanu"
+    "messageformat": "Noraidīts balss zvans"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "Jūs noraidījāt videozvanu"
+    "messageformat": "Noraidīts video zvans"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "Ienākošs balss zvans"
@@ -2649,10 +2661,10 @@
     "messageformat": "Signal turpinās darboties paziņojumu sadaļā. Varat to mainīt Signal iestatījumos."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "Ienākošs balss zvans…"
+    "messageformat": "Ienākošs balss zvans"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "Ienākošs videozvans…"
+    "messageformat": "Ienākošs videozvans"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "Izejošs balss zvans"
@@ -2697,7 +2709,7 @@
     "messageformat": "{count, plural, zero {{count,number} personu} one {{count,number} persona} other {{count,number} personas}}"
   },
   "icu:CallControls__InfoDisplay--audio-call": {
-    "messageformat": "Audiozvans"
+    "messageformat": "Balss zvans"
   },
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Zvana saite"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, zero {Zvanā piedalās {people,number}} one {Zvanā piedalās {people,number}} other {Zvanā piedalās {people,number}}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "Grupas zvans tika pabeigts"
+    "messageformat": "Video zvans ir beidzies"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "Grupas zvans tika sākts"
+    "messageformat": "Video zvans tika uzsākts"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "Jūs sākāt grupas zvanu"
+    "messageformat": "Jūs uzsākāt video zvanu"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name}sāka grupas zvanu"
+    "messageformat": "{name} uzsāka video zvanu"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "Jūs jau esat zvanā"
@@ -2829,13 +2841,13 @@
     "messageformat": "Noņemt šo personu no zvana"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "{name} — vai noņemt no šī zvana?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "Noņemt"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "Bloķēt piekļuvi zvanam"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, zero {{count,number} personu} one {{count,number} persona} other {{count,number} personas}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "izveidošanas poga"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Pārsūtīt"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "Lietotājvārdi nevar sākties ar skaitli."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "Lietotājvārdam jāsatur vismaz {min,number} rakstzīmes."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "Lietotājvārdi nedrīkst būt garāki par {max,number} rakstzīmēm."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, zero {Lietotājvārdam jāsatur vismaz {min,number} rakstzīmes.} one {Lietotājvārdam jāsatur vismaz {min,number} rakstzīme.} other {Lietotājvārdam jāsatur vismaz {min,number} rakstzīmes.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "Dzēst"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "Lai dzēstu savu lietotāja vārdu, atveriet Signal savā tālrunī un dodieties uz Iestatījumi > Profils."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "Kopēt vai dzēst lietotājvārdu"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "Nav nesenu stāstu"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "Sūta…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "Noklikšķiniet, lai skatītu stāstu"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} grupā {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "Noklikšķiniet, lai skatītu vai sāktu zvanu"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Meklēt"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "Nav neseno zvanu. Sāciet ar zvanu draugam."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Vaicājumam “{query}” nav rezultātu"
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "Neatbildēts"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "Noraidīts"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "Grupas zvans"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "Vai pamest pašreizējo zvana?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "Lai pievienotos citam zvanam, jums jāpamet pašreizējais zvans"
+    "messageformat": "Lai uzsāktu jaunu zvanu vai pievienotos jaunam zvanam, vispirms pārtrauciet esošo."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "Pamest sarunu"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Zvana saite"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {Izejošs videozvans} other {Ienākošs videozvans}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "Neatbildēts videozvans"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "Neatbildēts videozvans"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "Noraidīts video zvans"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "Pievienoties"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "Pievienot audiozvana nosaukumu"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "Rediģēt zvana nosaukumu"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "Apstiprināt visus dalībniekus"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopēt saiti"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Kopīgot saiti caur Signal"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "Dzēst saiti"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "Vai dzēst zvana saiti?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "Šī saite turpmāk nebūs izmantojama."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "Atcelt"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "Dzēst"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Zvana saites informācija"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "Pievienot audiozvana nosaukumu"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "Rediģēt zvana nosaukumu"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "Apstiprināt visus dalībniekus"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Izslēgts"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "Ieslēgts"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "Pievienot audiozvana nosaukumu"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "Rediģēt zvana nosaukumu"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "Zvana nosaukums"
@@ -5539,16 +5617,22 @@
     "messageformat": "Nelielas izmaiņas, kļūdu labojumi un darbības uzlabojumi. Paldies, ka lietojat Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "Tagad varat pārsūtīt kontaktpersonu kartītes, kas tika nosūtītas no mobilās ierīces. Kopīgojiet sava iecienītākā restorāna ēdienu piegādes numuru, neizņemot savu tālruni no kabatas."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "Reizēm ātri pateikt \"atā\" ir vieglāk nekā ilgi atvadīties, tāpēc paātrinājām dzēšanas procesu apjomīgām sarakstēm."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "Tagad lielizmēra emocijzīmes būs redzamas augstā izšķirtspējā, jo īpaši uz lieliem ekrāniem ar maziem pikseļiem."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "Mēs pievienojām saīsni, kas ļauj pārtraukt notiekošu zvanu, lai pievienotos jaunam zvanam. Jums būs jāapstiprina tas, ka pametat zvanu."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "Mēs arī atjauninājām uzlīmju izveidotāju, iekļaujot atbalstu jaunākajām emocijzīmēm. Uzlīmes tagad vairs neierobežo novecojušais Unicode standarts."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "Tāpat šajā atjauninājumā novērsām avarēšanu palaišanas brīdī Linux lietotājiem, kuru iestatītā valoda ir \"POSIX\"."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "Stāsti ar gariem aprakstiem tiek rādīti uz neuzkrītoša fona ar krāsu pāreju, lai uzlabotu kontrastu un teksts būtu vieglāk lasāms. Tagad visi var izlasīt to, kas jums sakāms, tāpēc tā vietā, lai rakstītu tikai \"LOL\", droši pievienojiet garāku apcerējumu par to, kas jūs šodien sasmīdināja."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "Šajā versijā tika uzlabota arī saišu priekšskatījuma ģenerēšanas veiktspēja un izlabota kļūda, kuras dēļ Iestatījumu logs uzreiz neaizvērās, bet gan īsu brīdi mirgoja patīkamā ultramarīna tonī."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

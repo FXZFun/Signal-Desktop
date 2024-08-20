@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "Zure datu-basearen bertsioa ez dator bat Signal-en bertsio honekin. Ziurtatu Signal-en bertsio berriena erabiltzen ari zarela ordenagailuan."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "Ezin da atzitu datu-baseko enkriptatze-gakoa, sistema eragilearen enkriptatze-gako sortaren backend-a jada ez baita {previousBackend}, {currentBackend} baizik. Ordenagailuaren ingurunea aldatzean gerta daiteke hori; adibidez, GNOME-tik KDE-ra aldatzean.\n\nAldatu ordenagailuaren aurreko ingurunera."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "Ezin da atzitu datu-baseko enkriptatze-gakoa, sistema eragilearen enkriptatze-gako sortaren backend-a jada ez baita {previousBackend}, {currentBackend} baizik. Ordenagailuaren ingurunea aldatzean gerta daiteke hori; adibidez, GNOME-tik KDE-ra aldatzean.\n\nAldatu ordenagailuaren aurreko ingurunera edo saiatu Signal agindu-lerroen aukera honekin exekutatzen: --password-store=\"{previousBackendFlag}\""
+  },
   "icu:mainMenuFile": {
     "messageformat": "&Fitxategia"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Ezin izan da eguneratu Signal. {retry} edo bisitatu {url} eskuz instalatzeko. Ondoren, {support} arazo honi buruz."
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Ezin izan da eguneratu Signal. <retryUpdateButton>Saiatu berriro</retryUpdateButton> edo, eskuz instalatzeko, joan {url} helbidera. Ondoren, jakinarazi arazo hau <contactSupportLink>laguntza-zerbitzuari</contactSupportLink>"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Ezin izan da eguneratu Signal. Bisitatu {url} eskuz instalatzeko. Ondoren, {support} arazo honi buruz."
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Ezin izan da eguneratu Signal. Eskuz instalatzeko, joan {url} helbidera. Ondoren, jakinarazi arazo hau <contactSupportLink>laguntza-zerbitzuari</contactSupportLink>"
   },
   "icu:readOnlyVolume": {
     "messageformat": "Signal Desktop ziur aski macOS koarentena batean dago eta ezingo da automatikoki eguneratu. Mesedez, Finder erabiliz saia zaitez mugitzen {app} aplikazioa {folder} karpetara."
@@ -990,7 +1002,7 @@
     "messageformat": "Txat honetako mezuak gailu honetatik ezabatuko dira. Mezuak ezabatuta ere, txat hau bilatu ahalko duzu."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "Txat honetako mezuak gailu guztietatik ezabatuko dira. Mezuak ezabatuta ere, txat hau bilatu ahalko duzu."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Irten taldetik"
@@ -1095,7 +1107,7 @@
     "messageformat": "Lotutako Gailuak"
   },
   "icu:linkNewDevice": {
-    "messageformat": "Gailu berria lotu"
+    "messageformat": "Lotu beste gailu bat"
   },
   "icu:Install__learn-more": {
     "messageformat": "Gehiago jakin"
@@ -1113,25 +1125,22 @@
     "messageformat": "Ezarpenak"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "Sakatu {plusButton} (Android-en) edo {linkNewDevice} (iPhone-etan)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "Ezin izan da kargatu QR kodea. Egiaztatu Internetera konektatuta zaudela eta saiatu berriro. <retry>Saiatu berriro</retry>"
+    "messageformat": "Sakatu {linkNewDevice}"
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "Ezin izan da kargatu QR kodea. Egiaztatu Internetera konektatuta zaudela eta saiatu berriro."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>Ustekabeko errore bat gertatu da.</paragraph><paragraph>Saiatu berriro.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "Une honetako sarea erabilita, Signal-ek ezin du lotu gailu hau."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "Berriro saiatu"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "Lortu laguntza"
   },
   "icu:Install__support-link": {
     "messageformat": "Laguntza behar duzu?"
@@ -1191,7 +1200,7 @@
     "messageformat": "Deitu berriro"
   },
   "icu:calling__join": {
-    "messageformat": "Deian Sartu"
+    "messageformat": "Deian sartu"
   },
   "icu:calling__return": {
     "messageformat": "Deira itzuli"
@@ -1305,34 +1314,34 @@
     "messageformat": "Baztertu sartzeko eskaera"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "Onartu guztiak"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "Guztia ukatu"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Eskaera {count,number} onartu nahi duzu?} other {{count,number} eskaera onartu nahi dituzu?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Eskaera {count,number} ukatu?} other {{count,number} eskaera ukatu?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, one {Pertsona {count,number} gehituko da deian.} other {{count,number} pertsona gehituko dira deian.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, one {Pertsona {count,number} ez da deian gehituko.} other {{count,number} pertsona ez dira deian gehituko.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, one {Deian sartzeko {count,number} eskaera} other {Deian sartzeko {count,number} eskaera}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "Sartu nahi du…"
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, one {Eskaera +{count,number}} other {+{count,number} eskaera}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, one {Pertsona {count,number} gehitu da deian} other {{count,number} pertsona gehitu dira deian}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, one {Jasotako {count,number} esku} other {Jasotako {count,number} esku}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, one {Dei honetan · pertsona {people,number}} other {Dei honetan · {people,number} pertsona}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "{name} blokeatu duzu"
+  "icu:calling__blocked-participant": {
+    "messageformat": "{name} blokeatuta dago"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "{name} blokeatuta dago"
   },
   "icu:calling__block-info": {
-    "messageformat": "Ez duzu jasoko haren ahots- edo bideo-mezurik, eta hark ere ez ditu zureak jasoko."
+    "messageformat": "Ez duzu bere audio edo bideorik jasoko eta ez dute zurerik jasoko."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "Ezin da {name} erabiltzailearen audio eta bideorik jaso."
@@ -2613,10 +2625,10 @@
     "messageformat": "Uko egin"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "Ahots-dei bat baztertu duzu"
+    "messageformat": "Ahots-deia baztertu da"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "Bideodei bati uko egin diozu"
+    "messageformat": "Bideodeia baztertu da"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "Sarrerako ahots-deia"
@@ -2649,7 +2661,7 @@
     "messageformat": "Signal-ek abian jarraituko du jakinarazpen-eremuan. Hori aldatzeko, joan ezarpenetara."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "Sarrerako ahots-deia…"
+    "messageformat": "Sarrerako ahots-deia"
   },
   "icu:incomingVideoCall": {
     "messageformat": "Sarrerako bideodeia"
@@ -2697,7 +2709,7 @@
     "messageformat": "{count, plural, one {Pertsona {count,number}} other {{count,number} pertsona}}"
   },
   "icu:CallControls__InfoDisplay--audio-call": {
-    "messageformat": "Audio-deia"
+    "messageformat": "Ahots-deia"
   },
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Deiaren esteka"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, one {{people,number} deian dago} other {{people,number} deian daude}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "Talde-deia amaitu egin da"
+    "messageformat": "Bideodeia amaitu da"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "Talde-deia hasi da"
+    "messageformat": "Bideodei bat hasi da"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "Talde-deia hasi duzu"
+    "messageformat": "Bideodeia hasi duzu"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name} erabiltzaileak talde-deia hasi du"
+    "messageformat": "{name} erabiltzaileak bideodeia hasi du"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "Deian zaude"
@@ -2829,13 +2841,13 @@
     "messageformat": "Kendu pertsona hau deitik"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "{name} deitik kendu?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "Kendu"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "Deitik blokeatu"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, one {Pertsona {count,number}} other {{count,number} pertsona}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "idazteko botoia"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Birbidali honi"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "Erabiltzaile-izenak ezin dira zenbaki batez hasi."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "Erabiltzaile-izenek gutxienez {min,number} karaktere izan behar dituzte."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "Erabiltzaile-izenek gehienez {max,number} karaktere izan behar dituzte."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, one {Erabiltzaile-izenek gutxienez karaktere{min,number} izan behar du.} other {Erabiltzaile-izenek gutxienez {min,number} karaktere izan behar dituzte.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "Ezabatu"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "Erabiltzaile-izena ezabatzeko, ireki Signal telefonoan eta joan Ezarpenak > Profila atalera."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "Kopiatu edo ezabatu erabiltzaile-izena"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "Une honetan ez dago azken istoriorik erakusteko"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "Bidaltzen…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "Istorio bat ikusteko, egin klik hartan"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} erabiltzaileak hona: {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "Egin klik dei bat ikusteko edo hasteko"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Bilatu"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "Ez dago azken deirik. Hasi lagun bati deitzen."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Ez dago honen emaitzarik: \"{query}\""
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "Galduak"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "Baztertu da"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "Talde-deia"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "Oraingo deitik irten nahi duzu?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "Beste dei batean sartzeko, oraingo deitik irten behar duzu."
+    "messageformat": "Beste dei bat hasteko edo beste dei batean sartzeko, oraingo deitik irten behar duzu."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "Deia utzi"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Deiaren esteka"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {Irteerako bideodeia} other {Sarrerako bideodeia}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "Bideodei galdua"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "Erantzun gabeo bideodeia"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "Bideodeia baztertu da"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "Sartu"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "Gehitu deiaren izena"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "Editatu deiaren izena"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "Kide guztiak onartu"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopiatu esteka"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Partekatu esteka Signal bidez"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "Ezabatu esteka"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "Deiaren esteka ezabatu nahi duzu?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "Esteka dutenek ezingo dute erabili."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "Utzi"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "Ezabatu"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Deiaren estekaren xehetasunak"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "Gehitu deiaren izena"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "Editatu deiaren izena"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "Kide guztiak onartu"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Desaktibatuta"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "Aktibatuta"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "Gehitu deiaren izena"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "Editatu deiaren izena"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "Deitu izena"
@@ -5539,16 +5617,22 @@
     "messageformat": "Doikuntza txikiak, akats-konponketak eta errendimendu-hobekuntzak. Eskerrik asko Signal erabiltzeagatik!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "Orain gailu mugikor batetik bidalitako kontaktu txartelak birbidali ditzakezu. Partekatu zure gogoko jatetxe horretako zenbakia telefonoa atera gabe."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "Kaleratze honen bidez, mezu-hari handiak ezabatzeko prozesua bizkortzen da."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "Bereizmen handiko emojiak erabiltzeko aukera berriari esker, emojiak tamaina handiagoan bistara daitezke."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "Dei bat abian denean uneko deia esekitzeko eta dei berrian sartzeko lasterbide bat gehitu dugu."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "Halaber, Eranskailuen sortzailea eguneratu dugu, emoji-karaktere berrienak erabili ahal izateko."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "Eguneratze honen bidez, halaber, eskualdeko ezarpenetan POSIX darabilten Linux-eko erabiltzaileei abioan gertatzen zitzaien hutsegite bat konpondu da."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "Orain, azpititulu luzeak dituzten istorioak kontraste hobetuarekin bistaratzen dira, testua irakurterrazagoa izan dadin."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "Halaber, kaleratze honen bidez, esteken aurreikuspena sortzeko funtzioaren errendimendua hobetu da, eta ezarpenen leihoa ixtean gertatzen zen akats txiki bat konpondu da."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

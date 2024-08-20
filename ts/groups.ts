@@ -19,7 +19,7 @@ import {
   maybeFetchNewCredentials,
 } from './services/groupCredentialFetcher';
 import { storageServiceUploadJob } from './services/storage';
-import dataInterface from './sql/Client';
+import { DataReader, DataWriter } from './sql/Client';
 import { toWebSafeBase64, fromWebSafeBase64 } from './util/webSafeBase64';
 import { assertDev, strictAssert } from './util/assert';
 import { isMoreRecentThan } from './util/timestamp';
@@ -263,7 +263,7 @@ const groupFieldsCache = new LRU<string, GroupFields>({
   max: MAX_CACHED_GROUP_FIELDS,
 });
 
-const { updateConversation } = dataInterface;
+const { updateConversation } = DataWriter;
 
 if (!isNumber(MAX_MESSAGE_SCHEMA)) {
   throw new Error(
@@ -1602,9 +1602,7 @@ export async function modifyGroupV2({
             groupMembersV2: membersV2,
           });
 
-          await dataInterface.replaceAllEndorsementsForGroup(
-            groupEndorsementData
-          );
+          await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
         }
       });
 
@@ -1921,7 +1919,7 @@ export async function createGroupV2(
       groupMembersV2: membersV2,
     });
 
-    await dataInterface.replaceAllEndorsementsForGroup(groupEndorsementData);
+    await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
   } catch (error) {
     if (!(error instanceof HTTPError)) {
       throw error;
@@ -2023,17 +2021,16 @@ export async function createGroupV2(
       details: [{ type: 'create' }],
     },
   };
-  await dataInterface.saveMessages([createdTheGroupMessage], {
+  await DataWriter.saveMessages([createdTheGroupMessage], {
     forceSave: true,
     ourAci,
   });
-  let model = new window.Whisper.Message(createdTheGroupMessage);
-  model = window.MessageCache.__DEPRECATED$register(
-    model.id,
-    model,
+  window.MessageCache.__DEPRECATED$register(
+    createdTheGroupMessage.id,
+    new window.Whisper.Message(createdTheGroupMessage),
     'createGroupV2'
   );
-  conversation.trigger('newmessage', model);
+  conversation.trigger('newmessage', createdTheGroupMessage);
 
   if (expireTimer) {
     await conversation.updateExpirationTimer(expireTimer, {
@@ -2377,9 +2374,8 @@ export async function initiateMigrationToGroupV2(
 
       const { avatar: currentAvatar } = conversation.attributes;
       if (currentAvatar?.path) {
-        const avatarData = await window.Signal.Migrations.readAttachmentData(
-          currentAvatar
-        );
+        const avatarData =
+          await window.Signal.Migrations.readAttachmentData(currentAvatar);
         const { hash, key } = await uploadAvatar({
           logId,
           publicParams,
@@ -2482,7 +2478,7 @@ export async function initiateMigrationToGroupV2(
       }
 
       // Save these most recent updates to conversation
-      updateConversation(conversation.attributes);
+      await updateConversation(conversation.attributes);
 
       strictAssert(
         Bytes.isNotEmpty(groupSendEndorsementResponse),
@@ -2496,7 +2492,7 @@ export async function initiateMigrationToGroupV2(
         groupMembersV2: membersV2,
       });
 
-      await dataInterface.replaceAllEndorsementsForGroup(groupEndorsementData);
+      await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
     });
   } catch (error) {
     const logId = conversation.idForLogging();
@@ -2960,7 +2956,7 @@ export async function respondToGroupV2Migration({
   }
 
   // Save these most recent updates to conversation
-  updateConversation(conversation.attributes);
+  await updateConversation(conversation.attributes);
 
   // Finally, check for any changes to the group since its initial creation using normal
   //   group update codepaths.
@@ -2983,7 +2979,7 @@ export async function respondToGroupV2Migration({
       groupMembersV2: membersV2,
     });
 
-    await dataInterface.replaceAllEndorsementsForGroup(groupEndorsementData);
+    await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
   }
 }
 
@@ -3364,7 +3360,7 @@ async function appendChangeMessages(
 
   const ourAci = window.textsecure.storage.user.getCheckedAci();
 
-  let lastMessage = await dataInterface.getLastConversationMessage({
+  let lastMessage = await DataReader.getLastConversationMessage({
     conversationId: conversation.id,
   });
 
@@ -3400,7 +3396,7 @@ async function appendChangeMessages(
     strictAssert(first !== undefined, 'First message must be there');
 
     log.info(`appendChangeMessages/${logId}: updating ${first.id}`);
-    await dataInterface.saveMessage(first, {
+    await DataWriter.saveMessage(first, {
       ourAci,
 
       // We don't use forceSave here because this is an update of existing
@@ -3410,7 +3406,7 @@ async function appendChangeMessages(
     log.info(
       `appendChangeMessages/${logId}: saving ${rest.length} new messages`
     );
-    await dataInterface.saveMessages(rest, {
+    await DataWriter.saveMessages(rest, {
       ourAci,
       forceSave: true,
     });
@@ -3418,7 +3414,7 @@ async function appendChangeMessages(
     log.info(
       `appendChangeMessages/${logId}: saving ${mergedMessages.length} new messages`
     );
-    await dataInterface.saveMessages(mergedMessages, {
+    await DataWriter.saveMessages(mergedMessages, {
       ourAci,
       forceSave: true,
     });
@@ -3438,13 +3434,12 @@ async function appendChangeMessages(
       continue;
     }
 
-    let model = new window.Whisper.Message(changeMessage);
-    model = window.MessageCache.__DEPRECATED$register(
-      model.id,
-      model,
+    window.MessageCache.__DEPRECATED$register(
+      changeMessage.id,
+      new window.Whisper.Message(changeMessage),
       'appendChangeMessages'
     );
-    conversation.trigger('newmessage', model);
+    conversation.trigger('newmessage', changeMessage);
     newMessages += 1;
   }
 
@@ -3766,7 +3761,7 @@ async function updateGroupViaState({
       groupMembersV2: membersV2,
     });
 
-    await dataInterface.replaceAllEndorsementsForGroup(groupEndorsementData);
+    await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
   }
 
   return {
@@ -3890,7 +3885,7 @@ async function updateGroupViaLogs({
   strictAssert(groupId != null, 'Group must have groupId');
 
   let cachedEndorsementsExpiration =
-    await dataInterface.getGroupSendCombinedEndorsementExpiration(groupId);
+    await DataReader.getGroupSendCombinedEndorsementExpiration(groupId);
 
   let response: GroupLogResponseType;
   let groupSendEndorsementResponse: Uint8Array | null = null;
@@ -3925,7 +3920,7 @@ async function updateGroupViaLogs({
         'updateGroupViaLogs: Received paginated response, deleting group endorsements'
       );
       // eslint-disable-next-line no-await-in-loop
-      await dataInterface.deleteAllEndorsementsForGroup(groupId);
+      await DataWriter.deleteAllEndorsementsForGroup(groupId);
       cachedEndorsementsExpiration = null; // gets sent as 0 in header
     }
 
@@ -3971,7 +3966,7 @@ async function updateGroupViaLogs({
       groupSecretParamsBase64: secretParams,
     });
 
-    await dataInterface.replaceAllEndorsementsForGroup(groupEndorsementData);
+    await DataWriter.replaceAllEndorsementsForGroup(groupEndorsementData);
   }
 
   return updates;
@@ -4122,7 +4117,10 @@ async function integrateGroupChanges({
 
   // If this is our first fetch, we will collapse this down to one set of messages
   const isFirstFetch = !isNumber(group.revision);
-  if (isFirstFetch) {
+  // ...but only if there has been more than one revision since creation
+  const moreThanOneVersion = Boolean(attributes.revision);
+
+  if (isFirstFetch && moreThanOneVersion) {
     // The first array in finalMessages is from the first revision we could process. It
     //   should contain a message about how we joined the group.
     const joinMessages = finalMessages[0];

@@ -13,7 +13,6 @@ import {
   GroupCallEndReason,
   type Reaction as CallReaction,
 } from '@signalapp/ringrtc';
-import { v4 as generateUuid } from 'uuid';
 import { getOwn } from '../../util/getOwn';
 import * as Errors from '../../types/errors';
 import { getIntl, getPlatform } from '../selectors/user';
@@ -42,20 +41,21 @@ import {
   MAX_CALLING_REACTIONS,
   CallEndedReason,
   CallingDeviceType,
-  CallMode,
   CallViewMode,
   CallState,
   GroupCallConnectionState,
   GroupCallJoinState,
 } from '../../types/Calling';
+import { CallMode } from '../../types/CallDisposition';
 import { callingTones } from '../../util/callingTones';
 import { requestCameraPermissions } from '../../util/callingPermissions';
 import {
   CALL_LINK_DEFAULT_STATE,
-  getRoomIdFromRootKey,
   isCallLinksCreateEnabled,
   toAdminKeyBytes,
+  toCallHistoryFromUnusedCallLink,
 } from '../../util/callLinks';
+import { getRoomIdFromRootKey } from '../../util/callLinksRingrtc';
 import { sendCallLinkUpdateSync } from '../../util/sendCallLinkUpdateSync';
 import { sleep } from '../../util/sleep';
 import { LatestQueue } from '../../util/LatestQueue';
@@ -82,21 +82,22 @@ import {
   isGroupOrAdhocCallMode,
   isGroupOrAdhocCallState,
 } from '../../util/isGroupOrAdhocCall';
-import type { ShowErrorModalActionType } from './globalModals';
-import { SHOW_ERROR_MODAL } from './globalModals';
+import type {
+  ShowErrorModalActionType,
+  ToggleConfirmLeaveCallModalActionType,
+} from './globalModals';
+import { SHOW_ERROR_MODAL, toggleConfirmLeaveCallModal } from './globalModals';
 import { ButtonVariant } from '../../components/Button';
 import { getConversationIdForLogging } from '../../util/idForLogging';
-import dataInterface from '../../sql/Client';
+import { DataReader, DataWriter } from '../../sql/Client';
 import { isAciString } from '../../util/isAciString';
-import type { CallHistoryDetails } from '../../types/CallDisposition';
-import {
-  AdhocCallStatus,
-  CallDirection,
-  CallType,
-} from '../../types/CallDisposition';
 import type { CallHistoryAdd } from './callHistory';
-import { addCallHistory } from './callHistory';
+import { addCallHistory, reloadCallHistory } from './callHistory';
 import { saveDraftRecordingIfNeeded } from './composer';
+import type { CallHistoryDetails } from '../../types/CallDisposition';
+import type { StartCallData } from '../../components/ConfirmLeaveCallModal';
+import { callLinksDeleteJobQueue } from '../../jobs/callLinksDeleteJobQueue';
+import { getCallLinksByRoomId } from '../selectors/calling';
 
 // State
 
@@ -255,6 +256,10 @@ type HandleCallLinkUpdateActionPayloadType = ReadonlyDeep<{
   callLink: CallLinkType;
 }>;
 
+type HandleCallLinkDeleteActionPayloadType = ReadonlyDeep<{
+  roomId: string;
+}>;
+
 type HangUpActionPayloadType = ReadonlyDeep<{
   conversationId: string;
 }>;
@@ -262,6 +267,10 @@ type HangUpActionPayloadType = ReadonlyDeep<{
 export type HandleCallLinkUpdateType = ReadonlyDeep<{
   rootKey: string;
   adminKey: string | null;
+}>;
+
+export type HandleCallLinkDeleteType = ReadonlyDeep<{
+  roomId: string;
 }>;
 
 export type IncomingDirectCallType = ReadonlyDeep<{
@@ -598,6 +607,7 @@ const GROUP_CALL_STATE_CHANGE = 'calling/GROUP_CALL_STATE_CHANGE';
 const GROUP_CALL_REACTIONS_RECEIVED = 'calling/GROUP_CALL_REACTIONS_RECEIVED';
 const GROUP_CALL_REACTIONS_EXPIRED = 'calling/GROUP_CALL_REACTIONS_EXPIRED';
 const HANDLE_CALL_LINK_UPDATE = 'calling/HANDLE_CALL_LINK_UPDATE';
+const HANDLE_CALL_LINK_DELETE = 'calling/HANDLE_CALL_LINK_DELETE';
 const HANG_UP = 'calling/HANG_UP';
 const INCOMING_DIRECT_CALL = 'calling/INCOMING_DIRECT_CALL';
 const INCOMING_GROUP_CALL = 'calling/INCOMING_GROUP_CALL';
@@ -740,8 +750,13 @@ type GroupCallReactionsExpiredActionType = ReadonlyDeep<{
 }>;
 
 type HandleCallLinkUpdateActionType = ReadonlyDeep<{
-  type: 'calling/HANDLE_CALL_LINK_UPDATE';
+  type: typeof HANDLE_CALL_LINK_UPDATE;
   payload: HandleCallLinkUpdateActionPayloadType;
+}>;
+
+type HandleCallLinkDeleteActionType = ReadonlyDeep<{
+  type: typeof HANDLE_CALL_LINK_DELETE;
+  payload: HandleCallLinkDeleteActionPayloadType;
 }>;
 
 type HangUpActionType = ReadonlyDeep<{
@@ -903,6 +918,7 @@ export type CallingActionType =
   | GroupCallReactionsReceivedActionType
   | GroupCallReactionsExpiredActionType
   | HandleCallLinkUpdateActionType
+  | HandleCallLinkDeleteActionType
   | HangUpActionType
   | IncomingDirectCallActionType
   | IncomingGroupCallActionType
@@ -1396,26 +1412,28 @@ function groupCallStateChange(
 // From sync messages, to notify us that another device joined or changed a call link.
 function handleCallLinkUpdate(
   payload: HandleCallLinkUpdateType
-): ThunkAction<void, RootStateType, unknown, HandleCallLinkUpdateActionType> {
+): ThunkAction<
+  void,
+  RootStateType,
+  unknown,
+  HandleCallLinkUpdateActionType | CallHistoryAdd
+> {
   return async dispatch => {
     const { rootKey, adminKey } = payload;
     const callLinkRootKey = CallLinkRootKey.parse(rootKey);
     const roomId = getRoomIdFromRootKey(callLinkRootKey);
     const logId = `handleCallLinkUpdate(${roomId})`;
 
-    const readResult = await calling.readCallLink({
-      callLinkRootKey,
-    });
+    const freshCallLinkState = await calling.readCallLink(callLinkRootKey);
 
     // Only give up when server confirms the call link is gone. If we fail to fetch
     // state due to unexpected errors, continue to save rootKey and adminKey.
-    if (readResult.errorStatusCode === 404) {
+    if (freshCallLinkState == null) {
       log.info(`${logId}: Call link not found, ignoring`);
       return;
     }
 
-    const { callLinkState: freshCallLinkState } = readResult;
-    const existingCallLink = await dataInterface.getCallLinkByRoomId(roomId);
+    const existingCallLink = await DataReader.getCallLinkByRoomId(roomId);
     const existingCallLinkState = pick(existingCallLink, [
       'name',
       'restrictions',
@@ -1432,18 +1450,24 @@ function handleCallLinkUpdate(
       adminKey,
     };
 
+    let callHistory: CallHistoryDetails | null = null;
+
     if (existingCallLink) {
       if (adminKey && adminKey !== existingCallLink.adminKey) {
-        await dataInterface.updateCallLinkAdminKeyByRoomId(roomId, adminKey);
+        await DataWriter.updateCallLinkAdminKeyByRoomId(roomId, adminKey);
         log.info(`${logId}: Updated existing call link with new adminKey`);
       }
 
       if (freshCallLinkState) {
-        await dataInterface.updateCallLinkState(roomId, freshCallLinkState);
+        await DataWriter.updateCallLinkState(roomId, freshCallLinkState);
         log.info(`${logId}: Updated existing call link state`);
       }
     } else {
-      await dataInterface.insertCallLink(callLink);
+      await DataWriter.insertCallLink(callLink);
+      if (adminKey != null) {
+        callHistory = toCallHistoryFromUnusedCallLink(callLink);
+        await DataWriter.saveCallHistory(callHistory);
+      }
       log.info(`${logId}: Saved new call link`);
     }
 
@@ -1451,49 +1475,24 @@ function handleCallLinkUpdate(
       type: HANDLE_CALL_LINK_UPDATE,
       payload: { callLink },
     });
+
+    if (callHistory != null) {
+      dispatch(addCallHistory(callHistory));
+    }
   };
 }
 
-/**
- * When starting a lobby and there's an active call, if we're already in call then
- * focus it (toggle pip), otherwise show an error.
- * @returns {boolean} `true` if there was an active call and we handled it.
- */
-function handleActiveCallOnStartLobby({
-  conversationId,
-  state,
-  dispatch,
-}: {
-  conversationId: string;
-  state: RootStateType;
-  dispatch: ThunkDispatch<
-    RootStateType,
-    unknown,
-    ShowErrorModalActionType | TogglePipActionType
-  >;
-}): boolean {
-  const { activeCallState } = state.calling;
-  if (!activeCallState) {
-    return false;
-  }
-
-  if (activeCallState.conversationId === conversationId) {
+function handleCallLinkDelete(
+  payload: HandleCallLinkDeleteType
+): ThunkAction<void, RootStateType, unknown, HandleCallLinkDeleteActionType> {
+  return async dispatch => {
     dispatch({
-      type: TOGGLE_PIP,
+      type: HANDLE_CALL_LINK_DELETE,
+      payload,
     });
-  } else {
-    const i18n = getIntl(state);
-    dispatch({
-      type: SHOW_ERROR_MODAL,
-      payload: {
-        title: i18n('icu:calling__cant-join'),
-        description: i18n('icu:calling__dialog-already-in-call'),
-        buttonVariant: ButtonVariant.Primary,
-      },
-    });
-  }
 
-  return true;
+    dispatch(reloadCallHistory());
+  };
 }
 
 function hangUpActiveCall(
@@ -1825,7 +1824,9 @@ function setPresenting(
   sourceToPresent?: PresentedSource
 ): ThunkAction<void, RootStateType, unknown, SetPresentingFulfilledActionType> {
   return async (dispatch, getState) => {
-    const callingState = getState().calling;
+    const state = getState();
+    const callingState = state.calling;
+
     const { activeCallState } = callingState;
     const activeCall = getActiveCall(callingState);
     if (!activeCall || !activeCallState) {
@@ -1833,10 +1834,20 @@ function setPresenting(
       return;
     }
 
+    let rootKey: string | undefined;
+    if (activeCall.callMode === CallMode.Adhoc) {
+      const callLink = getOwn(
+        getCallLinksByRoomId(state),
+        activeCall.conversationId
+      );
+      rootKey = callLink?.rootKey;
+    }
+
     await calling.setPresenting(
       activeCall.conversationId,
       activeCallState.hasLocalVideo,
-      sourceToPresent
+      sourceToPresent,
+      rootKey
     );
 
     dispatch({
@@ -1974,19 +1985,10 @@ function createCallLink(
     strictAssert(isCallLinksCreateEnabled(), 'Call links creation is disabled');
 
     const callLink = await calling.createCallLink();
-    const callHistory: CallHistoryDetails = {
-      callId: generateUuid(),
-      peerId: callLink.roomId,
-      ringerId: null,
-      mode: CallMode.Adhoc,
-      type: CallType.Adhoc,
-      direction: CallDirection.Incoming,
-      timestamp: Date.now(),
-      status: AdhocCallStatus.Pending,
-    };
+    const callHistory = toCallHistoryFromUnusedCallLink(callLink);
     await Promise.all([
-      dataInterface.insertCallLink(callLink),
-      dataInterface.saveCallHistory(callHistory),
+      DataWriter.insertCallLink(callLink),
+      DataWriter.saveCallHistory(callHistory),
     ]);
     dispatch({
       type: HANDLE_CALL_LINK_UPDATE,
@@ -1998,18 +2000,28 @@ function createCallLink(
   };
 }
 
+function deleteCallLink(
+  roomId: string
+): ThunkAction<void, RootStateType, unknown, HandleCallLinkDeleteActionType> {
+  return async dispatch => {
+    await DataWriter.beginDeleteCallLink(roomId);
+    await callLinksDeleteJobQueue.add({ source: 'deleteCallLink' });
+    dispatch(handleCallLinkDelete({ roomId }));
+  };
+}
+
 function updateCallLinkName(
   roomId: string,
   name: string
 ): ThunkAction<void, RootStateType, unknown, HandleCallLinkUpdateActionType> {
   return async dispatch => {
-    const prevCallLink = await dataInterface.getCallLinkByRoomId(roomId);
+    const prevCallLink = await DataReader.getCallLinkByRoomId(roomId);
     strictAssert(
       prevCallLink,
       `updateCallLinkName(${roomId}): call link not found`
     );
     const callLinkState = await calling.updateCallLinkName(prevCallLink, name);
-    const callLink = await dataInterface.updateCallLinkState(
+    const callLink = await DataWriter.updateCallLinkState(
       roomId,
       callLinkState
     );
@@ -2025,7 +2037,7 @@ function updateCallLinkRestrictions(
   restrictions: CallLinkRestrictions
 ): ThunkAction<void, RootStateType, unknown, HandleCallLinkUpdateActionType> {
   return async dispatch => {
-    const prevCallLink = await dataInterface.getCallLinkByRoomId(roomId);
+    const prevCallLink = await DataReader.getCallLinkByRoomId(roomId);
     strictAssert(
       prevCallLink,
       `updateCallLinkRestrictions(${roomId}): call link not found`
@@ -2034,7 +2046,7 @@ function updateCallLinkRestrictions(
       prevCallLink,
       restrictions
     );
-    const callLink = await dataInterface.updateCallLinkState(
+    const callLink = await DataWriter.updateCallLinkState(
       roomId,
       callLinkState
     );
@@ -2045,9 +2057,9 @@ function updateCallLinkRestrictions(
   };
 }
 
-function startCallLinkLobbyByRoomId(
-  roomId: string
-): StartCallLinkLobbyThunkActionType {
+function startCallLinkLobbyByRoomId({
+  roomId,
+}: StartCallLinkLobbyByRoomIdType): StartCallLinkLobbyThunkActionType {
   return async (dispatch, getState) => {
     const state = getState();
     const callLink = getOwn(state.calling.callLinks, roomId);
@@ -2081,6 +2093,7 @@ const _startCallLinkLobby = async ({
     unknown,
     | StartCallLinkLobbyActionType
     | ShowErrorModalActionType
+    | ToggleConfirmLeaveCallModalActionType
     | TogglePipActionType
   >;
   getState: () => RootStateType;
@@ -2089,15 +2102,34 @@ const _startCallLinkLobby = async ({
   const roomId = getRoomIdFromRootKey(callLinkRootKey);
   const state = getState();
 
-  if (
-    handleActiveCallOnStartLobby({ conversationId: roomId, state, dispatch })
-  ) {
+  const { activeCallState } = state.calling;
+  if (activeCallState && activeCallState.conversationId === roomId) {
+    dispatch({
+      type: TOGGLE_PIP,
+    });
+    return;
+  }
+  if (activeCallState) {
+    dispatch(
+      toggleConfirmLeaveCallModal({
+        type: 'adhoc-rootKey',
+        rootKey,
+      })
+    );
     return;
   }
 
-  const readResult = await calling.readCallLink({ callLinkRootKey });
-  const { callLinkState } = readResult;
-  if (!callLinkState) {
+  let callLinkState: CallLinkStateType | null = null;
+  try {
+    callLinkState = await calling.readCallLink(callLinkRootKey);
+  } catch (error) {
+    log.error(
+      'startCallLinkLobby: Error fetching call link state',
+      Errors.toLogFormat(error)
+    );
+  }
+
+  if (callLinkState == null) {
     const i18n = getIntl(getState());
     dispatch({
       type: SHOW_ERROR_MODAL,
@@ -2111,6 +2143,7 @@ const _startCallLinkLobby = async ({
   }
   if (
     callLinkState.revoked ||
+    callLinkState.expiration == null ||
     callLinkState.expiration < new Date().getTime()
   ) {
     const i18n = getIntl(getState());
@@ -2126,13 +2159,13 @@ const _startCallLinkLobby = async ({
   }
 
   try {
-    const callLinkExists = await dataInterface.callLinkExists(roomId);
+    const callLinkExists = await DataReader.callLinkExists(roomId);
     if (callLinkExists) {
-      await dataInterface.updateCallLinkState(roomId, callLinkState);
+      await DataWriter.updateCallLinkState(roomId, callLinkState);
       log.info('startCallLinkLobby: Updated existing call link', roomId);
     } else {
       const { name, restrictions, expiration, revoked } = callLinkState;
-      await dataInterface.insertCallLink({
+      await DataWriter.insertCallLink({
         roomId,
         rootKey,
         adminKey: null,
@@ -2180,6 +2213,34 @@ const _startCallLinkLobby = async ({
   });
 };
 
+function leaveCurrentCallAndStartCallingLobby(
+  data: StartCallData
+): ThunkAction<void, RootStateType, unknown, HangUpActionType> {
+  return async (dispatch, getState) => {
+    hangUpActiveCall(
+      'Leave call button pressed in ConfirmLeaveCurrentCallModal'
+    )(dispatch, getState, undefined);
+
+    const { type } = data;
+    if (type === 'conversation') {
+      const { conversationId, isVideoCall } = data;
+      startCallingLobby({ conversationId, isVideoCall })(
+        dispatch,
+        getState,
+        undefined
+      );
+    } else if (type === 'adhoc-roomId') {
+      const { roomId } = data;
+      startCallLinkLobbyByRoomId({ roomId })(dispatch, getState, undefined);
+    } else if (type === 'adhoc-rootKey') {
+      const { rootKey } = data;
+      startCallLinkLobby({ rootKey })(dispatch, getState, undefined);
+    } else {
+      throw missingCaseError(type);
+    }
+  };
+}
+
 function startCallingLobby({
   conversationId,
   isVideoCall,
@@ -2187,7 +2248,9 @@ function startCallingLobby({
   void,
   RootStateType,
   unknown,
-  StartCallingLobbyActionType | TogglePipActionType
+  | StartCallingLobbyActionType
+  | ToggleConfirmLeaveCallModalActionType
+  | TogglePipActionType
 > {
   return async (dispatch, getState) => {
     const state = getState();
@@ -2200,10 +2263,16 @@ function startCallingLobby({
       "startCallingLobby: can't start lobby without a conversation"
     );
 
-    strictAssert(
-      !state.calling.activeCallState,
-      "startCallingLobby: can't start lobby if a call is active"
-    );
+    if (state.calling.activeCallState) {
+      dispatch(
+        toggleConfirmLeaveCallModal({
+          type: 'conversation',
+          conversationId,
+          isVideoCall,
+        })
+      );
+      return;
+    }
 
     // The group call device count is considered 0 for a direct call.
     const groupCall = getGroupCall(
@@ -2364,6 +2433,7 @@ export const actions = {
   closeNeedPermissionScreen,
   createCallLink,
   declineCall,
+  deleteCallLink,
   denyUser,
   getPresentingSources,
   groupCallAudioLevelsChange,
@@ -2372,7 +2442,9 @@ export const actions = {
   groupCallStateChange,
   hangUpActiveCall,
   handleCallLinkUpdate,
+  handleCallLinkDelete,
   joinedAdhocCall,
+  leaveCurrentCallAndStartCallingLobby,
   onOutgoingVideoCallInConversation,
   onOutgoingAudioCallInConversation,
   openSystemPreferencesAction,

@@ -158,14 +158,17 @@ export class Bootstrap {
   private privDesktop?: Device;
   private storagePath?: string;
   private backupPath?: string;
+  private cdn3Path: string;
   private timestamp: number = Date.now() - durations.WEEK;
   private lastApp?: App;
   private readonly randomId = crypto.randomBytes(8).toString('hex');
 
   constructor(options: BootstrapOptions = {}) {
+    this.cdn3Path = path.join(os.tmpdir(), 'mock-signal-cdn3-');
     this.server = new Server({
       // Limit number of storage read keys for easier testing
       maxStorageReadKeys: MAX_STORAGE_READ_KEYS,
+      cdn3Path: this.cdn3Path,
     });
 
     this.options = {
@@ -286,12 +289,9 @@ export class Bootstrap {
 
     await Promise.race([
       Promise.all([
-        this.storagePath
-          ? fs.rm(this.storagePath, { recursive: true })
-          : Promise.resolve(),
-        this.backupPath
-          ? fs.rm(this.backupPath, { recursive: true })
-          : Promise.resolve(),
+        ...[this.storagePath, this.backupPath, this.cdn3Path].map(tmpPath =>
+          tmpPath ? fs.rm(tmpPath, { recursive: true }) : Promise.resolve()
+        ),
         this.server.close(),
         this.lastApp?.close(),
       ]),
@@ -305,6 +305,8 @@ export class Bootstrap {
     const app = await this.startApp(extraConfig);
 
     const window = await app.getWindow();
+
+    debug('looking for QR code or relink button');
     const qrCode = window.locator(
       '.module-InstallScreenQrCodeNotScannedStep__qr-code__code'
     );
@@ -316,10 +318,13 @@ export class Bootstrap {
       await qrCode.waitFor();
     }
 
+    debug('waiting for provision');
     const provision = await this.server.waitForProvision();
 
+    debug('waiting for provision URL');
     const provisionURL = await app.waitForProvisionURL();
 
+    debug('completing provision');
     this.privDesktop = await provision.complete({
       provisionURL,
       primaryDevice: this.phone,
@@ -649,6 +654,7 @@ export class Bootstrap {
       cdn: {
         '0': url,
         '2': url,
+        '3': `${url}/cdn3`,
       },
       updatesEnabled: false,
 

@@ -4,7 +4,7 @@
 import { assert } from 'chai';
 import { v4 as generateUuid } from 'uuid';
 
-import dataInterface from '../../sql/Client';
+import { DataReader, DataWriter } from '../../sql/Client';
 import { generateAci } from '../../types/ServiceId';
 import { constantTimeEqual, getRandomBytes } from '../../Crypto';
 import { singleProtoJobQueue } from '../../jobs/singleProtoJobQueue';
@@ -12,21 +12,24 @@ import { singleProtoJobQueue } from '../../jobs/singleProtoJobQueue';
 const {
   _getAllSentProtoMessageIds,
   _getAllSentProtoRecipients,
+  getAllSentProtos,
+} = DataReader;
+const {
   deleteSentProtoByMessageId,
   deleteSentProtoRecipient,
   deleteSentProtosOlderThan,
-  getAllSentProtos,
   getSentProtoByRecipient,
   insertProtoRecipients,
   insertSentProto,
   removeAllSentProtos,
   removeMessage,
   saveMessage,
-} = dataInterface;
+} = DataWriter;
 
 describe('sql/sendLog', () => {
   beforeEach(async () => {
     await removeAllSentProtos();
+    await window.ConversationController.load();
   });
 
   it('roundtrips with insertSentProto/getAllSentProtos', async () => {

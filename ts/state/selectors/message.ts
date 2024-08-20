@@ -11,7 +11,7 @@ import type { ReadonlyDeep } from 'type-fest';
 import type { StateType } from '../reducer';
 import type {
   LastMessageStatus,
-  MessageAttributesType,
+  ReadonlyMessageAttributesType,
   MessageReactionType,
   QuotedAttachmentType,
   ShallowChallengeError,
@@ -58,7 +58,10 @@ import type { AssertProps } from '../../types/Util';
 import type { LinkPreviewType } from '../../types/message/LinkPreviews';
 import { getMentionsRegex } from '../../types/Message';
 import { SignalService as Proto } from '../../protobuf';
-import type { AttachmentType } from '../../types/Attachment';
+import type {
+  AttachmentForUIType,
+  AttachmentType,
+} from '../../types/Attachment';
 import {
   isVoiceMessage,
   canBeDownloaded,
@@ -141,8 +144,7 @@ import {
 } from '../../util/getTitle';
 import { getMessageSentTimestamp } from '../../util/getMessageSentTimestamp';
 import type { CallHistorySelectorType } from './callHistory';
-import { CallMode } from '../../types/Calling';
-import { CallDirection } from '../../types/CallDisposition';
+import { CallMode, CallDirection } from '../../types/CallDisposition';
 import { getCallIdFromEra } from '../../util/callDisposition';
 import { LONG_MESSAGE } from '../../types/MIME';
 import type { MessageRequestResponseNotificationData } from '../../components/conversation/MessageRequestResponseNotification';
@@ -198,7 +200,7 @@ export function hasErrors(
 }
 
 export function getSource(
-  message: Pick<MessageAttributesType, 'type' | 'source'>,
+  message: Pick<ReadonlyMessageAttributesType, 'type' | 'source'>,
   ourNumber: string | undefined
 ): string | undefined {
   if (isIncoming(message)) {
@@ -230,7 +232,7 @@ export function getSourceDevice(
 }
 
 export function getSourceServiceId(
-  message: Pick<MessageAttributesType, 'type' | 'sourceServiceId'>,
+  message: Pick<ReadonlyMessageAttributesType, 'type' | 'sourceServiceId'>,
   ourAci: AciString | undefined
 ): ServiceIdString | undefined {
   if (isIncoming(message)) {
@@ -774,7 +776,7 @@ export const getPropsForMessage = (
     status: getMessagePropStatus(message, ourConversationId),
     text: message.body,
     textDirection: getTextDirection(message.body),
-    timestamp: getMessageSentTimestamp(message, { includeEdits: true, log }),
+    timestamp: getMessageSentTimestamp(message, { includeEdits: false, log }),
     receivedAtMS: message.received_at_ms,
   };
 };
@@ -796,18 +798,18 @@ export const getMessagePropsSelector = createSelector(
   getSelectedMessageIds,
   getDefaultConversationColor,
   (
-      conversationSelector,
-      ourConversationId,
-      ourAci,
-      ourPni,
-      ourNumber,
-      regionCode,
-      accountSelector,
-      cachedConversationMemberColorsSelector,
-      targetedMessage,
-      selectedMessageIds,
-      defaultConversationColor
-    ) =>
+    conversationSelector,
+    ourConversationId,
+    ourAci,
+    ourPni,
+    ourNumber,
+    regionCode,
+    accountSelector,
+    cachedConversationMemberColorsSelector,
+    targetedMessage,
+    selectedMessageIds,
+    defaultConversationColor
+  ) =>
     (message: MessageWithUIFieldsType) => {
       const contactNameColors = cachedConversationMemberColorsSelector(
         message.conversationId
@@ -1019,7 +1021,8 @@ export function isNormalBubble(message: MessageWithUIFieldsType): boolean {
     !isVerifiedChange(message) &&
     !isChangeNumberNotification(message) &&
     !isJoinedSignalNotification(message) &&
-    !isDeliveryIssue(message)
+    !isDeliveryIssue(message) &&
+    !isMessageRequestResponse(message)
   );
 }
 
@@ -1445,10 +1448,10 @@ export function getPropsForCallHistory(
   const isSelectMode = selectedMessageIds != null;
 
   let callCreator: ConversationType | null = null;
-  if (callHistory.ringerId) {
-    callCreator = conversationSelector(callHistory.ringerId);
-  } else if (callHistory.direction === CallDirection.Outgoing) {
+  if (callHistory.direction === CallDirection.Outgoing) {
     callCreator = conversationSelector(ourConversationId);
+  } else if (callHistory.ringerId) {
+    callCreator = conversationSelector(callHistory.ringerId);
   }
 
   if (callHistory.mode === CallMode.Direct) {
@@ -1520,13 +1523,13 @@ function getPropsForProfileChange(
 // Message Request Response Event
 
 export function isMessageRequestResponse(
-  message: MessageAttributesType
+  message: ReadonlyMessageAttributesType
 ): boolean {
   return message.type === 'message-request-response-event';
 }
 
 function getPropsForMessageRequestResponse(
-  message: MessageAttributesType
+  message: ReadonlyMessageAttributesType
 ): MessageRequestResponseNotificationData {
   const { messageRequestResponseEvent } = message;
   if (!messageRequestResponseEvent) {
@@ -1802,7 +1805,7 @@ export function getPropsForEmbeddedContact(
   message: MessageWithUIFieldsType,
   regionCode: string | undefined,
   accountSelector: (identifier?: string) => ServiceIdString | undefined
-): EmbeddedContactType | undefined {
+): ReadonlyDeep<EmbeddedContactType> | undefined {
   const contacts = message.contact;
   if (!contacts || !contacts.length) {
     return undefined;
@@ -1821,12 +1824,13 @@ export function getPropsForEmbeddedContact(
 
 export function getPropsForAttachment(
   attachment: AttachmentType
-): AttachmentType | undefined {
+): AttachmentForUIType | undefined {
   if (!attachment) {
     return undefined;
   }
 
-  const { path, pending, size, screenshot, thumbnail } = attachment;
+  const { path, pending, size, screenshot, thumbnail, thumbnailFromBackup } =
+    attachment;
 
   return {
     ...attachment,
@@ -1834,6 +1838,12 @@ export function getPropsForAttachment(
     isVoiceMessage: isVoiceMessage(attachment),
     pending,
     url: path ? getLocalAttachmentUrl(attachment) : undefined,
+    thumbnailFromBackup: thumbnailFromBackup?.path
+      ? {
+          ...thumbnailFromBackup,
+          url: getLocalAttachmentUrl(thumbnailFromBackup),
+        }
+      : undefined,
     screenshot: screenshot?.path
       ? {
           ...screenshot,
@@ -2081,7 +2091,7 @@ export function getLastChallengeError(
 
 const getTargetedMessageForDetails = (
   state: StateType
-): MessageAttributesType | undefined =>
+): ReadonlyMessageAttributesType | undefined =>
   state.conversations.targetedMessageForDetails;
 
 const OUTGOING_KEY_ERROR = 'OutgoingIdentityKeyError';

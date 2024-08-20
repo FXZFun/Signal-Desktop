@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "A versão da sua base de dados não corresponde a esta versão do Signal. Confira se está abrindo a versão mais recente do Signal no seu computador."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "Não foi possível acessar a chave de criptografia do banco de dados porque o backend do chaveiro de criptografia do sistema operacional foi alterado de {previousBackend} para {currentBackend}. Isso pode ocorrer se o ambiente de desktop for alterado, por exemplo, entre GNOME e KDE.\n\nPor favor, volte para o ambiente de desktop anterior."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "Não foi possível acessar a chave de criptografia do banco de dados porque o backend do chaveiro de criptografia do sistema operacional mudou de {previousBackend} para {currentBackend}.  Isso pode ocorrer se o ambiente de desktop mudar, por exemplo, entre GNOME e KDE.  .\n\nTroque para o ambiente de desktop anterior ou tente veicular o Signal com a bandeira da linha de comando --password-store=\"{previousBackendFlag}\""
+  },
   "icu:mainMenuFile": {
     "messageformat": "&Arquivo"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Signal não foi atualizado. {retry} ou visite {url} para você instalar a atualização. Em seguida, {support} sobre esse problema"
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Não foi possível atualizar o Signal. <retryUpdateButton>Tente atualizar novamente</retryUpdateButton> ou acesse {url} para instalar manualmente. Depois, <contactSupportLink>fale com o suporte</contactSupportLink> sobre este problema"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Signal não foi atualizado. Visite {url} para instalá-lo manualmente. Em seguida, {support} sobre esse problema"
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Não foi possível atualizar o Signal. Acesse {url} para instalar manualmente. Depois, <contactSupportLink>fale com o suporte</contactSupportLink> sobre este problema"
   },
   "icu:readOnlyVolume": {
     "messageformat": "O Signal Desktop possivelmente está na quarentena do macOS, portanto não será capaz de atualizar-se automaticamente, Por favor, tente mover {app} para {folder} usando o Finder."
@@ -990,7 +1002,7 @@
     "messageformat": "Todas as mensagens neste chat serão excluídas deste dispositivo. Você ainda poderá pesquisar neste chat após excluir mensagens."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "Todas as mensagens nesta conversa serão excluídas em todos os seus dispositivos. Você ainda poderá pesquisar nesta conversa após excluir as mensagens."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Sair do grupo"
@@ -1095,7 +1107,7 @@
     "messageformat": "Aparelhos vinculados"
   },
   "icu:linkNewDevice": {
-    "messageformat": "Vincular novo aparelho"
+    "messageformat": "Vincular um novo dispositivo"
   },
   "icu:Install__learn-more": {
     "messageformat": "Saiba mais"
@@ -1113,25 +1125,22 @@
     "messageformat": "Configurações"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "Toque em {plusButton} (Android) ou em {linkNewDevice} (iPhone)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "Não foi possível carregar o QR code. Verifique a sua conexão de internet e tente novamente. <retry>Tente novamente</retry>"
+    "messageformat": "Toque em {linkNewDevice}"
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "Não foi possível carregar o QR code. Verifique a sua conexão e tente novamente."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>Ocorreu um erro inesperado.</paragraph><paragraph>Tente novamente.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "O Signal não pode vincular esse dispositivo usando sua rede atual."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "Tente novamente"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "Obter ajuda"
   },
   "icu:Install__support-link": {
     "messageformat": "Precisa de ajuda?"
@@ -1185,7 +1194,7 @@
     "messageformat": "Chamadas"
   },
   "icu:calling__call-back": {
-    "messageformat": "Retornar a chamada"
+    "messageformat": "Retornar chamada"
   },
   "icu:calling__call-again": {
     "messageformat": "Ligar novamente"
@@ -1194,7 +1203,7 @@
     "messageformat": "Participar da chamada"
   },
   "icu:calling__return": {
-    "messageformat": "Voltar à chamada"
+    "messageformat": "Voltar para a chamada"
   },
   "icu:calling__lobby-automatically-muted-because-there-are-a-lot-of-people": {
     "messageformat": "Microfone silenciado devido à quantidade de pessoas na chamada"
@@ -1305,34 +1314,34 @@
     "messageformat": "Recusar solicitação de participação"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "Aprovar todos"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "Recusar todos"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Aprovar {count,number} solicitação?} other {Aprovar {count,number} solicitações?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Recusar {count,number} solicitação?} other {Recusar {count,number} solicitações?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} pessoa será adicionada à chamada.} other {{count,number} pessoas serão adicionadas à chamada.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} pessoa não será adicionada à chamada.} other {{count,number} pessoas não serão adicionadas à chamada.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, one {{count,number} solicitação para entrar na chamada} other {{count,number} solicitações para entrar na chamada}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "gostaria de participar..."
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, one {+ {count,number} solicitação} other {+ {count,number} solicitações}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, one {{count,number} pessoa adicionada à chamada} other {{count,number} pessoas adicionadas à chamada}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, one {{count,number} levantou a mão} other {{count,number} levantaram as mãos}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, one {Na ligação · {people,number} pessoa} other {Na ligação · {people,number} pessoas}}"
   },
-  "icu:calling__you-have-blocked": {
+  "icu:calling__blocked-participant": {
+    "messageformat": "Você bloqueou {name}"
+  },
+  "icu:calling__block-info-title": {
     "messageformat": "Você bloqueou {name}"
   },
   "icu:calling__block-info": {
-    "messageformat": "Você não receberá a voz ou o vídeo dessa pessoa, e ela não receberá os seus."
+    "messageformat": "Ao bloquear contatos, você não receberá mais o áudio ou o vídeo deles, e eles também não receberão os seus."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "Não é possível receber áudio e vídeo de {name}"
@@ -2613,10 +2625,10 @@
     "messageformat": "Recusar"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "Você recusou uma chamada de voz"
+    "messageformat": "Chamada de voz recusada"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "Você recusou uma chamada de vídeo"
+    "messageformat": "Chamada de vídeo recusada"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "Recebendo chamada de voz"
@@ -2649,10 +2661,10 @@
     "messageformat": "O Signal ficará aberto na área de notificações. Você pode alterar isso nas configurações do Signal."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "Recebendo chamada de voz…"
+    "messageformat": "Recebendo chamada de voz"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "Recebendo chamada de vídeo…"
+    "messageformat": "Chamada de vídeo recebida"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "Chamada de voz efetuada"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, one {{people,number} na chamada} other {{people,number} na chamada}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "A chamada em grupo foi encerrada"
+    "messageformat": "A chamada de vídeo foi encerrada"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "Uma chamada em grupo foi iniciada"
+    "messageformat": "Foi iniciada uma chamada de vídeo"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "Você começou uma chamada em grupo"
+    "messageformat": "Você iniciou uma chamada de vídeo"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name} começou uma chamada em grupo"
+    "messageformat": "{name} iniciou uma chamada de vídeo"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "Você já está em uma chamada"
@@ -2829,13 +2841,13 @@
     "messageformat": "Remover esta pessoa da chamada"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "Remover {name} da chamada?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "Remover"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "Bloquear da chamada"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, one {{count,number} pessoa} other {{count,number} pessoas}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "botão Escrever"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Encaminhar para"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "Os nomes de usuários não podem começar com um número."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "Nomes de usuário devem ter pelo menos {min,number} caracteres."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "Os nomes de usuário devem ter no máximo {max,number} caracteres."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, one {Os nomes de usuário precisam conter pelo menos {min,number} caractere.} other {Os nomes de usuários precisam conter pelo menos {min,number} caracteres.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "Apagar"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "Para excluir seu nome de usuário, abra o Signal no seu telefone e vá até Configurações > Perfil."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "Copiar ou apagar nome de usuário"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "Nenhum story em exibição no momento"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "Enviando…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "Clique para ver um story"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} em {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "Clique para ver ou iniciar uma chamada"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Pesquisar"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "Sem chamadas recentes. Comece ligando para um amigo."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Nenhum resultado encontrado para “{query}”"
@@ -5420,6 +5453,9 @@
   },
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "Perdida"
+  },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "Chamada recusada"
   },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "Chamada em grupo"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Link de chamada"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {Chamada de vídeo efetuada} other {Chamada de vídeo recebida}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "Chamada de vídeo perdida"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "Chamada de vídeo não atendida"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "Chamada de vídeo recusada"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "Participar"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "Adicionar nome da chamada"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "Editar nome da chamada"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "Aprovar todos os membros"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Copiar link"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Compartilhar link via Signal"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "Excluir link"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "Excluir link da chamada?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "Este link não funcionará mais para ninguém que o tenha."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "Cancelar"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "Excluir"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Detalhes do link de chamada"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "Adicionar nome da chamada"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "Editar nome da chamada"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "Aprovar todos os membros"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Desligado"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "Ligado"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "Adicionar nome da chamada"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "Editar nome da chamada"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "Nome da chamada"
@@ -5539,16 +5617,22 @@
     "messageformat": "Pequenas alterações adicionais, correções de bugs e melhorias de desempenho. Agradecemos por usar o Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "Agora você pode encaminhar cartões de contato que foram enviados de um dispositivo móvel. Compartilhe o número de telefone do seu restaurante favorito sem precisar tirar o celular do bolso."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "Esta atualização acelera o processo de exclusão de conversas longas ou com muitas mensagens e arquivos de mídia."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "O novo suporte para alta resolução \"jumbomoji\" adiciona detalhes maiores do que a vida real aos emojis grandes, especialmente em telas grandes com pixels pequenos."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "Adicionamos um atalho para você sair da chamada atual e entrar em uma nova, caso alguém te chame. Você verá uma solicitação para confirmar sua saída, mas pode decidir se sai ou não da chamada em que está."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "Também atualizamos o Criador de figurinhas para oferecer suporte aos emojis mais recentes, assim, as figurinhas de hoje não ficarão presas ao padrão Unicode de ontem."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "Essa atualização também corrige uma falha de inicialização no Linux para usuários cuja localidade está definida como `POSIX`."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "Agora, stories com textos mais longos terão um fundo degradê sutil para melhorar o contraste e facilitar a leitura. Com o texto mais legível, você pode se sentir à vontade para escrever alguns parágrafos sobre o que realmente te fez rir, em vez de apenas mandar um 'Kkkk' básico.\""
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "Nesta atualização, também melhoramos a performance das prévias de links e corrigimos um bug que fazia a janela de configurações dar uma piscada em um tom de azul ultramarino ao ser fechada, em vez de simplesmente fechar imediatamente."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

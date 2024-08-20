@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import { isFunction, isObject } from 'lodash';
+import type { ReadonlyDeep } from 'type-fest';
 
 import * as Contact from './EmbeddedContact';
 import type {
@@ -43,8 +44,7 @@ import {
   AttachmentDisposition,
 } from '../util/getLocalAttachmentUrl';
 import { encryptLegacyAttachment } from '../util/encryptLegacyAttachment';
-
-export { hasExpiration } from './Message';
+import { deepClone } from '../util/deepClone';
 
 export const GROUP = 'group';
 export const PRIVATE = 'private';
@@ -466,21 +466,26 @@ const toVersion12 = _withSchemaVersion({
 
     const result = { ...message };
 
+    const logId = `Message2.toVersion12(${message.sent_at})`;
+
     if (attachments?.length) {
       result.attachments = await Promise.all(
-        attachments.map(async attachment => {
-          const copy = await encryptLegacyAttachment(attachment, context);
+        attachments.map(async (attachment, i) => {
+          const copy = await encryptLegacyAttachment(attachment, {
+            ...context,
+            logId: `${logId}.attachments[${i}]`,
+          });
           if (copy.thumbnail) {
-            copy.thumbnail = await encryptLegacyAttachment(
-              copy.thumbnail,
-              context
-            );
+            copy.thumbnail = await encryptLegacyAttachment(copy.thumbnail, {
+              ...context,
+              logId: `${logId}.attachments[${i}].thumbnail`,
+            });
           }
           if (copy.screenshot) {
-            copy.screenshot = await encryptLegacyAttachment(
-              copy.screenshot,
-              context
-            );
+            copy.screenshot = await encryptLegacyAttachment(copy.screenshot, {
+              ...context,
+              logId: `${logId}.attachments[${i}].screenshot`,
+            });
           }
           return copy;
         })
@@ -488,31 +493,27 @@ const toVersion12 = _withSchemaVersion({
     }
 
     if (quote && quote.attachments?.length) {
-      try {
-        result.quote = {
-          ...quote,
-          attachments: await Promise.all(
-            quote.attachments.map(async quoteAttachment => {
-              return {
-                ...quoteAttachment,
-                thumbnail:
-                  quoteAttachment.thumbnail &&
-                  (await encryptLegacyAttachment(
-                    quoteAttachment.thumbnail,
-                    context
-                  )),
-              };
-            })
-          ),
-        };
-      } catch (error) {
-        context.logger.error(`Failed to migrate quote for ${message.id}`);
-      }
+      result.quote = {
+        ...quote,
+        attachments: await Promise.all(
+          quote.attachments.map(async (quoteAttachment, i) => {
+            return {
+              ...quoteAttachment,
+              thumbnail:
+                quoteAttachment.thumbnail &&
+                (await encryptLegacyAttachment(quoteAttachment.thumbnail, {
+                  ...context,
+                  logId: `${logId}.quote[${i}].thumbnail`,
+                })),
+            };
+          })
+        ),
+      };
     }
 
     if (contact?.length) {
       result.contact = await Promise.all(
-        contact.map(async c => {
+        contact.map(async (c, i) => {
           if (!c.avatar?.avatar) {
             return c;
           }
@@ -521,7 +522,10 @@ const toVersion12 = _withSchemaVersion({
             ...c,
             avatar: {
               ...c.avatar,
-              avatar: await encryptLegacyAttachment(c.avatar.avatar, context),
+              avatar: await encryptLegacyAttachment(c.avatar.avatar, {
+                ...context,
+                logId: `${logId}.contact[${i}].avatar`,
+              }),
             },
           };
         })
@@ -530,14 +534,17 @@ const toVersion12 = _withSchemaVersion({
 
     if (preview?.length) {
       result.preview = await Promise.all(
-        preview.map(async p => {
+        preview.map(async (p, i) => {
           if (!p.image) {
             return p;
           }
 
           return {
             ...p,
-            image: await encryptLegacyAttachment(p.image, context),
+            image: await encryptLegacyAttachment(p.image, {
+              ...context,
+              logId: `${logId}.preview[${i}].image`,
+            }),
           };
         })
       );
@@ -547,10 +554,16 @@ const toVersion12 = _withSchemaVersion({
       result.sticker = {
         ...sticker,
         data: sticker.data && {
-          ...(await encryptLegacyAttachment(sticker.data, context)),
+          ...(await encryptLegacyAttachment(sticker.data, {
+            ...context,
+            logId: `${logId}.sticker.data`,
+          })),
           thumbnail:
             sticker.data.thumbnail &&
-            (await encryptLegacyAttachment(sticker.data.thumbnail, context)),
+            (await encryptLegacyAttachment(sticker.data.thumbnail, {
+              ...context,
+              logId: `${logId}.sticker.thumbnail`,
+            })),
         },
       };
     }
@@ -818,14 +831,14 @@ export const loadQuoteData = (
 export const loadContactData = (
   loadAttachmentData: LoadAttachmentType
 ): ((
-  contact: Array<EmbeddedContactType> | undefined
+  contact: ReadonlyArray<ReadonlyDeep<EmbeddedContactType>> | undefined
 ) => Promise<Array<EmbeddedContactWithHydratedAvatar> | undefined>) => {
   if (!isFunction(loadAttachmentData)) {
     throw new TypeError('loadContactData: loadAttachmentData is required');
   }
 
   return async (
-    contact: Array<EmbeddedContactType> | undefined
+    contact: ReadonlyArray<ReadonlyDeep<EmbeddedContactType>> | undefined
   ): Promise<Array<EmbeddedContactWithHydratedAvatar> | undefined> => {
     if (!contact) {
       return undefined;
@@ -834,27 +847,23 @@ export const loadContactData = (
     return Promise.all(
       contact.map(
         async (
-          item: EmbeddedContactType
+          item: ReadonlyDeep<EmbeddedContactType>
         ): Promise<EmbeddedContactWithHydratedAvatar> => {
-          if (
-            !item ||
-            !item.avatar ||
-            !item.avatar.avatar ||
-            !item.avatar.avatar.path
-          ) {
+          const copy = deepClone(item);
+          if (!copy?.avatar?.avatar?.path) {
             return {
-              ...item,
+              ...copy,
               avatar: undefined,
             };
           }
 
           return {
-            ...item,
+            ...copy,
             avatar: {
-              ...item.avatar,
+              ...copy.avatar,
               avatar: {
-                ...item.avatar.avatar,
-                ...(await loadAttachmentData(item.avatar.avatar)),
+                ...copy.avatar.avatar,
+                ...(await loadAttachmentData(copy.avatar.avatar)),
               },
             },
           };
@@ -867,13 +876,15 @@ export const loadContactData = (
 export const loadPreviewData = (
   loadAttachmentData: LoadAttachmentType
 ): ((
-  preview: Array<LinkPreviewType> | undefined
+  preview: ReadonlyArray<ReadonlyDeep<LinkPreviewType>> | undefined
 ) => Promise<Array<LinkPreviewWithHydratedData>>) => {
   if (!isFunction(loadAttachmentData)) {
     throw new TypeError('loadPreviewData: loadAttachmentData is required');
   }
 
-  return async (preview: Array<LinkPreviewType> | undefined) => {
+  return async (
+    preview: ReadonlyArray<ReadonlyDeep<LinkPreviewType>> | undefined
+  ) => {
     if (!preview || !preview.length) {
       return [];
     }
@@ -881,17 +892,19 @@ export const loadPreviewData = (
     return Promise.all(
       preview.map(
         async (item: LinkPreviewType): Promise<LinkPreviewWithHydratedData> => {
-          if (!item.image) {
+          const copy = deepClone(item);
+
+          if (!copy.image) {
             return {
-              ...item,
+              ...copy,
               // Pacify typescript
               image: undefined,
             };
           }
 
           return {
-            ...item,
-            image: await loadAttachmentData(item.image),
+            ...copy,
+            image: await loadAttachmentData(copy.image),
           };
         }
       )
@@ -1024,3 +1037,16 @@ async function deletePreviews(
     })
   );
 }
+
+export const isUserMessage = (message: MessageAttributesType): boolean =>
+  message.type === 'incoming' || message.type === 'outgoing';
+
+export const hasExpiration = (message: MessageAttributesType): boolean => {
+  if (!isUserMessage(message)) {
+    return false;
+  }
+
+  const { expireTimer } = message;
+
+  return typeof expireTimer === 'number' && expireTimer > 0;
+};

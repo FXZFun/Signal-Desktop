@@ -3,7 +3,6 @@
 
 import { z } from 'zod';
 import Long from 'long';
-import { CallMode } from './Calling';
 import type { AciString } from './ServiceId';
 import { aciSchema } from './ServiceId';
 import { bytesToUuid } from '../util/uuidToBytes';
@@ -11,16 +10,27 @@ import { SignalService as Proto } from '../protobuf';
 import * as Bytes from '../Bytes';
 import { UUID_BYTE_SIZE } from './Crypto';
 
+// These are strings (1) for the backup (2) for Storybook.
+export enum CallMode {
+  Direct = 'Direct',
+  Group = 'Group',
+  Adhoc = 'Adhoc',
+}
+
 export enum CallType {
   Audio = 'Audio',
   Video = 'Video',
   Group = 'Group',
   Adhoc = 'Adhoc',
+  // Only used for backup roundtripping
+  Unknown = 'Unknown',
 }
 
 export enum CallDirection {
   Incoming = 'Incoming',
   Outgoing = 'Outgoing',
+  // Only used for backup roundtripping
+  Unknown = 'Unknown',
 }
 
 export enum CallLogEvent {
@@ -53,6 +63,8 @@ export enum CallStatusValue {
   Pending = 'Pending',
   Accepted = 'Accepted',
   Missed = 'Missed',
+  // TODO: DESKTOP-3483 - not generated locally
+  MissedNotificationProfile = 'MissedNotificationProfile',
   Declined = 'Declined',
   Deleted = 'Deleted',
   GenericGroupCall = 'GenericGroupCall',
@@ -61,14 +73,20 @@ export enum CallStatusValue {
   Ringing = 'Ringing',
   Joined = 'Joined',
   JoinedAdhoc = 'JoinedAdhoc',
+  // Only used for backup roundtripping
+  Unknown = 'Unknown',
 }
 
 export enum DirectCallStatus {
   Pending = CallStatusValue.Pending,
   Accepted = CallStatusValue.Accepted,
   Missed = CallStatusValue.Missed,
+  // TODO: DESKTOP-3483 - not generated locally
+  MissedNotificationProfile = CallStatusValue.MissedNotificationProfile,
   Declined = CallStatusValue.Declined,
   Deleted = CallStatusValue.Deleted,
+  // Only used for backup roundtripping
+  Unknown = CallStatusValue.Unknown,
 }
 
 export enum GroupCallStatus {
@@ -78,6 +96,8 @@ export enum GroupCallStatus {
   Joined = CallStatusValue.Joined,
   Accepted = CallStatusValue.Accepted,
   Missed = CallStatusValue.Missed,
+  // TODO: DESKTOP-3483 - not generated locally
+  MissedNotificationProfile = CallStatusValue.MissedNotificationProfile,
   Declined = CallStatusValue.Declined,
   Deleted = CallStatusValue.Deleted,
 }
@@ -87,6 +107,8 @@ export enum AdhocCallStatus {
   Pending = CallStatusValue.Pending,
   Joined = CallStatusValue.JoinedAdhoc,
   Deleted = CallStatusValue.Deleted,
+  // Only used for backup roundtripping
+  Unknown = CallStatusValue.Unknown,
 }
 
 export type CallStatus = DirectCallStatus | GroupCallStatus | AdhocCallStatus;

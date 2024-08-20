@@ -58,6 +58,11 @@
     width: 128px;
   }
 
+  &.module-img--80 {
+    height: 80px;
+    width: 80px;
+  }
+
   &.module-logo-blue {
     background-color: $color-ultramarine-icon;
   }
@@ -408,7 +413,9 @@ $message-padding-horizontal: 12px;
   background: transparent;
   border: 1px solid $color-gray-20;
   animation: module-message__select-checkbox--fadeIn 0.2s ease-out;
-  transition: background 0.1s ease-out, border-color 0.1s ease-out;
+  transition:
+    background 0.1s ease-out,
+    border-color 0.1s ease-out;
 
   &::before {
     content: '';
@@ -953,7 +960,7 @@ $message-padding-horizontal: 12px;
   padding-inline: $message-padding-horizontal;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
 
   @include light-theme {
     background-color: $color-gray-02;
@@ -992,6 +999,7 @@ $message-padding-horizontal: 12px;
 .module-message__link-preview__description {
   @include font-body-2;
 
+  margin-top: 4px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 5;
@@ -4023,8 +4031,12 @@ button.module-image__border-overlay:focus {
     line-height: 0;
     overflow: hidden;
     border-radius: 10px;
-    transition: top 200ms linear, inset-inline-start 200ms linear,
-      transform 200ms linear, width 200ms linear, height 200ms linear;
+    transition:
+      top 200ms linear,
+      inset-inline-start 200ms linear,
+      transform 200ms linear,
+      width 200ms linear,
+      height 200ms linear;
 
     @media (prefers-reduced-motion) {
       transition: none;
@@ -4294,7 +4306,9 @@ button.module-image__border-overlay:focus {
   backface-visibility: hidden;
   background-color: $color-gray-95;
   border-radius: 4px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.05), 0px 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0px 0px 8px rgba(0, 0, 0, 0.05),
+    0px 8px 20px rgba(0, 0, 0, 0.3);
   cursor: grab;
   height: 158px;
   position: fixed;
@@ -5300,41 +5314,6 @@ button.module-calling-participants-list__contact {
 .module-left-pane__dialogs {
   &:first-child {
     margin-top: 8px;
-  }
-}
-
-.module-left-pane__empty {
-  align-items: center;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  padding-block: 0;
-  padding-inline: 32px;
-  text-align: center;
-
-  .module-left-pane--width-narrow & {
-    display: none;
-  }
-
-  &--composer_icon {
-    align-items: center;
-    background-color: $color-gray-05;
-    border-radius: 100%;
-    display: inline-flex;
-    height: 28px;
-    justify-content: center;
-    margin-bottom: -2px;
-    margin-inline-start: 4px;
-    vertical-align: bottom;
-    width: 28px;
-
-    &--icon {
-      $icon: '../images/icons/v3/compose/compose.svg';
-      @include color-svg($icon, $color-gray-90);
-      display: inline-block;
-      height: 16px;
-      width: 16px;
-    }
   }
 }
 
@@ -7598,22 +7577,35 @@ button.module-calling-participants-list__contact {
 
 .module-message__action {
   @include button-reset();
-  margin-top: 5px;
-  padding: 10px;
+  border-radius: 30px;
+  margin-top: 14px;
+  margin-bottom: 4px;
+  padding: 8px;
   text-align: center;
   width: 100%;
+
   @include font-body-1-bold();
-  border-top: 1px solid;
 }
 .module-message__action--outgoing {
-  border-top-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba($color-white, 0.22);
+  &:hover {
+    background-color: rgba($color-white, 0.36);
+  }
 }
 .module-message__action--incoming {
   @include light-theme {
-    border-top-color: rgba(0, 0, 0, 0.25);
+    color: $color-link;
+    background-color: $color-white-alpha-70;
+    &:hover {
+      background-color: $color-white;
+    }
   }
   @include dark-theme {
-    border-top-color: rgba(255, 255, 255, 0.25);
+    color: $color-white;
+    background-color: rgba($color-white, 0.07);
+    &:hover {
+      background-color: rgba($color-white, 0.17);
+    }
   }
 }
 
@@ -7621,19 +7613,7 @@ button.module-calling-participants-list__contact {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
   margin-inline-end: 12px;
-  background: #e5e5fe;
-  @include rounded-corners();
-  &::before {
-    content: '';
-    display: block;
-    width: 36px;
-    height: 36px;
-    @include color-svg(
-      '../images/icons/v3/video/video-display-bold.svg',
-      #5151f6
-    );
-  }
+  margin-top: 4px;
+  margin-bottom: 4px;
 }

@@ -9,6 +9,7 @@ import type { SendStateByConversationId } from '../messages/MessageSendState';
 
 import * as Edits from '../messageModifiers/Edits';
 import * as log from '../logging/log';
+import { DataWriter } from '../sql/Client';
 import * as Deletes from '../messageModifiers/Deletes';
 import * as DeletesForMe from '../messageModifiers/DeletesForMe';
 import * as MessageReceipts from '../messageModifiers/MessageReceipts';
@@ -101,7 +102,7 @@ export async function modifyTargetMessage(
   }
 
   if (type === 'outgoing' || (type === 'story' && ourAci === sourceServiceId)) {
-    const receipts = await MessageReceipts.forMessage(message);
+    const receipts = await MessageReceipts.forMessage(message.attributes);
     const sendActions = receipts.map(({ receiptSync }) => {
       let sendActionType: SendActionType;
       const receiptType = receiptSync.type;
@@ -163,10 +164,10 @@ export async function modifyTargetMessage(
   if (type === 'incoming') {
     // In a followup (see DESKTOP-2100), we want to make `ReadSyncs#forMessage` return
     //   an array, not an object. This array wrapping makes that future a bit easier.
-    const maybeSingleReadSync = await ReadSyncs.forMessage(message);
+    const maybeSingleReadSync = await ReadSyncs.forMessage(message.attributes);
     const readSyncs = maybeSingleReadSync ? [maybeSingleReadSync] : [];
 
-    const viewSyncs = await ViewSyncs.forMessage(message);
+    const viewSyncs = await ViewSyncs.forMessage(message.attributes);
 
     const isGroupStoryReply =
       isGroup(conversation.attributes) && message.get('storyId');
@@ -232,13 +233,13 @@ export async function modifyTargetMessage(
       drop(
         message
           .getConversation()
-          ?.onReadMessage(message, markReadAt, newestSentAt)
+          ?.onReadMessage(message.attributes, markReadAt, newestSentAt)
       );
     }
 
     // Check for out-of-order view once open syncs
     if (isTapToView(message.attributes)) {
-      const viewOnceOpenSync = ViewOnceOpenSyncs.forMessage(message);
+      const viewOnceOpenSync = ViewOnceOpenSyncs.forMessage(message.attributes);
       if (viewOnceOpenSync) {
         await message.markViewOnceMessageViewed({ fromSync: true });
         changed = true;
@@ -247,7 +248,7 @@ export async function modifyTargetMessage(
   }
 
   if (isStory(message.attributes)) {
-    const viewSyncs = await ViewSyncs.forMessage(message);
+    const viewSyncs = await ViewSyncs.forMessage(message.attributes);
 
     if (viewSyncs.length !== 0) {
       message.set({
@@ -276,7 +277,7 @@ export async function modifyTargetMessage(
   }
 
   // Does message message have any pending, previously-received associated reactions?
-  const reactions = Reactions.findReactionsForMessage(message);
+  const reactions = Reactions.findReactionsForMessage(message.attributes);
 
   log.info(
     `${logId}: Found ${reactions.length} early reaction(s) for ${message.attributes.type} message`
@@ -313,7 +314,7 @@ export async function modifyTargetMessage(
   // We save here before handling any edits because handleEditMessage does its own saves
   if (changed && !isFirstRun) {
     log.info(`${logId}: Changes in second run; saving.`);
-    await window.Signal.Data.saveMessage(message.attributes, {
+    await DataWriter.saveMessage(message.attributes, {
       ourAci,
     });
   }

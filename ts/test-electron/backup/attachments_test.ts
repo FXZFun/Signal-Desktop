@@ -10,7 +10,7 @@ import { assert } from 'chai';
 
 import type { ConversationModel } from '../../models/conversations';
 import * as Bytes from '../../Bytes';
-import Data from '../../sql/Client';
+import { DataWriter } from '../../sql/Client';
 import { type AciString, generateAci } from '../../types/ServiceId';
 import { ReadStatus } from '../../messages/MessageReadStatus';
 import { SeenStatus } from '../../MessageSeenStatus';
@@ -39,9 +39,9 @@ describe('backup/attachments', () => {
   let contactA: ConversationModel;
 
   beforeEach(async () => {
-    await Data._removeAllMessages();
-    await Data._removeAllConversations();
+    await DataWriter.removeAll();
     window.storage.reset();
+    window.ConversationController.reset();
 
     await setupBasics();
 
@@ -69,12 +69,18 @@ describe('backup/attachments', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await DataWriter.removeAll();
+
     sandbox.restore();
   });
 
   function getBase64(str: string): string {
     return Bytes.toBase64(Bytes.fromString(str));
+  }
+
+  function digestToMediaName(digestBase64: string): string {
+    return Bytes.toHex(Bytes.fromBase64(digestBase64));
   }
 
   function composeAttachment(
@@ -169,7 +175,9 @@ describe('backup/attachments', () => {
                   'thumbnail',
                   'uploadTimestamp',
                 ]),
-                backupLocator: { mediaName: attachment.digest },
+                backupLocator: {
+                  mediaName: digestToMediaName(attachment.digest),
+                },
               },
             ],
           }),
@@ -201,7 +209,9 @@ describe('backup/attachments', () => {
                   'thumbnail',
                   'uploadTimestamp',
                 ]),
-                backupLocator: { mediaName: attachment.digest },
+                backupLocator: {
+                  mediaName: digestToMediaName(attachment.digest),
+                },
               },
             ],
           }),
@@ -271,7 +281,9 @@ describe('backup/attachments', () => {
                     'thumbnail',
                     'uploadTimestamp',
                   ]),
-                  backupLocator: { mediaName: attachment.digest },
+                  backupLocator: {
+                    mediaName: digestToMediaName(attachment.digest),
+                  },
                 },
               },
             ],
@@ -332,7 +344,9 @@ describe('backup/attachments', () => {
                       'thumbnail',
                       'uploadTimestamp',
                     ]),
-                    backupLocator: { mediaName: attachment.digest },
+                    backupLocator: {
+                      mediaName: digestToMediaName(attachment.digest),
+                    },
                   },
                   isProfile: false,
                 },
@@ -417,7 +431,9 @@ describe('backup/attachments', () => {
                       'uploadTimestamp',
                       'thumbnail',
                     ]),
-                    backupLocator: { mediaName: attachment.digest },
+                    backupLocator: {
+                      mediaName: digestToMediaName(attachment.digest),
+                    },
                   },
                   contentType: VIDEO_MP4,
                 },
@@ -468,7 +484,9 @@ describe('backup/attachments', () => {
                   'uploadTimestamp',
                   'thumbnail',
                 ]),
-                backupLocator: { mediaName: existingAttachment.digest },
+                backupLocator: {
+                  mediaName: digestToMediaName(existingAttachment.digest),
+                },
               },
             ],
           },
@@ -483,7 +501,9 @@ describe('backup/attachments', () => {
                   // been downloaded
                   thumbnail: {
                     ...omit(quoteAttachment, ['iv', 'path', 'uploadTimestamp']),
-                    backupLocator: { mediaName: quoteAttachment.digest },
+                    backupLocator: {
+                      mediaName: digestToMediaName(quoteAttachment.digest),
+                    },
                   },
                   contentType: VIDEO_MP4,
                 },
@@ -563,7 +583,7 @@ describe('backup/attachments', () => {
               key,
               digest,
               backupLocator: {
-                mediaName: digest,
+                mediaName: digestToMediaName(digest),
               },
             });
           },
@@ -635,7 +655,7 @@ describe('backup/attachments', () => {
                 key,
                 digest,
                 backupLocator: {
-                  mediaName: digest,
+                  mediaName: digestToMediaName(digest),
                 },
               });
             },
@@ -716,7 +736,9 @@ describe('backup/attachments', () => {
                     'thumbnail',
                     'uploadTimestamp',
                   ]),
-                  backupLocator: { mediaName: attachment.digest },
+                  backupLocator: {
+                    mediaName: digestToMediaName(attachment.digest),
+                  },
                 },
               },
             }),

@@ -5,7 +5,6 @@ import { last } from 'lodash';
 import type { ReactChild } from 'react';
 import React from 'react';
 
-import { I18n } from '../I18n';
 import type { ToFindType } from './LeftPaneHelper';
 import type {
   ConversationType,
@@ -15,6 +14,7 @@ import { LeftPaneHelper } from './LeftPaneHelper';
 import { getConversationInDirection } from './getConversationInDirection';
 import type { Row } from '../ConversationList';
 import { RowType } from '../ConversationList';
+import { NavSidebarEmpty } from '../NavSidebar';
 import type { PropsData as ConversationListItemPropsType } from '../conversationList/ConversationListItem';
 import type { LocalizerType } from '../../types/Util';
 import { handleKeydownForSearch } from './handleKeydownForSearch';
@@ -25,6 +25,7 @@ export type LeftPaneInboxPropsType = {
   archivedConversations: ReadonlyArray<ConversationListItemPropsType>;
   pinnedConversations: ReadonlyArray<ConversationListItemPropsType>;
   isAboutToSearch: boolean;
+  isSearchingGlobally: boolean;
   startSearchCounter: number;
   searchDisabled: boolean;
   searchTerm: string;
@@ -40,6 +41,8 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
 
   private readonly isAboutToSearch: boolean;
 
+  private readonly isSearchingGlobally: boolean;
+
   private readonly startSearchCounter: number;
 
   private readonly searchDisabled: boolean;
@@ -53,6 +56,7 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
     archivedConversations,
     pinnedConversations,
     isAboutToSearch,
+    isSearchingGlobally,
     startSearchCounter,
     searchDisabled,
     searchTerm,
@@ -64,6 +68,7 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
     this.archivedConversations = archivedConversations;
     this.pinnedConversations = pinnedConversations;
     this.isAboutToSearch = isAboutToSearch;
+    this.isSearchingGlobally = isSearchingGlobally;
     this.startSearchCounter = startSearchCounter;
     this.searchDisabled = searchDisabled;
     this.searchTerm = searchTerm;
@@ -84,12 +89,16 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
   override getSearchInput({
     clearConversationSearch,
     clearSearch,
+    endConversationSearch,
+    endSearch,
     i18n,
     showConversation,
     updateSearchTerm,
   }: Readonly<{
     clearConversationSearch: () => unknown;
     clearSearch: () => unknown;
+    endConversationSearch: () => unknown;
+    endSearch: () => unknown;
     i18n: LocalizerType;
     showConversation: ShowConversationType;
     updateSearchTerm: (searchTerm: string) => unknown;
@@ -98,8 +107,11 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
       <LeftPaneSearchInput
         clearConversationSearch={clearConversationSearch}
         clearSearch={clearSearch}
+        endConversationSearch={endConversationSearch}
+        endSearch={endSearch}
         disabled={this.searchDisabled}
         i18n={i18n}
+        isSearchingGlobally={this.isSearchingGlobally}
         searchConversation={this.searchConversation}
         searchTerm={this.searchTerm}
         showConversation={showConversation}
@@ -109,31 +121,17 @@ export class LeftPaneInboxHelper extends LeftPaneHelper<LeftPaneInboxPropsType> 
     );
   }
 
-  override getPreRowsNode({
+  override getBackgroundNode({
     i18n,
   }: Readonly<{
     i18n: LocalizerType;
   }>): ReactChild | null {
     if (this.getRowCount() === 0) {
       return (
-        <div className="module-left-pane__empty">
-          <div>
-            <I18n
-              i18n={i18n}
-              id="icu:emptyInboxMessage"
-              components={{
-                composeIcon: (
-                  <span>
-                    <strong>{i18n('icu:composeIcon')}</strong>
-                    <span className="module-left-pane__empty--composer_icon">
-                      <i className="module-left-pane__empty--composer_icon--icon" />
-                    </span>
-                  </span>
-                ),
-              }}
-            />
-          </div>
-        </div>
+        <NavSidebarEmpty
+          title={i18n('icu:emptyInbox__title')}
+          subtitle={i18n('icu:emptyInbox__subtitle')}
+        />
       );
     }
 

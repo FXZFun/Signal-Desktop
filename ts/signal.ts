@@ -3,13 +3,16 @@
 
 // The idea with this file is to make it webpackable for the style guide
 
+import type { ReadonlyDeep } from 'type-fest';
+
 import * as Crypto from './Crypto';
 import * as Curve from './Curve';
 import { start as conversationControllerStart } from './ConversationController';
-import Data from './sql/Client';
 import * as Groups from './groups';
 import OS from './util/os/osMain';
+import { isProduction } from './util/version';
 import * as RemoteConfig from './RemoteConfig';
+import { DataReader, DataWriter } from './sql/Client';
 
 // Components
 import { ConfirmationDialog } from './components/ConfirmationDialog';
@@ -85,13 +88,13 @@ type MigrationsModuleType = {
     attachment: Partial<AttachmentType>
   ) => Promise<AttachmentWithHydratedData>;
   loadContactData: (
-    contact: Array<EmbeddedContactType> | undefined
+    contact: ReadonlyArray<ReadonlyDeep<EmbeddedContactType>> | undefined
   ) => Promise<Array<EmbeddedContactWithHydratedAvatar> | undefined>;
   loadMessage: (
     message: MessageAttributesType
   ) => Promise<MessageAttributesType>;
   loadPreviewData: (
-    preview: Array<LinkPreviewType> | undefined
+    preview: ReadonlyArray<ReadonlyDeep<LinkPreviewType>> | undefined
   ) => Promise<Array<LinkPreviewWithHydratedData>>;
   loadQuoteData: (
     quote: QuotedMessageType | null | undefined
@@ -455,7 +458,6 @@ export const setup = (options: {
     Curve,
     // Note: used in test/index.html, and not type-checked!
     conversationControllerStart,
-    Data,
     Groups,
     Migrations,
     OS,
@@ -463,5 +465,12 @@ export const setup = (options: {
     Services,
     State,
     Types,
+
+    ...(isProduction(window.getVersion())
+      ? {}
+      : {
+          DataReader,
+          DataWriter,
+        }),
   };
 };

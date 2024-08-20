@@ -117,11 +117,13 @@ import { load as loadLocale } from './locale';
 import type { LoggerType } from '../ts/types/Logging';
 import { HourCyclePreference } from '../ts/types/I18N';
 import { ScreenShareStatus } from '../ts/types/Calling';
-import { DBVersionFromFutureError } from '../ts/sql/migrations';
 import type { ParsedSignalRoute } from '../ts/util/signalRoutes';
 import { parseSignalRoute } from '../ts/util/signalRoutes';
 import * as dns from '../ts/util/dns';
 import { ZoomFactorService } from '../ts/services/ZoomFactorService';
+import { SafeStorageBackendChangeError } from '../ts/types/SafeStorageBackendChangeError';
+import { LINUX_PASSWORD_STORE_FLAGS } from '../ts/util/linuxPasswordStoreFlags';
+import { getOwn } from '../ts/util/getOwn';
 
 const animationSettings = systemPreferences.getAnimationSettings();
 
@@ -179,6 +181,8 @@ const nativeThemeNotifier = new NativeThemeNotifier();
 nativeThemeNotifier.initialize();
 
 let appStartInitialSpellcheckSetting = true;
+
+let macInitialOpenUrlRoute: ParsedSignalRoute | undefined;
 
 const cliParser = createParser({
   allowUnknown: true,
@@ -282,10 +286,19 @@ if (!process.mas) {
       return true;
     });
 
+    // This event is received in macOS packaged builds.
     app.on('open-url', (event, incomingHref) => {
       event.preventDefault();
       const route = parseSignalRoute(incomingHref);
+
       if (route != null) {
+        // When the app isn't open and you click a signal link to open the app, then
+        // this event will emit before mainWindow is ready. We save the value for later.
+        if (mainWindow == null || !mainWindow.webContents) {
+          macInitialOpenUrlRoute = route;
+          return;
+        }
+
         handleSignalRoute(route);
       }
     });
@@ -351,13 +364,18 @@ async function getResolvedThemeSetting(
   return ThemeType[theme];
 }
 
+type GetBackgroundColorOptionsType = GetThemeSettingOptionsType &
+  Readonly<{
+    signalColors?: boolean;
+  }>;
+
 async function getBackgroundColor(
-  options?: GetThemeSettingOptionsType
+  options?: GetBackgroundColorOptionsType
 ): Promise<string> {
   const theme = await getResolvedThemeSetting(options);
 
   if (theme === 'light') {
-    return '#3a76f0';
+    return options?.signalColors ? '#3a76f0' : '#ffffff';
   }
 
   if (theme === 'dark') {
@@ -385,14 +403,14 @@ async function getLocaleOverrideSetting(): Promise<string | null> {
 
 const zoomFactorService = new ZoomFactorService({
   async getZoomFactorSetting() {
-    const item = await sql.sqlCall('getItemById', 'zoomFactor');
+    const item = await sql.sqlRead('getItemById', 'zoomFactor');
     if (typeof item?.value !== 'number') {
       return null;
     }
     return item.value;
   },
   async setZoomFactorSetting(zoomFactor) {
-    await sql.sqlCall('createOrUpdateItem', {
+    await sql.sqlWrite('createOrUpdateItem', {
       id: 'zoomFactor',
       value: zoomFactor,
     });
@@ -662,17 +680,26 @@ async function createWindow() {
   const usePreloadBundle =
     !isTestEnvironment(getEnvironment()) || forcePreloadBundle;
 
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width: maxWidth, height: maxHeight } = primaryDisplay.workAreaSize;
+  const width = windowConfig
+    ? Math.min(windowConfig.width, maxWidth)
+    : DEFAULT_WIDTH;
+  const height = windowConfig
+    ? Math.min(windowConfig.height, maxHeight)
+    : DEFAULT_HEIGHT;
+
   const windowOptions: Electron.BrowserWindowConstructorOptions = {
     show: false,
-    width: DEFAULT_WIDTH,
-    height: DEFAULT_HEIGHT,
+    width,
+    height,
     minWidth: MIN_WIDTH,
     minHeight: MIN_HEIGHT,
     autoHideMenuBar: false,
     titleBarStyle: mainTitleBarStyle,
     backgroundColor: isTestEnvironment(getEnvironment())
       ? '#ffffff' // Tests should always be rendered on a white background
-      : await getBackgroundColor(),
+      : await getBackgroundColor({ signalColors: true }),
     webPreferences: {
       ...defaultWebPrefs,
       nodeIntegration: false,
@@ -690,7 +717,7 @@ async function createWindow() {
       disableBlinkFeatures: 'Accelerated2dCanvas,AcceleratedSmallCanvases',
     },
     icon: windowIcon,
-    ...pick(windowConfig, ['autoHideMenuBar', 'width', 'height', 'x', 'y']),
+    ...pick(windowConfig, ['autoHideMenuBar', 'x', 'y']),
   };
 
   if (!isNumber(windowOptions.width) || windowOptions.width < MIN_WIDTH) {
@@ -820,12 +847,6 @@ async function createWindow() {
   // App dock icon bounce
   bounce.init(mainWindow);
 
-  mainWindow.on('hide', () => {
-    if (mainWindow && !windowState.shouldQuit()) {
-      mainWindow.webContents.send('set-media-playback-disabled', true);
-    }
-  });
-
   // Emitted when the window is about to be closed.
   // Note: We do most of our shutdown logic here because all windows are closed by
   //   Electron before the app quits.
@@ -850,6 +871,9 @@ async function createWindow() {
     // Prevent the shutdown
     e.preventDefault();
 
+    // Disable media playback
+    mainWindow.webContents.send('set-media-playback-disabled', true);
+
     // In certain cases such as during an active call, we ask the user to confirm close
     // which includes shutdown, clicking X on MacOS or closing to tray.
     let shouldClose = true;
@@ -870,15 +894,18 @@ async function createWindow() {
      * if the user is in fullscreen mode and closes the window, not the
      * application, we need them leave fullscreen first before closing it to
      * prevent a black screen.
+     * Also check for mainWindow because it might become undefined while
+     * waiting for close confirmation.
      *
      * issue: https://github.com/signalapp/Signal-Desktop/issues/4348
      */
-
-    if (mainWindow.isFullScreen()) {
-      mainWindow.once('leave-full-screen', () => mainWindow?.hide());
-      mainWindow.setFullScreen(false);
-    } else {
-      mainWindow.hide();
+    if (mainWindow) {
+      if (mainWindow.isFullScreen()) {
+        mainWindow.once('leave-full-screen', () => mainWindow?.hide());
+        mainWindow.setFullScreen(false);
+      } else {
+        mainWindow.hide();
+      }
     }
 
     // On Mac, or on other platforms when the tray icon is in use, the window
@@ -886,7 +913,11 @@ async function createWindow() {
     const usingTrayIcon = shouldMinimizeToSystemTray(
       await systemTraySettingCache.get()
     );
-    if (!windowState.shouldQuit() && (usingTrayIcon || OS.isMacOS())) {
+    if (
+      mainWindow &&
+      !windowState.shouldQuit() &&
+      (usingTrayIcon || OS.isMacOS())
+    ) {
       if (usingTrayIcon) {
         const shownTrayNotice = ephemeralConfig.get('shown-tray-notice');
         if (shownTrayNotice) {
@@ -1084,11 +1115,16 @@ async function readyForUpdates() {
 
   isReadyForUpdates = true;
 
-  // First, install requested sticker pack
+  // First, handle requested signal URLs
   const incomingHref = maybeGetIncomingSignalRoute(process.argv);
   if (incomingHref) {
     handleSignalRoute(incomingHref);
+  } else if (macInitialOpenUrlRoute) {
+    handleSignalRoute(macInitialOpenUrlRoute);
   }
+
+  // Discard value even if we don't handle a saved URL.
+  macInitialOpenUrlRoute = undefined;
 
   // Second, start checking for app updates
   try {
@@ -1315,7 +1351,7 @@ async function showAbout() {
     title: getResolvedMessagesLocale().i18n('icu:aboutSignalDesktop'),
     titleBarStyle: nonMainTitleBarStyle,
     autoHideMenuBar: true,
-    backgroundColor: await getBackgroundColor(),
+    backgroundColor: await getBackgroundColor({ signalColors: true }),
     show: false,
     webPreferences: {
       ...defaultWebPrefs,
@@ -1401,8 +1437,8 @@ async function showSettingsWindow() {
 
 async function getIsLinked() {
   try {
-    const number = await sql.sqlCall('getItemById', 'number_id');
-    const password = await sql.sqlCall('getItemById', 'password');
+    const number = await sql.sqlRead('getItemById', 'number_id');
+    const password = await sql.sqlRead('getItemById', 'password');
     return Boolean(number && password);
   } catch (e) {
     return false;
@@ -1568,7 +1604,7 @@ const runSQLCorruptionHandler = async () => {
       `Restarting the application immediately. Error: ${error.message}`
   );
 
-  await onDatabaseError(Errors.toLogFormat(error));
+  await onDatabaseError(error);
 };
 
 const runSQLReadonlyHandler = async () => {
@@ -1595,12 +1631,35 @@ function generateSQLKey(): string {
 
 function getSQLKey(): string {
   let update = false;
+  const isLinux = OS.isLinux();
   const legacyKeyValue = userConfig.get('key');
   const modernKeyValue = userConfig.get('encryptedKey');
+  const previousBackend = isLinux
+    ? userConfig.get('safeStorageBackend')
+    : undefined;
 
+  const safeStorageBackend: string | undefined = isLinux
+    ? safeStorage.getSelectedStorageBackend()
+    : undefined;
   const isEncryptionAvailable =
     safeStorage.isEncryptionAvailable() &&
-    (!OS.isLinux() || safeStorage.getSelectedStorageBackend() !== 'basic_text');
+    (!isLinux || safeStorageBackend !== 'basic_text');
+
+  // On Linux the backend can change based on desktop environment and command line flags.
+  // If the backend changes we won't be able to decrypt the key.
+  if (
+    isLinux &&
+    typeof previousBackend === 'string' &&
+    previousBackend !== safeStorageBackend
+  ) {
+    console.error(
+      `Detected change in safeStorage backend, can't decrypt DB key (previous: ${previousBackend}, current: ${safeStorageBackend})`
+    );
+    throw new SafeStorageBackendChangeError({
+      currentBackend: String(safeStorageBackend),
+      previousBackend,
+    });
+  }
 
   let key: string;
   if (typeof modernKeyValue === 'string') {
@@ -1615,6 +1674,13 @@ function getSQLKey(): string {
     if (legacyKeyValue != null) {
       getLogger().info('getSQLKey: removing legacy key');
       userConfig.set('key', undefined);
+    }
+
+    if (isLinux && previousBackend == null) {
+      getLogger().info(
+        `getSQLKey: saving safeStorageBackend: ${safeStorageBackend}`
+      );
+      userConfig.set('safeStorageBackend', safeStorageBackend);
     }
   } else if (typeof legacyKeyValue === 'string') {
     key = legacyKeyValue;
@@ -1638,6 +1704,14 @@ function getSQLKey(): string {
     getLogger().info('getSQLKey: updating encrypted key in the config');
     const encrypted = safeStorage.encryptString(key).toString('hex');
     userConfig.set('encryptedKey', encrypted);
+    userConfig.set('key', undefined);
+
+    if (isLinux && safeStorageBackend) {
+      getLogger().info(
+        `getSQLKey: saving safeStorageBackend: ${safeStorageBackend}`
+      );
+      userConfig.set('safeStorageBackend', safeStorageBackend);
+    }
   } else {
     getLogger().info('getSQLKey: updating plaintext key in the config');
     userConfig.set('key', key);
@@ -1650,14 +1724,41 @@ async function initializeSQL(
   userDataPath: string
 ): Promise<{ ok: true; error: undefined } | { ok: false; error: Error }> {
   sqlInitTimeStart = Date.now();
+
+  let key: string;
+  try {
+    key = getSQLKey();
+  } catch (error) {
+    try {
+      // Initialize with *some* key to setup paths
+      await sql.initialize({
+        appVersion: app.getVersion(),
+        configDir: userDataPath,
+        key: 'abcd',
+        logger: getLogger(),
+      });
+    } catch {
+      // Do nothing, we fail right below anyway.
+    }
+
+    if (error instanceof Error) {
+      return { ok: false, error };
+    }
+
+    return {
+      ok: false,
+      error: new Error(`initializeSQL: Caught a non-error '${error}'`),
+    };
+  }
+
   try {
     // This should be the first awaited call in this function, otherwise
-    // `sql.sqlCall` will throw an uninitialized error instead of waiting for
+    // `sql.sqlRead` will throw an uninitialized error instead of waiting for
     // init to finish.
     await sql.initialize({
       appVersion: app.getVersion(),
       configDir: userDataPath,
-      key: getSQLKey(),
+      key,
       logger: getLogger(),
     });
   } catch (error: unknown) {
@@ -1680,7 +1781,7 @@ async function initializeSQL(
   return { ok: true, error: undefined };
 }
 
-const onDatabaseError = async (error: string) => {
+const onDatabaseError = async (error: Error) => {
   // Prevent window from re-opening
   ready = false;
 
@@ -1698,17 +1799,37 @@ const onDatabaseError = async (error: string) => {
   const copyErrorAndQuitButtonIndex = 0;
   const SIGNAL_SUPPORT_LINK = 'https://support.signal.org/error';
 
-  if (error.includes(DBVersionFromFutureError.name)) {
+  // Note that this error is thrown by the worker process and thus instanceof
+  // check won't work.
+  if (error.name === 'DBVersionFromFutureError') {
     // If the DB version is too new, the user likely opened an older version of Signal,
     // and they would almost never want to delete their data as a result, so we don't show
     // that option
     messageDetail = i18n('icu:databaseError__startOldVersion');
+  } else if (error instanceof SafeStorageBackendChangeError) {
+    const { currentBackend, previousBackend } = error;
+    const previousBackendFlag = getOwn(
+      LINUX_PASSWORD_STORE_FLAGS,
+      previousBackend
+    );
+    messageDetail = previousBackendFlag
+      ? i18n('icu:databaseError__safeStorageBackendChangeWithPreviousFlag', {
+          currentBackend,
+          previousBackend,
+          previousBackendFlag,
+        })
+      : i18n('icu:databaseError__safeStorageBackendChange', {
+          currentBackend,
+          previousBackend,
+        });
   } else {
     // Otherwise, this is some other kind of DB error, let's give them the option to
     // delete.
-    messageDetail = i18n('icu:databaseError__detail', {
-      link: SIGNAL_SUPPORT_LINK,
-    });
+    messageDetail = i18n(
+      'icu:databaseError__detail',
+      { link: SIGNAL_SUPPORT_LINK },
+      { bidi: 'strip' }
+    );
 
     buttons.push(i18n('icu:deleteAndRestart'));
     deleteAllDataButtonIndex = 1;
@@ -1725,7 +1846,9 @@ const onDatabaseError = async (error: string) => {
   });
 
   if (buttonIndex === copyErrorAndQuitButtonIndex) {
-    clipboard.writeText(`Database startup error:\n\n${redactAll(error)}`);
+    clipboard.writeText(
+      `Database startup error:\n\n${redactAll(Errors.toLogFormat(error))}`
+    );
   } else if (
     typeof deleteAllDataButtonIndex === 'number' &&
     buttonIndex === deleteAllDataButtonIndex
@@ -1764,10 +1887,6 @@ const onDatabaseError = async (error: string) => {
 let sqlInitPromise:
   | Promise<{ ok: true; error: undefined } | { ok: false; error: Error }>
   | undefined;
-
-ipc.on('database-error', (_event: Electron.Event, error: string) => {
-  drop(onDatabaseError(error));
-});
 
 ipc.on('database-readonly', (_event: Electron.Event, error: string) => {
   // Just let global_errors.ts handle it
@@ -2029,7 +2148,10 @@ app.on('ready', async () => {
   // This color is to be used only in loading screen and in this case we should
   // never wait for the database to be initialized. Thus the theme setting
   // lookup should be done only in ephemeral config.
-  const backgroundColor = await getBackgroundColor({ ephemeralOnly: true });
+  const backgroundColor = await getBackgroundColor({
+    ephemeralOnly: true,
+    signalColors: true,
+  });
 
   drop(
     // eslint-disable-next-line more/no-then
@@ -2109,7 +2231,7 @@ app.on('ready', async () => {
   if (sqlError) {
     getLogger().error('sql.initialize was unsuccessful; returning early');
 
-    await onDatabaseError(Errors.toLogFormat(sqlError));
+    await onDatabaseError(sqlError);
 
     return;
   }
@@ -2118,10 +2240,10 @@ app.on('ready', async () => {
 
   try {
     const IDB_KEY = 'indexeddb-delete-needed';
-    const item = await sql.sqlCall('getItemById', IDB_KEY);
+    const item = await sql.sqlRead('getItemById', IDB_KEY);
     if (item && item.value) {
-      await sql.sqlCall('removeIndexedDBFiles');
-      await sql.sqlCall('removeItemById', IDB_KEY);
+      await sql.sqlWrite('removeIndexedDBFiles');
+      await sql.sqlWrite('removeItemById', IDB_KEY);
     }
   } catch (err) {
     getLogger().error(
@@ -2286,12 +2408,15 @@ async function requestShutdown() {
     //   exits the app before we've set everything up in preload() (so the browser isn't
     //   yet listening for these events), or if there are a whole lot of stacked-up tasks.
     // Note: two minutes is also our timeout for SQL tasks in data.js in the browser.
-    timeout = setTimeout(() => {
-      getLogger().error(
-        'requestShutdown: Response never received; forcing shutdown.'
-      );
-      resolveFn();
-    }, 2 * 60 * 1000);
+    timeout = setTimeout(
+      () => {
+        getLogger().error(
+          'requestShutdown: Response never received; forcing shutdown.'
+        );
+        resolveFn();
+      },
+      2 * 60 * 1000
+    );
   });
 
   try {
@@ -2491,6 +2616,7 @@ ipc.on(
   async (_event: Electron.Event, logText: string) => {
     const { filePath } = await dialog.showSaveDialog({
       defaultPath: 'debuglog.txt',
+      showsTagField: false,
     });
     if (filePath) {
       await writeFile(filePath, logText);
@@ -2854,9 +2980,11 @@ ipc.handle('show-save-dialog', async (_event, { defaultPath }) => {
 
   const { canceled, filePath: selectedFilePath } = await dialog.showSaveDialog(
     mainWindow,
-    { defaultPath }
+    {
+      defaultPath,
+      showsTagField: false,
+    }
   );
-
   if (canceled || selectedFilePath == null) {
     return { canceled: true };
   }

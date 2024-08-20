@@ -64,10 +64,15 @@ export type StorageAccessType = {
   attachmentMigration_lastProcessedIndex: number;
   blocked: ReadonlyArray<string>;
   defaultConversationColor: DefaultConversationColorType;
+
+  // Not used UI, stored as is when imported from backup.
+  defaultWallpaperPhotoPointer: Uint8Array;
+  defaultWallpaperPreset: number;
+  defaultDimWallpaperInDarkMode: boolean;
+
   customColors: CustomColorsItemType;
   device_name: string;
   existingOnboardingStoryMessageIds: ReadonlyArray<string> | undefined;
-  hasRegisterSupportForUnauthenticatedDelivery: boolean;
   hasSetMyStoriesPrivacy: boolean;
   hasCompletedUsernameOnboarding: boolean;
   hasCompletedUsernameLinkOnboarding: boolean;
@@ -182,6 +187,7 @@ export type StorageAccessType = {
   lastStartup: never;
   sendEditWarningShown: never;
   formattingWarningShown: never;
+  hasRegisterSupportForUnauthenticatedDelivery: never;
 };
 
 export type StorageInterface = {

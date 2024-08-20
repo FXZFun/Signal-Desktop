@@ -60,7 +60,7 @@ export async function parseContactsV2(
       ),
       keysBase64: attachment.localKey,
       size: attachment.size,
-      isLocal: true,
+      type: 'local',
     },
     parseContactsTransform
   );
@@ -147,10 +147,9 @@ export class ParseContactsTransform extends Transform {
           );
           const hash = computeHash(data);
 
-          // eslint-disable-next-line no-await-in-loop
-          const local = await window.Signal.Migrations.writeNewAttachmentData(
-            avatarData
-          );
+          const local =
+            // eslint-disable-next-line no-await-in-loop
+            await window.Signal.Migrations.writeNewAttachmentData(avatarData);
 
           const prepared = prepareContact(this.activeContact, {
             ...this.activeContact.avatar,

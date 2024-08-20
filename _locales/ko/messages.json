@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "데이터베이스 버전이 이 버전의 Signal과 일치하지 않습니다. 컴퓨터에서 최신 버전 Signal을 열었는지 확인하세요."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "OS 암호화 키링 백엔드가 {previousBackend}에서 {currentBackend}(으)로 변경되어 데이터베이스 암호화 키에 접근할 수 없습니다. 이 문제는 데스크톱 환경(예: GNOME 및 KDE 간)이 변경될 때 발생할 수 있습니다.\n\n이전 데스크톱 환경으로 전환하세요."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "OS 암호화 키링 백엔드가 {previousBackend}에서 {currentBackend}(으)로 변경되어 데이터베이스 암호화 키에 접근할 수 없습니다. 이 문제는 데스크톱 환경(예: GNOME 및 KDE 간)이 변경될 때 발생할 수 있습니다.\n\n이전 데스크톱 환경으로 전환하거나 --password-store=\"{previousBackendFlag}\" 명령줄 플래그로 Signal을 실행해 보세요."
+  },
   "icu:mainMenuFile": {
     "messageformat": "파일 (&F)"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Signal을 업데이트하지 못했습니다. {retry} 또는 {url}을(를) 방문하여 수동으로 설치하세요. 그다음 {support}에 이 문제에 관해 문의하세요."
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Signal을 업데이트하지 못했습니다. <retryUpdateButton>업데이트를 다시 시도</retryUpdateButton>하거나 {url}을(를) 방문하여 수동으로 설치하세요. 그런 다음 <contactSupportLink>지원팀</contactSupportLink>에 이 문제에 관해 문의하세요."
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Signal을 업데이트하지 못했습니다. {url}을(를) 방문하여 수동으로 설치하세요. 그다음 {support}에 이 문제에 관해 문의하세요."
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Signal을 업데이트하지 못했습니다. {url}을(를) 방문하여 수동으로 설치하세요. 그런 다음 <contactSupportLink>지원팀</contactSupportLink>에 이 문제에 관해 문의하세요."
   },
   "icu:readOnlyVolume": {
     "messageformat": "Signal Desktop이 macOS 검역에 걸렸을 가능성이 크며 자동 업데이트할 수 없습니다. 탐색기를 사용하여 {app} 앱을 {folder} 폴더로 이동하세요."
@@ -990,7 +1002,7 @@
     "messageformat": "이 대화의 모든 메시지가 기기에서 삭제됩니다. 메시지를 삭제한 후에도 이 대화를 계속 검색할 수 있습니다."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "이 대화의 모든 메시지가 모든 기기에서 삭제됩니다. 메시지를 삭제한 후에도 이 대화를 계속 검색할 수 있습니다."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "그룹 나가기"
@@ -1113,25 +1125,22 @@
     "messageformat": "설정"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "Android는 {plusButton}, iPhone은 {linkNewDevice}을(를) 탭하세요."
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "QR 코드를 로드할 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요. <retry>다시 시도하기</retry>"
+    "messageformat": "{linkNewDevice}을(를) 탭하세요."
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "QR 코드를 로드할 수 없습니다. 연결을 확인하고 다시 시도하세요."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>예기치 못한 오류가 발생했습니다.</paragraph><paragraph>다시 시도하세요.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "Signal에서 현재 네트워크를 사용하여 이 기기를 연결할 수 없습니다."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "재시도"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "도움 받기"
   },
   "icu:Install__support-link": {
     "messageformat": "도움이 필요하신가요?"
@@ -1191,10 +1200,10 @@
     "messageformat": "다시 걸기"
   },
   "icu:calling__join": {
-    "messageformat": "전화 참여하기"
+    "messageformat": "통화 참여"
   },
   "icu:calling__return": {
-    "messageformat": "전화로 돌아가기"
+    "messageformat": "통화로 돌아가기"
   },
   "icu:calling__lobby-automatically-muted-because-there-are-a-lot-of-people": {
     "messageformat": "통화 규모로 인해 마이크가 음소거 처리되었습니다."
@@ -1305,34 +1314,34 @@
     "messageformat": "참여 요청 거부"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "모두 승인"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "모두 거부"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, other {요청 {count,number}개를 승인할까요?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, other {요청 {count,number}개를 거부할까요?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, other {통화에 {count,number}명을 추가합니다.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, other {통화에 {count,number}명을 추가하지 않습니다.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, other {{count,number}명이 통화 참여를 요청함}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "참여하기를 원합니다..."
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, other {+요청 {count,number}개}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, other {통화에 {count,number}명이 추가되었습니다.}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, other {{count,number}명이 손을 듦}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, other {이 통화 참여자 · {people,number}명}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "{name} 님을 차단했습니다."
+  "icu:calling__blocked-participant": {
+    "messageformat": "{name} 님을 차단함"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "{name} 님을 차단함"
   },
   "icu:calling__block-info": {
-    "messageformat": "상대와 음성 및 동영상을 주고받을 수 없습니다."
+    "messageformat": "음성 또는 영상 통화를 더 이상 수신하지 않으며 차단된 사람도 나의 통화를 수신할 수 없습니다."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "{name} 님의 음성 및 영상 통화를 수신할 수 없습니다."
@@ -2613,10 +2625,10 @@
     "messageformat": "거절"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "음성 통화를 거부했습니다."
+    "messageformat": "음성 통화를 거부함"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "영상 통화를 거부했습니다."
+    "messageformat": "화상 통화를 거부함"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "수신 음성 통화"
@@ -2649,10 +2661,10 @@
     "messageformat": "Signal이 알림 영역에서 계속 실행됩니다. Signal 설정에서 이 설정을 변경할 수 있습니다."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "음성 통화 수신 중..."
+    "messageformat": "수신 음성 통화"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "영상 통화 수신 중…"
+    "messageformat": "수신 화상 통화"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "발신 음성 통화"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, other {{people,number}명이 통화 중}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "그룹 통화가 종료됨"
+    "messageformat": "화상 통화를 종료했습니다"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "그룹 통화가 시작됨"
+    "messageformat": "화상 통화를 시작함"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "그룹 통화를 시작함"
+    "messageformat": "화상 통화를 시작했습니다"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name} 님이 그룹 통화를 시작함"
+    "messageformat": "{name} 님이 화상 통화를 시작했습니다"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "이미 통화 참가자 수 최대"
@@ -2829,13 +2841,13 @@
     "messageformat": "이 사용자를 통화에서 제거"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "{name} 님을 통화에서 제거할까요?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "제거"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "통화에서 차단"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, other {{count,number}명}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "구성 버튼"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "전달 대상"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "사용자 이름은 숫자로 시작할 수 없습니다."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "사용자 이름은 {min,number}자 이상이어야 합니다."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "사용자명은 {max,number}자 이하여야 합니다."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, other {사용자 이름은 {min,number}자 이상이어야 합니다.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "삭제"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "사용자 이름을 삭제하려면 휴대폰에서 Signal을 열고 설정 > 프로필로 이동하세요."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "사용자 이름 복사 또는 삭제"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "표시할 최근 스토리가 없습니다."
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "보내는 중…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "클릭하여 스토리 보기"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "보낸 사람: {name} 님, 받는 사람: {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "클릭하여 통화 보기 또는 시작"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "검색"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "최근 통화 없음 친구에게 전화를 걸어 시작하세요."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "“{query}” 검색 결과 없음"
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "부재중"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "거부됨"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "그룹 통화"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "현재 통화를 종료하시겠어요?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "새 통화에 참여하려면 먼저 현재 통화를 끝내야 합니다."
+    "messageformat": "새 통화를 시작하거나 새 통화에 참여하려면 먼저 현재 통화를 끝내야 합니다."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "통화 종료"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "통화 링크"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {발신 화상 통화} other {수신 화상 통화}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "부재중 화상 통화"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "응답하지 않은 화상 통화"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "화상 통화를 거부함"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "참가"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "통화 이름 추가"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "통화 이름 수정"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "모든 멤버 승인"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "링크 복사"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Signal을 통해 링크 공유"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "링크 삭제"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "통화 링크를 삭제할까요?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "이 링크는 더 이상 누구도 사용할 수 없습니다."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "취소"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "삭제"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "통화 링크 세부 정보"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "통화 이름 추가"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "통화 이름 수정"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "모든 멤버 승인"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "꺼짐"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "켜짐"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "통화 이름 추가"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "통화 이름 수정"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "통화 이름"
@@ -5539,16 +5617,22 @@
     "messageformat": "사소한 변경 사항과 버그 수정 및 성능 개선. Signal을 이용해 주셔서 감사합니다!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "이제 모바일 기기에서 보낸 연락처 카드를 전달할 수 있습니다."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "이번 릴리스에서는 대용량 메시지 대화 삭제 프로세스 속도가 향상되었습니다."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "새로운 고화질 이모지 지원을 통해 대형 이모지 캐릭터가 표시되는 방식을 개선했습니다."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "다른 통화가 이미 진행 중일 때 통화를 종료하고 새 통화에 참여하는 바로 가기를 추가했습니다."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "또한 최신 이모지 캐릭터를 지원하도록 스티커 크리에이터를 업데이트했습니다."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "또한 이 업데이트는 로캘이 `POSIX`로 설정된 사용자의 Linux 시작 충돌을 해결합니다."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "이제 대조를 향상하여 긴 캡션이 포함된 스토리의 텍스트를 더 쉽게 읽을 수 있습니다."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "이 릴리스는 또한 링크 미리 보기 생성 기능을 개선하고, 설정 창을 닫을 때 발생하는 사소한 표시 버그를 해결합니다."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

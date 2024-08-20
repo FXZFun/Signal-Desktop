@@ -7,9 +7,10 @@ import { v4 as generateUuid } from 'uuid';
 import pMap from 'p-map';
 import { Writable } from 'stream';
 import { isNumber } from 'lodash';
+import { CallLinkRootKey } from '@signalapp/ringrtc';
 
 import { Backups, SignalService } from '../../protobuf';
-import Data from '../../sql/Client';
+import { DataWriter } from '../../sql/Client';
 import type { StoryDistributionWithMembersType } from '../../sql/Interface';
 import * as log from '../../logging/log';
 import { GiftBadgeStates } from '../../components/conversation/Message';
@@ -23,6 +24,7 @@ import {
 import { isStoryDistributionId } from '../../types/StoryDistributionId';
 import * as Errors from '../../types/errors';
 import { PaymentEventKind } from '../../types/Payment';
+import { MessageRequestResponseEvent } from '../../types/MessageRequestResponseEvent';
 import {
   ContactFormType,
   AddressType as ContactAddressType,
@@ -32,6 +34,12 @@ import {
   STICKERPACK_KEY_BYTE_LEN,
   downloadStickerPack,
 } from '../../types/Stickers';
+import type {
+  ConversationColorType,
+  CustomColorsItemType,
+  CustomColorType,
+  CustomColorDataType,
+} from '../../types/Colors';
 import type {
   ConversationAttributesType,
   CustomError,
@@ -61,13 +69,14 @@ import { SendStatus } from '../../messages/MessageSendState';
 import type { SendStateByConversationId } from '../../messages/MessageSendState';
 import { SeenStatus } from '../../MessageSeenStatus';
 import * as Bytes from '../../Bytes';
-import { BACKUP_VERSION } from './constants';
-import type { AboutMe } from './types';
+import { BACKUP_VERSION, WALLPAPER_TO_BUBBLE_COLOR } from './constants';
+import type { AboutMe, LocalChatStyle } from './types';
 import type { GroupV2ChangeDetailType } from '../../groups';
 import { queueAttachmentDownloads } from '../../util/queueAttachmentDownloads';
 import { drop } from '../../util/drop';
 import { isNotNil } from '../../util/isNotNil';
 import { isGroup, isGroupV2 } from '../../util/whatTypeOfConversation';
+import { rgbToHSL } from '../../util/rgbToHSL';
 import {
   convertBackupMessageAttachmentToAttachment,
   convertFilePointerToAttachment,
@@ -76,6 +85,20 @@ import { filterAndClean } from '../../types/BodyRange';
 import { APPLICATION_OCTET_STREAM, stringToMIMEType } from '../../types/MIME';
 import { copyFromQuotedMessage } from '../../messages/copyQuote';
 import { groupAvatarJobQueue } from '../../jobs/groupAvatarJobQueue';
+import {
+  AdhocCallStatus,
+  CallDirection,
+  CallMode,
+  CallType,
+  DirectCallStatus,
+  GroupCallStatus,
+} from '../../types/CallDisposition';
+import type { CallHistoryDetails } from '../../types/CallDisposition';
+import { CallLinkRestrictions } from '../../types/CallLink';
+import type { CallLinkType } from '../../types/CallLink';
+
+import { fromAdminKeyBytes } from '../../util/callLinks';
+import { getRoomIdFromRootKey } from '../../util/callLinksRingrtc';
 
 const MAX_CONCURRENCY = 10;
 
@@ -105,14 +128,14 @@ async function processConversationOpBatch(
       `updates=${updates.length}`
   );
 
-  await Data.saveConversations(saves);
-  await Data.updateConversations(updates);
+  await DataWriter.saveConversations(saves);
+  await DataWriter.updateConversations(updates);
 }
 async function processMessagesBatch(
   ourAci: AciString,
   batch: ReadonlyArray<MessageAttributesType>
 ): Promise<void> {
-  const ids = await Data.saveMessages(batch, {
+  const ids = await DataWriter.saveMessages(batch, {
     forceSave: true,
     ourAci,
   });
@@ -131,7 +154,7 @@ async function processMessagesBatch(
 
     if (editHistory?.length) {
       drop(
-        Data.saveEditedMessages(
+        DataWriter.saveEditedMessages(
           attributes,
           ourAci,
           editHistory.slice(0, -1).map(({ timestamp }) => ({
@@ -223,6 +246,7 @@ export class BackupImportStream extends Writable {
     number,
     ConversationAttributesType
   >();
+  private readonly recipientIdToCallLink = new Map<number, CallLinkType>();
   private readonly chatIdToConvo = new Map<
     number,
     ConversationAttributesType
@@ -249,6 +273,9 @@ export class BackupImportStream extends Writable {
   });
   private ourConversation?: ConversationAttributesType;
   private pinnedConversations = new Array<[number, string]>();
+  private customColorById = new Map<number, CustomColorDataType>();
+  private releaseNotesRecipientId: Long | undefined;
+  private releaseNotesChatId: Long | undefined;
 
   constructor() {
     super({ objectMode: true });
@@ -371,9 +398,20 @@ export class BackupImportStream extends Writable {
       if (frame.recipient) {
         const { recipient } = frame;
         strictAssert(recipient.id != null, 'Recipient must have an id');
+        const recipientId = recipient.id.toNumber();
+
         let convo: ConversationAttributesType;
         if (recipient.contact) {
           convo = await this.fromContact(recipient.contact);
+        } else if (recipient.releaseNotes) {
+          strictAssert(
+            this.releaseNotesRecipientId == null,
+            'Duplicate release notes recipient'
+          );
+          this.releaseNotesRecipientId = recipient.id;
+
+          // Not yet supported
+          return;
         } else if (recipient.self) {
           strictAssert(this.ourConversation != null, 'Missing account data');
           convo = this.ourConversation;
@@ -381,6 +419,11 @@ export class BackupImportStream extends Writable {
           convo = await this.fromGroup(recipient.group);
         } else if (recipient.distributionList) {
           await this.fromDistributionList(recipient.distributionList);
+
+          // Not a conversation
+          return;
+        } else if (recipient.callLink) {
+          await this.fromCallLink(recipientId, recipient.callLink);
 
           // Not a conversation
           return;
@@ -393,7 +436,7 @@ export class BackupImportStream extends Writable {
           this.saveConversation(convo);
         }
 
-        this.recipientIdToConvo.set(recipient.id.toNumber(), convo);
+        this.recipientIdToConvo.set(recipientId, convo);
       } else if (frame.chat) {
         await this.fromChat(frame.chat);
       } else if (frame.chatItem) {
@@ -406,6 +449,8 @@ export class BackupImportStream extends Writable {
         await this.fromChatItem(frame.chatItem, { aboutMe });
       } else if (frame.stickerPack) {
         await this.fromStickerPack(frame.stickerPack);
+      } else if (frame.adHocCall) {
+        await this.fromAdHocCall(frame.adHocCall);
       } else {
         log.warn(`${this.logId}: unsupported frame item ${frame.item}`);
       }
@@ -441,6 +486,12 @@ export class BackupImportStream extends Writable {
       'import.saveMessage'
     );
     this.saveMessageBatcher.add(attributes);
+  }
+
+  private async saveCallHistory(
+    callHistory: CallHistoryDetails
+  ): Promise<void> {
+    await DataWriter.saveCallHistory(callHistory);
   }
 
   private async fromAccount({
@@ -540,10 +591,10 @@ export class BackupImportStream extends Writable {
       'preferContactAvatars',
       accountSettings?.preferContactAvatars === true
     );
-    if (accountSettings?.universalExpireTimer) {
+    if (accountSettings?.universalExpireTimerSeconds) {
       await storage.put(
         'universalExpireTimer',
-        accountSettings.universalExpireTimer
+        accountSettings.universalExpireTimerSeconds
       );
     }
     await storage.put(
@@ -610,6 +661,40 @@ export class BackupImportStream extends Writable {
       await window.storage.put(
         'phoneNumberDiscoverability',
         PhoneNumberDiscoverability.Discoverable
+      );
+    }
+
+    // It is important to import custom chat colors before default styles
+    // because we build the uuid => integer id map for the colors.
+    await this.fromCustomChatColors(accountSettings?.customChatColors);
+
+    const defaultChatStyle = this.fromChatStyle(
+      accountSettings?.defaultChatStyle
+    );
+
+    if (defaultChatStyle.color != null) {
+      await window.storage.put('defaultConversationColor', {
+        color: defaultChatStyle.color,
+        customColorData: defaultChatStyle.customColorData,
+      });
+    }
+
+    if (defaultChatStyle.wallpaperPhotoPointer != null) {
+      await window.storage.put(
+        'defaultWallpaperPhotoPointer',
+        defaultChatStyle.wallpaperPhotoPointer
+      );
+    }
+    if (defaultChatStyle.wallpaperPreset != null) {
+      await window.storage.put(
+        'defaultWallpaperPreset',
+        defaultChatStyle.wallpaperPreset
+      );
+    }
+    if (defaultChatStyle.dimWallpaperInDarkMode != null) {
+      await window.storage.put(
+        'defaultDimWallpaperInDarkMode',
+        defaultChatStyle.dimWallpaperInDarkMode
       );
     }
 
@@ -930,12 +1015,54 @@ export class BackupImportStream extends Writable {
       };
     }
 
-    await Data.createNewStoryDistribution(result);
+    await DataWriter.createNewStoryDistribution(result);
+  }
+
+  private async fromCallLink(
+    recipientId: number,
+    callLinkProto: Backups.ICallLink
+  ): Promise<void> {
+    const {
+      rootKey: rootKeyBytes,
+      adminKey,
+      name,
+      restrictions,
+      expirationMs,
+    } = callLinkProto;
+
+    strictAssert(rootKeyBytes?.length, 'fromCallLink: rootKey is required');
+    strictAssert(name, 'fromCallLink: name is required');
+
+    const rootKey = CallLinkRootKey.fromBytes(Buffer.from(rootKeyBytes));
+
+    const callLink: CallLinkType = {
+      roomId: getRoomIdFromRootKey(rootKey),
+      rootKey: rootKey.toString(),
+      adminKey: adminKey?.length ? fromAdminKeyBytes(adminKey) : null,
+      name,
+      restrictions: fromCallLinkRestrictionsProto(restrictions),
+      revoked: false,
+      expiration: expirationMs?.toNumber() || null,
+    };
+
+    this.recipientIdToCallLink.set(recipientId, callLink);
+
+    await DataWriter.insertCallLink(callLink);
   }
 
   private async fromChat(chat: Backups.IChat): Promise<void> {
     strictAssert(chat.id != null, 'chat must have an id');
     strictAssert(chat.recipientId != null, 'chat must have a recipientId');
+
+    // Drop release notes chat
+    if (this.releaseNotesRecipientId?.eq(chat.recipientId)) {
+      strictAssert(
+        this.releaseNotesChatId == null,
+        'Duplicate release notes chat'
+      );
+      this.releaseNotesChatId = chat.id;
+      return;
+    }
 
     const conversation = this.recipientIdToConvo.get(
       chat.recipientId.toNumber()
@@ -959,6 +1086,27 @@ export class BackupImportStream extends Writable {
     conversation.dontNotifyForMentionsIfMuted =
       chat.dontNotifyForMentionsIfMuted === true;
 
+    const chatStyle = this.fromChatStyle(chat.style);
+
+    if (chatStyle.wallpaperPhotoPointer != null) {
+      conversation.wallpaperPhotoPointerBase64 = Bytes.toBase64(
+        chatStyle.wallpaperPhotoPointer
+      );
+    }
+    if (chatStyle.wallpaperPreset != null) {
+      conversation.wallpaperPreset = chatStyle.wallpaperPreset;
+    }
+    if (chatStyle.color != null) {
+      conversation.conversationColor = chatStyle.color;
+    }
+    if (chatStyle.customColorData != null) {
+      conversation.customColor = chatStyle.customColorData.value;
+      conversation.customColorId = chatStyle.customColorData.id;
+    }
+    if (chatStyle.dimWallpaperInDarkMode != null) {
+      conversation.dimWallpaperInDarkMode = chatStyle.dimWallpaperInDarkMode;
+    }
+
     this.updateConversation(conversation);
 
     if (chat.pinnedOrder != null) {
@@ -980,6 +1128,11 @@ export class BackupImportStream extends Writable {
     strictAssert(item.chatId != null, `${logId}: must have a chatId`);
     strictAssert(item.dateSent != null, `${logId}: must have a dateSent`);
     strictAssert(timestamp, `${logId}: must have a timestamp`);
+
+    if (this.releaseNotesChatId?.eq(item.chatId)) {
+      // Drop release notes messages
+      return;
+    }
 
     const chatConvo = this.chatIdToConvo.get(item.chatId.toNumber());
     strictAssert(
@@ -1239,7 +1392,12 @@ export class BackupImportStream extends Writable {
     }
 
     strictAssert(directionless, 'Absent direction state');
-    return { patch: {} };
+    return {
+      patch: {
+        readStatus: ReadStatus.Read,
+        seenStatus: SeenStatus.Seen,
+      },
+    };
   }
 
   private async fromStandardMessage(
@@ -1667,7 +1825,7 @@ export class BackupImportStream extends Writable {
       timestamp: number;
     }
   ): Promise<ChatItemParseResult | undefined> {
-    const { aboutMe, author } = options;
+    const { aboutMe, author, conversation } = options;
 
     if (updateMessage.groupChange) {
       return this.fromGroupUpdateMessage(updateMessage.groupChange, options);
@@ -1677,10 +1835,9 @@ export class BackupImportStream extends Writable {
       const { expiresInMs } = updateMessage.expirationTimerChange;
 
       const sourceServiceId = author?.serviceId ?? aboutMe.aci;
-      const expireTimer =
-        isNumber(expiresInMs) && expiresInMs
-          ? DurationInSeconds.fromMillis(expiresInMs)
-          : DurationInSeconds.fromSeconds(0);
+      const expireTimer = DurationInSeconds.fromMillis(
+        expiresInMs?.toNumber() ?? 0
+      );
 
       return {
         message: {
@@ -1781,8 +1938,117 @@ export class BackupImportStream extends Writable {
       };
     }
 
-    // TODO (DESKTOP-6964): check these fields
-    //   updateMessage.callingMessage
+    if (updateMessage.groupCall) {
+      const { groupId } = conversation;
+
+      if (!isGroup(conversation)) {
+        throw new Error('groupCall: Conversation is not a group!');
+      }
+      if (!groupId) {
+        throw new Error('groupCall: No groupId available on conversation');
+      }
+
+      const {
+        callId: callIdLong,
+        state,
+        ringerRecipientId,
+        startedCallRecipientId,
+        startedCallTimestamp,
+        read,
+      } = updateMessage.groupCall;
+
+      const initiator =
+        ringerRecipientId?.toNumber() || startedCallRecipientId?.toNumber();
+      const ringer = isNumber(initiator)
+        ? this.recipientIdToConvo.get(initiator)
+        : undefined;
+
+      if (!callIdLong) {
+        throw new Error('groupCall: callId is required!');
+      }
+      if (!startedCallTimestamp) {
+        throw new Error('groupCall: startedCallTimestamp is required!');
+      }
+      const isRingerMe = ringer?.serviceId === aboutMe.aci;
+
+      const callId = callIdLong.toString();
+      const callHistory: CallHistoryDetails = {
+        callId,
+        status: fromGroupCallStateProto(state),
+        mode: CallMode.Group,
+        type: CallType.Group,
+        ringerId: ringer?.serviceId ?? null,
+        peerId: groupId,
+        direction: isRingerMe ? CallDirection.Outgoing : CallDirection.Incoming,
+        timestamp: startedCallTimestamp.toNumber(),
+      };
+
+      await this.saveCallHistory(callHistory);
+
+      return {
+        message: {
+          type: 'call-history',
+          callId,
+          sourceServiceId: undefined,
+          readStatus: ReadStatus.Read,
+          seenStatus: read ? SeenStatus.Seen : SeenStatus.Unseen,
+        },
+        additionalMessages: [],
+      };
+    }
+
+    if (updateMessage.individualCall) {
+      const {
+        callId: callIdLong,
+        type,
+        direction: protoDirection,
+        state,
+        startedCallTimestamp,
+        read,
+      } = updateMessage.individualCall;
+
+      if (!callIdLong) {
+        throw new Error('individualCall: callId is required!');
+      }
+      if (!startedCallTimestamp) {
+        throw new Error('individualCall: startedCallTimestamp is required!');
+      }
+
+      const peerId = conversation.serviceId || conversation.e164;
+      strictAssert(peerId, 'individualCall: no peerId found for call');
+
+      const callId = callIdLong.toString();
+      const direction = fromIndividualCallDirectionProto(protoDirection);
+      const ringerId =
+        direction === CallDirection.Outgoing
+          ? aboutMe.aci
+          : conversation.serviceId;
+      strictAssert(ringerId, 'individualCall: no ringerId found');
+
+      const callHistory: CallHistoryDetails = {
+        callId,
+        status: fromIndividualCallStateProto(state),
+        mode: CallMode.Direct,
+        type: fromIndividualCallTypeProto(type),
+        ringerId,
+        peerId,
+        direction,
+        timestamp: startedCallTimestamp.toNumber(),
+      };
+
+      await this.saveCallHistory(callHistory);
+
+      return {
+        message: {
+          type: 'call-history',
+          callId,
+          sourceServiceId: undefined,
+          readStatus: ReadStatus.Read,
+          seenStatus: read ? SeenStatus.Seen : SeenStatus.Unseen,
+        },
+        additionalMessages: [],
+      };
+    }
 
     return undefined;
   }
@@ -2305,10 +2571,9 @@ export class BackupImportStream extends Writable {
           );
         }
         const sourceServiceId = fromAciObject(Aci.fromUuidBytes(updaterAci));
-        const expireTimer =
-          isNumber(expiresInMs) && expiresInMs
-            ? DurationInSeconds.fromMillis(expiresInMs)
-            : undefined;
+        const expireTimer = expiresInMs
+          ? DurationInSeconds.fromMillis(expiresInMs.toNumber())
+          : undefined;
         additionalMessages.push({
           type: 'timer-notification',
           sourceServiceId,
@@ -2389,6 +2654,7 @@ export class BackupImportStream extends Writable {
     }
   ): Promise<Partial<MessageAttributesType> | undefined> {
     const { Type } = Backups.SimpleChatUpdate;
+    strictAssert(simpleUpdate.type != null, 'Simple update missing type');
     switch (simpleUpdate.type) {
       case Type.END_SESSION:
         return {
@@ -2429,7 +2695,7 @@ export class BackupImportStream extends Writable {
         return {
           type: 'delivery-issue',
         };
-      case Type.BOOST_REQUEST:
+      case Type.RELEASE_CHANNEL_DONATION_REQUEST:
         log.warn('backups: dropping boost request from release notes');
         return undefined;
       case Type.PAYMENTS_ACTIVATED:
@@ -2451,8 +2717,13 @@ export class BackupImportStream extends Writable {
           requiredProtocolVersion:
             SignalService.DataMessage.ProtocolVersion.CURRENT - 1,
         };
+      case Type.REPORTED_SPAM:
+        return {
+          type: 'message-request-response-event',
+          messageRequestResponseEvent: MessageRequestResponseEvent.SPAM,
+        };
       default:
-        throw new Error('Not implemented');
+        throw new Error(`Unsupported update type: ${simpleUpdate.type}`);
     }
   }
 
@@ -2477,4 +2748,366 @@ export class BackupImportStream extends Writable {
       })
     );
   }
+
+  private async fromAdHocCall({
+    callId: callIdLong,
+    recipientId: recipientIdLong,
+    state,
+    callTimestamp,
+  }: Backups.IAdHocCall): Promise<void> {
+    strictAssert(callIdLong, 'AdHocCall must have a callId');
+
+    const callId = callIdLong.toString();
+    const logId = `fromAdhocCall(${callId.slice(-2)})`;
+
+    strictAssert(callTimestamp, `${logId}: must have a valid timestamp`);
+    strictAssert(recipientIdLong, 'AdHocCall must have a recipientIdLong');
+
+    const recipientId = recipientIdLong.toNumber();
+    const callLink = this.recipientIdToCallLink.get(recipientId);
+
+    if (!callLink) {
+      log.warn(
+        `${logId}: Dropping ad-hoc call, Call Link for recipientId ${recipientId} not found`
+      );
+      return;
+    }
+
+    const callHistory: CallHistoryDetails = {
+      callId,
+      peerId: callLink.roomId,
+      ringerId: null,
+      mode: CallMode.Adhoc,
+      type: CallType.Adhoc,
+      direction: CallDirection.Unknown,
+      timestamp: callTimestamp.toNumber(),
+      status: fromAdHocCallStateProto(state),
+    };
+
+    await this.saveCallHistory(callHistory);
+  }
+
+  private async fromCustomChatColors(
+    customChatColors:
+      | ReadonlyArray<Backups.ChatStyle.ICustomChatColor>
+      | undefined
+      | null
+  ): Promise<void> {
+    if (!customChatColors?.length) {
+      return;
+    }
+
+    const customColors: CustomColorsItemType = {
+      version: 1,
+      colors: {},
+    };
+
+    for (const color of customChatColors) {
+      const uuid = generateUuid();
+      let value: CustomColorType;
+
+      if (color.solid) {
+        value = {
+          start: rgbIntToHSL(color.solid),
+        };
+      } else {
+        strictAssert(color.gradient != null, 'Either solid or gradient');
+        strictAssert(color.gradient.colors != null, 'Missing gradient colors');
+
+        const start = color.gradient.colors.at(0);
+        const end = color.gradient.colors.at(-1);
+        const deg = color.gradient.angle;
+
+        strictAssert(start != null, 'Missing start color');
+        strictAssert(end != null, 'Missing end color');
+        strictAssert(deg != null, 'Missing angle');
+
+        value = {
+          start: rgbIntToHSL(start),
+          end: rgbIntToHSL(end),
+          deg,
+        };
+      }
+
+      customColors.colors[uuid] = value;
+      this.customColorById.set(color.id?.toNumber() || 0, {
+        id: uuid,
+        value,
+      });
+    }
+
+    await window.storage.put('customColors', customColors);
+  }
+
+  private fromChatStyle(chatStyle: Backups.IChatStyle | null | undefined): Omit<
+    LocalChatStyle,
+    'customColorId'
+  > & {
+    customColorData: CustomColorDataType | undefined;
+  } {
+    if (!chatStyle) {
+      return {
+        wallpaperPhotoPointer: undefined,
+        wallpaperPreset: undefined,
+        color: 'ultramarine',
+        customColorData: undefined,
+        dimWallpaperInDarkMode: undefined,
+      };
+    }
+
+    let wallpaperPhotoPointer: Uint8Array | undefined;
+    let wallpaperPreset: number | undefined;
+    const dimWallpaperInDarkMode = dropNull(chatStyle.dimWallpaperInDarkMode);
+
+    if (chatStyle.wallpaperPhoto) {
+      wallpaperPhotoPointer = Backups.FilePointer.encode(
+        chatStyle.wallpaperPhoto
+      ).finish();
+    } else if (chatStyle.wallpaperPreset != null) {
+      wallpaperPreset = chatStyle.wallpaperPreset;
+    }
+
+    let color: ConversationColorType | undefined;
+    let customColorData: CustomColorDataType | undefined;
+    if (chatStyle.autoBubbleColor) {
+      if (wallpaperPreset != null) {
+        color = WALLPAPER_TO_BUBBLE_COLOR.get(wallpaperPreset) || 'ultramarine';
+      } else {
+        color = 'ultramarine';
+      }
+    } else if (chatStyle.bubbleColorPreset != null) {
+      const { BubbleColorPreset } = Backups.ChatStyle;
+
+      switch (chatStyle.bubbleColorPreset) {
+        case BubbleColorPreset.SOLID_CRIMSON:
+          color = 'crimson';
+          break;
+        case BubbleColorPreset.SOLID_VERMILION:
+          color = 'vermilion';
+          break;
+        case BubbleColorPreset.SOLID_BURLAP:
+          color = 'burlap';
+          break;
+        case BubbleColorPreset.SOLID_FOREST:
+          color = 'forest';
+          break;
+        case BubbleColorPreset.SOLID_WINTERGREEN:
+          color = 'wintergreen';
+          break;
+        case BubbleColorPreset.SOLID_TEAL:
+          color = 'teal';
+          break;
+        case BubbleColorPreset.SOLID_BLUE:
+          color = 'blue';
+          break;
+        case BubbleColorPreset.SOLID_INDIGO:
+          color = 'indigo';
+          break;
+        case BubbleColorPreset.SOLID_VIOLET:
+          color = 'violet';
+          break;
+        case BubbleColorPreset.SOLID_PLUM:
+          color = 'plum';
+          break;
+        case BubbleColorPreset.SOLID_TAUPE:
+          color = 'taupe';
+          break;
+        case BubbleColorPreset.SOLID_STEEL:
+          color = 'steel';
+          break;
+        case BubbleColorPreset.GRADIENT_EMBER:
+          color = 'ember';
+          break;
+        case BubbleColorPreset.GRADIENT_MIDNIGHT:
+          color = 'midnight';
+          break;
+        case BubbleColorPreset.GRADIENT_INFRARED:
+          color = 'infrared';
+          break;
+        case BubbleColorPreset.GRADIENT_LAGOON:
+          color = 'lagoon';
+          break;
+        case BubbleColorPreset.GRADIENT_FLUORESCENT:
+          color = 'fluorescent';
+          break;
+        case BubbleColorPreset.GRADIENT_BASIL:
+          color = 'basil';
+          break;
+        case BubbleColorPreset.GRADIENT_SUBLIME:
+          color = 'sublime';
+          break;
+        case BubbleColorPreset.GRADIENT_SEA:
+          color = 'sea';
+          break;
+        case BubbleColorPreset.GRADIENT_TANGERINE:
+          color = 'tangerine';
+          break;
+        case BubbleColorPreset.SOLID_ULTRAMARINE:
+        default:
+          color = 'ultramarine';
+          break;
+      }
+    } else {
+      strictAssert(chatStyle.customColorId != null, 'Missing custom color id');
+
+      const entry = this.customColorById.get(
+        chatStyle.customColorId.toNumber()
+      );
+      strictAssert(entry != null, 'Missing custom color');
+
+      color = 'custom';
+      customColorData = entry;
+    }
+
+    return {
+      wallpaperPhotoPointer,
+      wallpaperPreset,
+      color,
+      customColorData,
+      dimWallpaperInDarkMode,
+    };
+  }
+}
+
+function rgbIntToHSL(intValue: number): { hue: number; saturation: number } {
+  const { h: hue, s: saturation } = rgbToHSL(
+    // eslint-disable-next-line no-bitwise
+    (intValue >>> 16) & 0xff,
+    // eslint-disable-next-line no-bitwise
+    (intValue >>> 8) & 0xff,
+    // eslint-disable-next-line no-bitwise
+    intValue & 0xff
+  );
+
+  return { hue, saturation };
+}
+
+function fromGroupCallStateProto(
+  state: Backups.GroupCall.State | undefined | null
+): GroupCallStatus {
+  const values = Backups.GroupCall.State;
+
+  if (state == null) {
+    return GroupCallStatus.GenericGroupCall;
+  }
+
+  if (state === values.GENERIC) {
+    return GroupCallStatus.GenericGroupCall;
+  }
+  if (state === values.OUTGOING_RING) {
+    return GroupCallStatus.OutgoingRing;
+  }
+  if (state === values.RINGING) {
+    return GroupCallStatus.Ringing;
+  }
+  if (state === values.JOINED) {
+    return GroupCallStatus.Joined;
+  }
+  if (state === values.ACCEPTED) {
+    return GroupCallStatus.Accepted;
+  }
+  if (state === values.MISSED) {
+    return GroupCallStatus.Missed;
+  }
+  if (state === values.MISSED_NOTIFICATION_PROFILE) {
+    return GroupCallStatus.MissedNotificationProfile;
+  }
+  if (state === values.DECLINED) {
+    return GroupCallStatus.Declined;
+  }
+
+  return GroupCallStatus.GenericGroupCall;
+}
+
+function fromIndividualCallDirectionProto(
+  direction: Backups.IndividualCall.Direction | undefined | null
+): CallDirection {
+  const values = Backups.IndividualCall.Direction;
+
+  if (direction == null) {
+    return CallDirection.Unknown;
+  }
+  if (direction === values.INCOMING) {
+    return CallDirection.Incoming;
+  }
+  if (direction === values.OUTGOING) {
+    return CallDirection.Outgoing;
+  }
+
+  return CallDirection.Unknown;
+}
+
+function fromIndividualCallTypeProto(
+  type: Backups.IndividualCall.Type | undefined | null
+): CallType {
+  const values = Backups.IndividualCall.Type;
+
+  if (type == null) {
+    return CallType.Unknown;
+  }
+  if (type === values.AUDIO_CALL) {
+    return CallType.Audio;
+  }
+  if (type === values.VIDEO_CALL) {
+    return CallType.Video;
+  }
+
+  return CallType.Unknown;
+}
+
+function fromIndividualCallStateProto(
+  status: Backups.IndividualCall.State | undefined | null
+): DirectCallStatus {
+  const values = Backups.IndividualCall.State;
+
+  if (status == null) {
+    return DirectCallStatus.Unknown;
+  }
+  if (status === values.ACCEPTED) {
+    return DirectCallStatus.Accepted;
+  }
+  if (status === values.NOT_ACCEPTED) {
+    return DirectCallStatus.Declined;
+  }
+  if (status === values.MISSED) {
+    return DirectCallStatus.Missed;
+  }
+  if (status === values.MISSED_NOTIFICATION_PROFILE) {
+    return DirectCallStatus.MissedNotificationProfile;
+  }
+
+  return DirectCallStatus.Unknown;
+}
+
+function fromAdHocCallStateProto(
+  status: Backups.AdHocCall.State | undefined | null
+): AdhocCallStatus {
+  const values = Backups.AdHocCall.State;
+
+  if (status == null) {
+    return AdhocCallStatus.Unknown;
+  }
+  if (status === values.GENERIC) {
+    return AdhocCallStatus.Generic;
+  }
+
+  return AdhocCallStatus.Unknown;
+}
+
+function fromCallLinkRestrictionsProto(
+  restrictions: Backups.CallLink.Restrictions | undefined | null
+): CallLinkRestrictions {
+  const values = Backups.CallLink.Restrictions;
+
+  if (restrictions == null) {
+    return CallLinkRestrictions.Unknown;
+  }
+  if (restrictions === values.NONE) {
+    return CallLinkRestrictions.None;
+  }
+  if (restrictions === values.ADMIN_APPROVAL) {
+    return CallLinkRestrictions.AdminApproval;
+  }
+
+  return CallLinkRestrictions.Unknown;
 }

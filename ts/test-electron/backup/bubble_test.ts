@@ -7,7 +7,7 @@ import { SendStatus } from '../../messages/MessageSendState';
 import type { ConversationModel } from '../../models/conversations';
 import { GiftBadgeStates } from '../../components/conversation/Message';
 
-import Data from '../../sql/Client';
+import { DataWriter } from '../../sql/Client';
 import { getRandomBytes } from '../../Crypto';
 import * as Bytes from '../../Bytes';
 import { generateAci } from '../../types/ServiceId';
@@ -15,6 +15,7 @@ import { ReadStatus } from '../../messages/MessageReadStatus';
 import { SeenStatus } from '../../MessageSeenStatus';
 import { loadCallsHistory } from '../../services/callHistoryLoader';
 import { ID_V1_LENGTH } from '../../groups';
+import { DurationInSeconds, WEEK } from '../../util/durations';
 import {
   setupBasics,
   asymmetricRoundtripHarness,
@@ -39,8 +40,8 @@ describe('backup/bubble messages', () => {
   let gv1: ConversationModel;
 
   beforeEach(async () => {
-    await Data._removeAllMessages();
-    await Data._removeAllConversations();
+    await DataWriter._removeAllMessages();
+    await DataWriter._removeAllConversations();
     window.storage.reset();
 
     await setupBasics();
@@ -162,7 +163,7 @@ describe('backup/bubble messages', () => {
     ]);
   });
 
-  it.skip('roundtrips unopened gift badge', async () => {
+  it('roundtrips unopened gift badge', async () => {
     await symmetricRoundtripHarness([
       {
         conversationId: contactA.id,
@@ -187,7 +188,7 @@ describe('backup/bubble messages', () => {
     ]);
   });
 
-  it.skip('roundtrips opened gift badge', async () => {
+  it('roundtrips opened gift badge', async () => {
     await symmetricRoundtripHarness([
       {
         conversationId: contactA.id,
@@ -212,7 +213,7 @@ describe('backup/bubble messages', () => {
     ]);
   });
 
-  it.skip('roundtrips gift badge quote', async () => {
+  it('roundtrips gift badge quote', async () => {
     await symmetricRoundtripHarness([
       {
         conversationId: contactA.id,
@@ -422,5 +423,50 @@ describe('backup/bubble messages', () => {
       ],
       []
     );
+  });
+
+  it('drops messages that expire soon', async () => {
+    await asymmetricRoundtripHarness(
+      [
+        {
+          conversationId: contactA.id,
+          id: generateGuid(),
+          type: 'incoming',
+          received_at: 3,
+          received_at_ms: 3,
+          sent_at: 3,
+          timestamp: 3,
+          sourceServiceId: CONTACT_A,
+          body: 'd',
+          readStatus: ReadStatus.Unread,
+          seenStatus: SeenStatus.Unseen,
+          unidentifiedDeliveryReceived: true,
+          expirationStartTimestamp: Date.now(),
+          expireTimer: DurationInSeconds.fromSeconds(1),
+        },
+      ],
+      []
+    );
+  });
+
+  it('does not drop messages that expire far in the future', async () => {
+    await symmetricRoundtripHarness([
+      {
+        conversationId: contactA.id,
+        id: generateGuid(),
+        type: 'incoming',
+        received_at: 3,
+        received_at_ms: 3,
+        sent_at: 3,
+        timestamp: 3,
+        sourceServiceId: CONTACT_A,
+        body: 'd',
+        readStatus: ReadStatus.Unread,
+        seenStatus: SeenStatus.Unseen,
+        unidentifiedDeliveryReceived: true,
+        expirationStartTimestamp: Date.now(),
+        expireTimer: DurationInSeconds.fromMillis(WEEK),
+      },
+    ]);
   });
 });

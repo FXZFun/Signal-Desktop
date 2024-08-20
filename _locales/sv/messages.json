@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "Versionen av din databas matchar inte den här versionen av Signal. Se till att du öppnar den senaste versionen av Signal på din dator."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "Det går inte att komma åt databasens krypteringsnyckel eftersom OS-krypteringsnyckelns backend har ändrats från {previousBackend} till {currentBackend}. Detta kan inträffa om skrivbordsmiljön ändras, t.ex. mellan GNOME och KDE.\n\nByt till den tidigare skrivbordsmiljön."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "Det går inte att komma åt databasens krypteringsnyckel eftersom OS-krypteringsnyckelns backend har ändrats från {previousBackend} till {currentBackend}. Detta kan inträffa om skrivbordsmiljön ändras, t.ex. mellan GNOME och KDE.\n\nByt till föregående skrivbordsmiljö eller försök att köra Signal med kommandoradsflaggan --password-store=\"{previousBackendFlag}\""
+  },
   "icu:mainMenuFile": {
     "messageformat": "&Arkiv"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Det gick inte att uppdatera Signal. {retry} eller besök {url} för att installera det manuellt. Därefter, {support} om detta problem"
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Signal kunde inte uppdateras. <retryUpdateButton>Försök uppdatera igen</retryUpdateButton> eller besök {url} för att installera manuellt. <contactSupportLink>Kontakta sedan supporten</contactSupportLink> om detta problem"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Signal kunde inte uppdateras. Besök {url} för att installera det manuellt. Sedan, {support} om det här problemet"
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Signal kunde inte uppdateras. Besök {url} för att installera manuellt. <contactSupportLink>Kontakta sedan supporten</contactSupportLink> om detta problem"
   },
   "icu:readOnlyVolume": {
     "messageformat": "Signal Desktop är sannolikt i en MacOS-karantän och kan inte uppdateras automatiskt. Försök att flytta {app} till {folder} med Finder."
@@ -990,7 +1002,7 @@
     "messageformat": "Alla meddelanden i den här chatten kommer att tas bort från den här enheten. Du kan fortfarande söka efter den här chatten när du har tagit bort meddelanden."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "Alla meddelanden i den här chatten kommer att tas bort från alla dina enheter. Du kan fortfarande söka efter den här chatten när du har tagit bort meddelanden."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Lämna grupp"
@@ -1095,7 +1107,7 @@
     "messageformat": "Länkade enheter"
   },
   "icu:linkNewDevice": {
-    "messageformat": "Länka ny enhet"
+    "messageformat": "Länka en ny enhet"
   },
   "icu:Install__learn-more": {
     "messageformat": "Läs mer"
@@ -1113,25 +1125,22 @@
     "messageformat": "Inställningar"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "Tryck på {plusButton} (Android) eller {linkNewDevice} (iPhone)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "QR-koden kunde inte läsas in. Kontrollera ditt internet och försök igen. <retry>Försök igen</retry>"
+    "messageformat": "Tryck på {linkNewDevice}"
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "QR-koden kunde inte läsas in. Kontrollera din anslutning och försök igen."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>Ett oväntat fel uppstod.</paragraph><paragraph>Försök igen.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "Signalen kan inte länka den här enheten med ditt nuvarande nätverk."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "Försök igen"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "Få hjälp"
   },
   "icu:Install__support-link": {
     "messageformat": "Behöver du hjälp?"
@@ -1194,7 +1203,7 @@
     "messageformat": "Gå med i samtalet"
   },
   "icu:calling__return": {
-    "messageformat": "Återgå till samtalet"
+    "messageformat": "Återgå till samtal"
   },
   "icu:calling__lobby-automatically-muted-because-there-are-a-lot-of-people": {
     "messageformat": "Mikrofonen är av på grund av samtalets storlek"
@@ -1305,34 +1314,34 @@
     "messageformat": "Avvisa begäran om anslutning"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "Godkänn alla"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "Neka alla"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Godkänn {count,number} förfrågan?} other {Godkänn {count,number} förfrågningar?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, one {Neka {count,number} förfrågan?} other {Neka {count,number} förfrågningar?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} person kommer att läggas till i samtalet.} other {{count,number} personer kommer att läggas till i samtalet.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} person kommer inte att läggas till i samtalet.} other {{count,number} personer kommer inte att läggas till i samtalet.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, one {{count,number} begäran om att få ansluta till samtalet} other {{count,number} begäran om att få ansluta till samtalet}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "Vill gå med …"
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, one {+{count,number} förfrågan} other {+{count,number} förfrågningar}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, one {{count,number} person har lagts till i samtalet} other {{count,number} personer har lagts till i samtalet}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, one {{count,number} har räckt upp handen} other {{count,number} har räckt upp handen}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, one {I detta samtal · {people,number} person} other {I detta samtal · {people,number} personer}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "Du har blockerat {name}"
+  "icu:calling__blocked-participant": {
+    "messageformat": "{name} är blockerad"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "{name} är blockerad"
   },
   "icu:calling__block-info": {
-    "messageformat": "Du kommer inte att ta emot deras röst eller video och de kommer inte att ta emot dina."
+    "messageformat": "Du kommer inte att ta emot deras ljud eller video och de kommer inte att ta emot dina."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "Kan inte ta emot ljud och video från {name}"
@@ -2613,10 +2625,10 @@
     "messageformat": "Avfärda"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "Du avböjde ett röstsamtal"
+    "messageformat": "Avvisat röstsamtal"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "Du avböjde ett videosamtal"
+    "messageformat": "Avvisat videosamtal"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "Inkommande röstsamtal"
@@ -2649,10 +2661,10 @@
     "messageformat": "Signal fortsätter att köras i aviseringsfältet. Du kan ändra detta i Signal-inställningarna."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "Inkommande röstsamtal ..."
+    "messageformat": "Inkommande röstsamtal"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "Inkommande videosamtal …"
+    "messageformat": "Inkommande videosamtal"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "Utgående röstsamtal"
@@ -2697,7 +2709,7 @@
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} personer}}"
   },
   "icu:CallControls__InfoDisplay--audio-call": {
-    "messageformat": "Ljudsamtal"
+    "messageformat": "Röstsamtal"
   },
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Samtalslänk"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, one {{people,number} i samtalet} other {{people,number} i samtalet}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "Gruppsamtalet har avslutats"
+    "messageformat": "Videosamtalet har avslutats"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "Ett gruppsamtal startades"
+    "messageformat": "Ett videosamtal startades"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "Du startade ett gruppsamtal"
+    "messageformat": "Du startade ett videosamtal"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name} startade ett gruppsamtal"
+    "messageformat": "{name} startade ett videosamtal"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "Du är redan i ett samtal"
@@ -2829,13 +2841,13 @@
     "messageformat": "Ta bort den här personen från samtalet"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "Ta bort {name} från samtalet?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "Ta bort"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "Blockera från samtal"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} personer}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "skriv-knappen"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Vidarebefordra till"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "Användarnamn kan inte börja med en siffra."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "Användarnamn måste ha minst {min,number} tecken."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "Användarnamn får högst ha {max,number} tecken."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, one {Användarnamn måste ha minst {min,number} tecken.} other {Användarnamn måste ha minst {min,number} tecken.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "Ta bort"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "Om du vill ta bort ditt användarnamn öppnar du Signal på din telefon och navigerar till Inställningar > Profil."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "Kopiera eller ta bort användarnamn"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "Inga nya stories att visa just nu"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "Skickar …"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "Klicka för att visa en story"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} till {group}"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "Klicka för att visa eller starta ett samtal"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Sök"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "Inga nyliga samtal. Kom igång genom att ringa en vän."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Inga resultat för ”{query}”"
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "Missat"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "Avfärdat"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "Gruppsamtal"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "Lämna det aktuella samtalet?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "Du måste lämna det pågående samtalet innan du kan ansluta till ett nytt samtal."
+    "messageformat": "Du måste lämna det pågående samtalet innan du påbörjar eller ansluter till ett nytt samtal."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "Lämna samtalet"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Samtalslänk"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {Utgående videosamtal} other {Inkommande videosamtal}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "Missat videosamtal"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "Obesvarat videosamtal"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "Avvisat videosamtal"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "Gå med"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "Lägg till samtalsnamn"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "Redigera samtalsnamn"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "Godkänn alla medlemmar"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopiera länk"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Dela länk via Signal"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "Ta bort länk"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "Ta bort samtalslänk?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "Den här länken fungerar inte längre för alla som har den."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "Avbryt"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "Ta bort"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Uppgifter om samtalslänk"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "Lägg till samtalsnamn"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "Redigera samtalsnamn"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "Godkänn alla medlemmar"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Av"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "På"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "Lägg till samtalsnamn"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "Redigera samtalsnamn"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "Samtalsnamn"
@@ -5539,16 +5617,22 @@
     "messageformat": "Små justeringer, buggfixar och prestandaförbättringar. Tack för att du använder Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "Nu kan du vidarebefordra kontaktkort som skickats från en mobil enhet."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "Denna version snabbar upp processen med att ta bort långa meddelandetrådar."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "Nytt stöd för högupplösta emojier förbättrar hur stora emojisymboler visas."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "Vi har lagt till en genväg för att lägga på och ansluta till ett nytt samtal medan ett annat samtal redan pågår."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "Vi har också uppdaterat skaparen för klistermärken för att stödja de senaste emojisymbolerna."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "Denna uppdatering åtgärdar också en uppstartskrasch på Linux för användare vars språkzon är inställt på POSIX."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "Stories med långa bildtexter visas nu med förbättrad kontrast som gör texten lättare att läsa."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "Denna version förbättrar också prestandan för generering av länkförhandsvisning och åtgärdar en mindre visningsbugg när du stänger fönstret Inställningar."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

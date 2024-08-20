@@ -4,19 +4,20 @@
 import pMap from 'p-map';
 
 import * as log from '../logging/log';
-import Data from '../sql/Client';
+import { DataReader, DataWriter } from '../sql/Client';
 import type { ConversationAttributesType } from '../model-types.d';
 import { encryptLegacyAttachment } from './encryptLegacyAttachment';
 import { AttachmentDisposition } from './getLocalAttachmentUrl';
 import { isNotNil } from './isNotNil';
 import { isSignalConversation } from './isSignalConversation';
+import { getConversationIdForLogging } from './idForLogging';
 
 const CONCURRENCY = 32;
 
 type CleanupType = Array<() => Promise<void>>;
 
 export async function encryptConversationAttachments(): Promise<void> {
-  const all = await Data.getAllConversations();
+  const all = await DataReader.getAllConversations();
   log.info(`encryptConversationAttachments: checking ${all.length}`);
 
   const updated = (
@@ -36,7 +37,9 @@ export async function encryptConversationAttachments(): Promise<void> {
 
   if (updated.length !== 0) {
     log.info(`encryptConversationAttachments: updating ${updated.length}`);
-    await Data.updateConversations(updated.map(({ attributes }) => attributes));
+    await DataWriter.updateConversations(
+      updated.map(({ attributes }) => attributes)
+    );
 
     const cleanup = updated.map(entry => entry.cleanup).flat();
 
@@ -66,6 +69,7 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
     return undefined;
   }
 
+  const logId = getConversationIdForLogging(attributes);
   const result = { ...attributes };
 
   const {
@@ -86,6 +90,7 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
     result.profileAvatar = await encryptLegacyAttachment(
       attributes.profileAvatar,
       {
+        logId: `${logId}.profileAvatar`,
         readAttachmentData,
         writeNewAttachmentData,
         disposition: AttachmentDisposition.Attachment,
@@ -99,6 +104,7 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
 
   if (attributes.avatar?.path) {
     result.avatar = await encryptLegacyAttachment(attributes.avatar, {
+      logId: `${logId}.avatar`,
       readAttachmentData,
       writeNewAttachmentData,
       disposition: AttachmentDisposition.Attachment,
@@ -111,7 +117,7 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
 
   if (attributes.avatars?.length) {
     result.avatars = await Promise.all(
-      attributes.avatars.map(async avatar => {
+      attributes.avatars.map(async (avatar, i) => {
         if (avatar.version === 2 || !avatar.imagePath) {
           return avatar;
         }
@@ -121,6 +127,7 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
             path: avatar.imagePath,
           },
           {
+            logId: `${logId}.avatars[${i}]`,
             readAttachmentData: readAvatarData,
             writeNewAttachmentData: writeNewAvatarData,
             disposition: AttachmentDisposition.AvatarData,
@@ -141,8 +148,9 @@ async function encryptOne(attributes: ConversationAttributesType): Promise<
 
   if (attributes.draftAttachments?.length) {
     result.draftAttachments = await Promise.all(
-      attributes.draftAttachments.map(async draft => {
+      attributes.draftAttachments.map(async (draft, i) => {
         const updated = await encryptLegacyAttachment(draft, {
+          logId: `${logId}.draft[${i}]`,
           readAttachmentData: readDraftData,
           writeNewAttachmentData: writeNewDraftData,
           disposition: AttachmentDisposition.Draft,

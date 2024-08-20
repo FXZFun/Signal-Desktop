@@ -21,6 +21,7 @@ import { createName, getRelativePath } from './util/attachmentPath';
 import { appendPaddingStream, logPadSize } from './util/logPadding';
 import { prependStream } from './util/prependStream';
 import { appendMacStream } from './util/appendMacStream';
+import { finalStream } from './util/finalStream';
 import { getIvAndDecipher } from './util/getIvAndDecipher';
 import { getMacAndUpdateHmac } from './util/getMacAndUpdateHmac';
 import { trimPadding } from './util/trimPadding';
@@ -29,6 +30,7 @@ import * as Errors from './types/errors';
 import { isNotNil } from './util/isNotNil';
 import { missingCaseError } from './util/missingCaseError';
 import { getEnvironment, Environment } from './environment';
+import { toBase64 } from './Bytes';
 
 // This file was split from ts/Crypto.ts because it pulls things in from node, and
 //   too many things pull in Crypto.ts, so it broke storybook.
@@ -37,7 +39,7 @@ const DIGEST_LENGTH = MAC_LENGTH;
 const HEX_DIGEST_LENGTH = DIGEST_LENGTH * 2;
 const ATTACHMENT_MAC_LENGTH = MAC_LENGTH;
 
-export class ReencyptedDigestMismatchError extends Error {}
+export class ReencryptedDigestMismatchError extends Error {}
 
 /** @private */
 export const KEY_SET_LENGTH = KEY_LENGTH + MAC_LENGTH;
@@ -59,21 +61,13 @@ export type EncryptedAttachmentV2 = {
 
 export type ReencryptedAttachmentV2 = {
   path: string;
-  iv: Uint8Array;
+  iv: string;
   plaintextHash: string;
-
-  key: Uint8Array;
+  localKey: string;
+  version: 2;
 };
 
 export type DecryptedAttachmentV2 = {
-  path: string;
-  iv: Uint8Array;
-  plaintextHash: string;
-};
-
-export type ReecryptedAttachmentV2 = {
-  key: Uint8Array;
-  mac: Uint8Array;
   path: string;
   iv: Uint8Array;
   plaintextHash: string;
@@ -228,7 +222,7 @@ export async function encryptAttachmentV2({
 
   if (dangerousIv?.reason === 'reencrypting-for-backup') {
     if (!constantTimeEqual(ourDigest, dangerousIv.digestToMatch)) {
-      throw new ReencyptedDigestMismatchError(
+      throw new ReencryptedDigestMismatchError(
         `${logId}: iv was hardcoded for backup re-encryption, but digest does not match`
       );
     }
@@ -253,12 +247,13 @@ type DecryptAttachmentToSinkOptionsType = Readonly<
     };
   } & (
     | {
-        isLocal?: false;
+        type: 'standard';
         theirDigest: Readonly<Uint8Array>;
       }
     | {
-        // No need to check integrity for already downloaded attachments
-        isLocal: true;
+        // No need to check integrity for locally reencrypted attachments, or for backup
+        // thumbnails (since we created it)
+        type: 'local' | 'backupThumbnail';
         theirDigest?: undefined;
       }
   ) &
@@ -384,13 +379,73 @@ export async function decryptAttachmentV2ToSink(
         }),
         trimPadding(options.size),
         peekAndUpdateHash(plaintextHash),
+        finalStream(() => {
+          const ourMac = hmac.digest();
+          const ourDigest = digest.digest();
+
+          strictAssert(
+            ourMac.byteLength === ATTACHMENT_MAC_LENGTH,
+            `${logId}: Failed to generate ourMac!`
+          );
+          strictAssert(
+            theirMac != null && theirMac.byteLength === ATTACHMENT_MAC_LENGTH,
+            `${logId}: Failed to find theirMac!`
+          );
+          strictAssert(
+            ourDigest.byteLength === DIGEST_LENGTH,
+            `${logId}: Failed to generate ourDigest!`
+          );
+
+          if (!constantTimeEqual(ourMac, theirMac)) {
+            throw new Error(`${logId}: Bad MAC`);
+          }
+
+          const { type } = options;
+          switch (type) {
+            case 'local':
+            case 'backupThumbnail':
+              // Skip digest check
+              break;
+            case 'standard':
+              if (!constantTimeEqual(ourDigest, options.theirDigest)) {
+                throw new Error(`${logId}: Bad digest`);
+              }
+              break;
+            default:
+              throw missingCaseError(type);
+          }
+
+          if (!outerEncryption) {
+            return;
+          }
+
+          strictAssert(outerHmac, 'outerHmac must exist');
+
+          const ourOuterMac = outerHmac.digest();
+          strictAssert(
+            ourOuterMac.byteLength === ATTACHMENT_MAC_LENGTH,
+            `${logId}: Failed to generate ourOuterMac!`
+          );
+          strictAssert(
+            theirOuterMac != null &&
+              theirOuterMac.byteLength === ATTACHMENT_MAC_LENGTH,
+            `${logId}: Failed to find theirOuterMac!`
+          );
+
+          if (!constantTimeEqual(ourOuterMac, theirOuterMac)) {
+            throw new Error(`${logId}: Bad outer encryption MAC`);
+          }
+        }),
         sink,
       ].filter(isNotNil)
     );
   } catch (error) {
     // These errors happen when canceling fetch from `attachment://` urls,
     // ignore them to avoid noise in the logs.
-    if (error.name === 'AbortError') {
+    if (
+      error.name === 'AbortError' ||
+      error.code === 'ERR_STREAM_PREMATURE_CLOSE'
+    ) {
       throw error;
     }
 
@@ -403,57 +458,16 @@ export async function decryptAttachmentV2ToSink(
     await readFd?.close();
   }
 
-  const ourMac = hmac.digest();
-  const ourDigest = digest.digest();
   const ourPlaintextHash = plaintextHash.digest('hex');
-
-  strictAssert(
-    ourMac.byteLength === ATTACHMENT_MAC_LENGTH,
-    `${logId}: Failed to generate ourMac!`
-  );
-  strictAssert(
-    theirMac != null && theirMac.byteLength === ATTACHMENT_MAC_LENGTH,
-    `${logId}: Failed to find theirMac!`
-  );
-  strictAssert(
-    ourDigest.byteLength === DIGEST_LENGTH,
-    `${logId}: Failed to generate ourDigest!`
-  );
   strictAssert(
     ourPlaintextHash.length === HEX_DIGEST_LENGTH,
     `${logId}: Failed to generate file hash!`
   );
 
-  if (!constantTimeEqual(ourMac, theirMac)) {
-    throw new Error(`${logId}: Bad MAC`);
-  }
-  if (!options.isLocal && !constantTimeEqual(ourDigest, options.theirDigest)) {
-    throw new Error(`${logId}: Bad digest`);
-  }
-
   strictAssert(
     iv != null && iv.byteLength === IV_LENGTH,
     `${logId}: failed to find their iv`
   );
-
-  if (outerEncryption) {
-    strictAssert(outerHmac, 'outerHmac must exist');
-
-    const ourOuterMac = outerHmac.digest();
-    strictAssert(
-      ourOuterMac.byteLength === ATTACHMENT_MAC_LENGTH,
-      `${logId}: Failed to generate ourOuterMac!`
-    );
-    strictAssert(
-      theirOuterMac != null &&
-        theirOuterMac.byteLength === ATTACHMENT_MAC_LENGTH,
-      `${logId}: Failed to find theirOuterMac!`
-    );
-
-    if (!constantTimeEqual(ourOuterMac, theirOuterMac)) {
-      throw new Error(`${logId}: Bad outer encryption MAC`);
-    }
-  }
 
   return {
     iv,
@@ -461,7 +475,7 @@ export async function decryptAttachmentV2ToSink(
   };
 }
 
-export async function reencryptAttachmentV2(
+export async function decryptAndReencryptLocally(
   options: DecryptAttachmentOptionsType
 ): Promise<ReencryptedAttachmentV2> {
   const { idForLogging } = options;
@@ -499,8 +513,10 @@ export async function reencryptAttachmentV2(
 
     return {
       ...result,
-      key: keys,
+      localKey: toBase64(keys),
+      iv: toBase64(result.iv),
       path: relativeTargetPath,
+      version: 2,
     };
   } catch (error) {
     log.error(

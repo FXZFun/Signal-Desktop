@@ -15,6 +15,7 @@ import {
   jsonToObject,
 } from '../util';
 import type { Query, EmptyQuery } from '../util';
+import type { WritableDB } from '../Interface';
 
 import updateToSchemaVersion41 from './41-uuid-keys';
 import updateToSchemaVersion42 from './42-stale-reactions';
@@ -87,10 +88,12 @@ import { updateToSchemaVersion1080 } from './1080-nondisappearing-addressable';
 import { updateToSchemaVersion1090 } from './1090-message-delete-indexes';
 import { updateToSchemaVersion1100 } from './1100-optimize-mark-call-history-read-in-conversation';
 import { updateToSchemaVersion1110 } from './1110-sticker-local-key';
+import { updateToSchemaVersion1120 } from './1120-messages-foreign-keys-indexes';
+import { updateToSchemaVersion1130 } from './1130-isStory-index';
 import {
-  updateToSchemaVersion1120,
+  updateToSchemaVersion1140,
   version as MAX_VERSION,
-} from './1120-messages-foreign-keys-indexes';
+} from './1140-call-links-deleted-column';
 
 function updateToSchemaVersion1(
   currentVersion: number,
@@ -2043,9 +2046,12 @@ export const SCHEMA_VERSIONS = [
   updateToSchemaVersion1070,
   updateToSchemaVersion1080,
   updateToSchemaVersion1090,
+
   updateToSchemaVersion1100,
   updateToSchemaVersion1110,
   updateToSchemaVersion1120,
+  updateToSchemaVersion1130,
+  updateToSchemaVersion1140,
 ];
 
 export class DBVersionFromFutureError extends Error {
@@ -2075,7 +2081,7 @@ export function enableFTS5SecureDelete(db: Database, logger: LoggerType): void {
   }
 }
 
-export function updateSchema(db: Database, logger: LoggerType): void {
+export function updateSchema(db: WritableDB, logger: LoggerType): void {
   const sqliteVersion = getSQLiteVersion(db);
   const sqlcipherVersion = getSQLCipherVersion(db);
   const startingVersion = getUserVersion(db);

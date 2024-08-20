@@ -40,6 +40,8 @@ export abstract class LeftPaneHelper<T> {
     _: Readonly<{
       clearConversationSearch: () => unknown;
       clearSearch: () => unknown;
+      endConversationSearch: () => unknown;
+      endSearch: () => unknown;
       i18n: LocalizerType;
       onChangeComposeSearchTerm: (
         event: ChangeEvent<HTMLInputElement>
@@ -62,6 +64,14 @@ export abstract class LeftPaneHelper<T> {
     }>
   ): undefined | (() => void) {
     return undefined;
+  }
+
+  getBackgroundNode(
+    _: Readonly<{
+      i18n: LocalizerType;
+    }>
+  ): null | ReactChild {
+    return null;
   }
 
   getPreRowsNode(

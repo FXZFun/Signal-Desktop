@@ -80,6 +80,12 @@
   "icu:databaseError__startOldVersion": {
     "messageformat": "ನಿಮ್ಮ ಡೇಟಾಬೇಸ್‌ನ ಈ ಆವೃತ್ತಿಯು Signal ನ ಈ ಆವೃತ್ತಿಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ Signal ನ ಹೊಚ್ಚಹೊಸ ಆವೃತ್ತಿಯನ್ನು ತೆರೆಯುತ್ತಿರುವುದನ್ನು ಖಾತ್ರಿಗೊಳಿಸಿ."
   },
+  "icu:databaseError__safeStorageBackendChange": {
+    "messageformat": "ಡೇಟಾಬೇಸ್ ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಕೀಯನ್ನು ಆ್ಯಕ್ಸೆಸ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ, ಏಕೆಂದರೆ OS ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಕೀರಿಂಗ್ ಬ್ಯಾಕ್‌ಎಂಡ್ {previousBackend} ನಿಂದ {currentBackend} ಗೆ ಬದಲಾಗಿದೆ. ಡೆಸ್ಕ್‌ಟಾಪ್ ಪರಿಸರವು ಬದಲಾದರೆ ಇದು ಸಂಭವಿಸಬಹುದು, ಉದಾಹರಣೆಗೆ GNOME ಮತ್ತು KDE ನಡುವೆ.\n\nದಯವಿಟ್ಟು ಹಿಂದಿನ ಡೆಸ್ಕ್‌ಟಾಪ್ ಪರಿಸರಕ್ಕೆ ಬದಲಿಸಿ."
+  },
+  "icu:databaseError__safeStorageBackendChangeWithPreviousFlag": {
+    "messageformat": "ಡೇಟಾಬೇಸ್ ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಕೀಯನ್ನು ಆ್ಯಕ್ಸೆಸ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ, ಏಕೆಂದರೆ OS ಎನ್‌ಕ್ರಿಪ್ಶನ್ ಕೀರಿಂಗ್ ಬ್ಯಾಕ್‌ಎಂಡ್ {previousBackend} ನಿಂದ {currentBackend} ಗೆ ಬದಲಾಗಿದೆ. ಡೆಸ್ಕ್‌ಟಾಪ್ ಪರಿಸರವು ಬದಲಾದರೆ ಇದು ಸಂಭವಿಸಬಹುದು, ಉದಾಹರಣೆಗೆ GNOME ಮತ್ತು KDE ನಡುವೆ.\n\nದಯವಿಟ್ಟು ಹಿಂದಿನ ಡೆಸ್ಕ್‌ಟಾಪ್ ಪರಿಸರಕ್ಕೆ ಬದಲಿಸಿ ಅಥವಾ --password-store=\"{previousBackendFlag}\"ಕಮಾಂಡ್‍ಲೈನ್‍ಫ್ಲ್ಯಾಗ್‌ನೊಂದಿಗೆ ಸಿಗ್ನಲ್ ಅನ್ನು ರನ್ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿ"
+  },
   "icu:mainMenuFile": {
     "messageformat": "&ಫೈಲ್"
   },
@@ -818,8 +824,14 @@
   "icu:cannotUpdateDetail": {
     "messageformat": "Signal ಅಪ್‌ಡೇಟ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಅದನ್ನು ಮ್ಯಾನುವಲ್ ಆಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು {retry} ಅಥವಾ {url} ಗೆ ಭೇಟಿ ನೀಡಿ. ಬಳಿಕ, ಈ ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ {support}"
   },
+  "icu:cannotUpdateDetail-v2": {
+    "messageformat": "Signal ಅನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. <retryUpdateButton>ಅಪ್‌ಡೇಟ್ ಅನ್ನು ಮರುಪ್ರಯತ್ನಿಸಿ</retryUpdateButton> ಅಥವಾ ಅದನ್ನು ಹಸ್ತಚಾಲಿತವಾಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು {url}ಗೆ ಭೇಟಿ ನೀಡಿ. ನಂತರ, ಈ ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ <contactSupportLink>ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ</contactSupportLink>"
+  },
   "icu:cannotUpdateRequireManualDetail": {
     "messageformat": "Signal ಅಪ್‌ಡೇಟ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಅದನ್ನು ಮ್ಯಾನುವಲ್ ಆಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು {url} ಗೆ ಭೇಟಿ ನೀಡಿ. ಬಳಿಕ, ಈ ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ {support}"
+  },
+  "icu:cannotUpdateRequireManualDetail-v2": {
+    "messageformat": "Signal ಅನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಇದನ್ನು ಹಸ್ತಚಾಲಿತವಾಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು {url}ಗೆ ಭೇಟಿ ನೀಡಿ. ನಂತರ, ಈ ಸಮಸ್ಯೆಯ ಬಗ್ಗೆ <contactSupportLink>ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ</contactSupportLink>"
   },
   "icu:readOnlyVolume": {
     "messageformat": "Signal Desktop ಬಹುಶಃ macOS ಕ್ವಾರಂಟೈನ್‌ನಲ್ಲಿದೆ ಮತ್ತು ಇದು ಸ್ವಯಂ ಅಪ್‌ಡೇಟ್ ಆಗದಿರಬಹುದು. ಫೈಂಡರ್ ಬಳಸಿ {app} ಅನ್ನು {folder} ಗೆ ಸಾಗಿಸಲು ಪ್ರಯತ್ನಿಸಿ."
@@ -990,7 +1002,7 @@
     "messageformat": "ಈ ಸಾಧನದಿಂದ ಈ ಚಾಟ್‌ನಲ್ಲಿರುವ ಎಲ್ಲಾ ಮೆಸೇಜ್‌ಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ನೀವು ಮೆಸೇಜ್‌ಗಳನ್ನು ಅಳಿಸಿದ ನಂತರವೂ ಈ ಚಾಟ್‌ ಅನ್ನು ನೀವು ಹುಡುಕಬಹುದು."
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages."
+    "messageformat": "ಈ ಚಾಟ್‌ನಲ್ಲಿರುವ ಎಲ್ಲಾ ಮೆಸೇಜ್‌ಗಳನ್ನು ನಿಮ್ಮ ಎಲ್ಲಾ ಸಾಧನಗಳಿಂದ ಅಳಿಸಲಾಗುತ್ತದೆ. ನೀವು ಮೆಸೇಜ್‌ಗಳನ್ನು ಅಳಿಸಿದ ನಂತರವೂ ಈ ಚಾಟ್‌ ಅನ್ನು ನೀವು ಹುಡುಕಬಹುದು."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "ಗ್ರೂಪ್ ಅನ್ನು ತೊರೆಯಿರಿ"
@@ -1113,25 +1125,22 @@
     "messageformat": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು"
   },
   "icu:Install__instructions__3": {
-    "messageformat": "ಟ್ಯಾಪ್ ಮಾಡಿ {plusButton} (ಆಂಡ್ರಾಯ್ಡ್) ಅಥವಾ {linkNewDevice} (ಐಫೋನ್)"
-  },
-  "icu:Install__qr-failed-load": {
-    "messageformat": "ಕ್ಯೂಆರ್ ಕೋಡ್ ಲೋಡ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ. <retry>ಮರುಪ್ರಯತ್ನಿಸಿ</retry>"
+    "messageformat": "{linkNewDevice}ಟ್ಯಾಪ್ ಮಾಡಿ"
   },
   "icu:Install__qr-failed-load__error--timeout": {
-    "messageformat": "The QR code couldn't load. Check your connection and try again."
+    "messageformat": "ಕ್ಯೂಆರ್ ಕೋಡ್ ಲೋಡ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ನಿಮ್ಮ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಇನ್ನೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ."
   },
   "icu:Install__qr-failed-load__error--unknown": {
-    "messageformat": "<paragraph>An unexpected error occurred.</paragraph><paragraph>Please try again.</paragraph>"
+    "messageformat": "<paragraph>ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ.</paragraph><paragraph>ದಯವಿಟ್ಟು ಪುನಃ ಪ್ರಯತ್ನಿಸಿ.</paragraph>"
   },
   "icu:Install__qr-failed-load__error--network": {
-    "messageformat": "Signal cannot link this device using your current network."
+    "messageformat": "ನಿಮ್ಮ ಪ್ರಸ್ತುತ ನೆಟ್‌ವರ್ಕ್ ಅನ್ನು ಬಳಸಿಕೊಂಡು Signal ಈ ಸಾಧನವನ್ನು ಲಿಂಕ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
   },
   "icu:Install__qr-failed-load__retry": {
-    "messageformat": "Retry"
+    "messageformat": "ಮರುಪ್ರಯತ್ನಿಸಿ"
   },
   "icu:Install__qr-failed-load__get-help": {
-    "messageformat": "Get help"
+    "messageformat": "ಸಹಾಯ ಪಡೆಯಿರಿ"
   },
   "icu:Install__support-link": {
     "messageformat": "ಸಹಾಯ ಅಗತ್ಯವಿದೆಯೇ?"
@@ -1305,34 +1314,34 @@
     "messageformat": "ಸೇರುವ ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಿ"
   },
   "icu:CallingPendingParticipants__ApproveAll": {
-    "messageformat": "Approve all"
+    "messageformat": "ಎಲ್ಲವನ್ನೂ ಅನುಮತಿಸಿ"
   },
   "icu:CallingPendingParticipants__DenyAll": {
-    "messageformat": "Deny all"
+    "messageformat": "ಎಲ್ಲವನ್ನೂ ನಿರಾಕರಿಸಿ"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--ApproveAll": {
-    "messageformat": "{count, plural, one {Approve {count,number} request?} other {Approve {count,number} requests?}}"
+    "messageformat": "{count, plural, one {{count,number} ವಿನಂತಿಯನ್ನು ಅನುಮತಿಸಬೇಕೆ?} other {{count,number} ವಿನಂತಿಗಳನ್ನು ಅನುಮತಿಸಬೇಕೆ?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogTitle--DenyAll": {
-    "messageformat": "{count, plural, one {Deny {count,number} request?} other {Deny {count,number} requests?}}"
+    "messageformat": "{count, plural, one {{count,number} ವಿನಂತಿಯನ್ನು ನಿರಾಕರಿಸಬೇಕೆ?} other {{count,number} ವಿನಂತಿಗಳನ್ನು ನಿರಾಕರಿಸಬೇಕೆ?}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--ApproveAll": {
-    "messageformat": "{count, plural, one {{count,number} person will be added to the call.} other {{count,number} people will be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} ವ್ಯಕ್ತಿಯನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.} other {{count,number} ವ್ಯಕ್ತಿಯನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.}}"
   },
   "icu:CallingPendingParticipants__ConfirmDialogBody--DenyAll": {
-    "messageformat": "{count, plural, one {{count,number} person will not be added to the call.} other {{count,number} people will not be added to the call.}}"
+    "messageformat": "{count, plural, one {{count,number} ವ್ಯಕ್ತಿಯನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.} other {{count,number} ವ್ಯಕ್ತಿಗಳನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗುವುದಿಲ್ಲ.}}"
   },
   "icu:CallingPendingParticipants__RequestsToJoin": {
     "messageformat": "{count, plural, one {ಕರೆಗೆ ಸೇರಲು {count,number} ವಿನಂತಿ} other {ಕರೆಗೆ ಸೇರಲು {count,number} ವಿನಂತಿಗಳು}}"
   },
   "icu:CallingPendingParticipants__WouldLikeToJoin": {
-    "messageformat": "Would like to join..."
+    "messageformat": "...ಸೇರಲು ಬಯಸುತ್ತಾರೆ"
   },
   "icu:CallingPendingParticipants__AdditionalRequests": {
-    "messageformat": "{count, plural, one {+{count,number} request} other {+{count,number} requests}}"
+    "messageformat": "{count, plural, one {+{count,number} ವಿನಂತಿ} other {+{count,number} ವಿನಂತಿಗಳು}}"
   },
   "icu:CallingPendingParticipants__Toast--added-users-to-call": {
-    "messageformat": "{count, plural, one {{count,number} person added to the call} other {{count,number} people added to the call}}"
+    "messageformat": "{count, plural, one {{count,number} ವ್ಯಕ್ತಿಯನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗಿದೆ} other {{count,number} ಜನರನ್ನು ಕರೆಗೆ ಸೇರಿಸಲಾಗಿದೆ}}"
   },
   "icu:CallingRaisedHandsList__Title": {
     "messageformat": "{count, plural, one {{count,number} ಕೈ ಎತ್ತಿದರು} other {{count,number} ಕೈಗಳನ್ನು ಎತ್ತಿದರು}}"
@@ -1394,11 +1403,14 @@
   "icu:calling__in-this-call": {
     "messageformat": "{people, plural, one {ಈ ಕರೆಯಲ್ಲಿ · {people,number} ಜನರು} other {ಈ ಕರೆಯಲ್ಲಿ · {people,number} ಜನರು}}"
   },
-  "icu:calling__you-have-blocked": {
-    "messageformat": "ನೀವು {name} ಅವರನ್ನು ನಿರ್ಬಂಧಿಸಿದ್ದೀರಿ"
+  "icu:calling__blocked-participant": {
+    "messageformat": "{name} ಅವರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ"
+  },
+  "icu:calling__block-info-title": {
+    "messageformat": "{name} ಅವರನ್ನು ಬ್ಲಾಕ್ ಮಾಡಲಾಗಿದೆ"
   },
   "icu:calling__block-info": {
-    "messageformat": "ನೀವು ಅವರ ಮತ್ತು ಅವರು ನಿಮ್ಮ ಧ್ವನಿ ಅಥವಾ ವೀಡಿಯೋ ಸ್ವೀಕರಿಸುವುದಿಲ್ಲ."
+    "messageformat": "ಅವರ ಆಡಿಯೋ ಅಥವಾ ವಿಡಿಯೋ ಅನ್ನು ನೀವು ಸ್ವೀಕರಿಸುವುದಿಲ್ಲ ಮತ್ತು ಅವರು ನಿಮ್ಮದ್ದನ್ನು ಸ್ವೀಕರಿಸುವುದಿಲ್ಲ."
   },
   "icu:calling__missing-media-keys": {
     "messageformat": "{name} ರಿಂದ ಆಡಿಯೊ ಹಾಗೂ ವೀಡಿಯೊ ಸ್ವೀಕರಿಸಲಾಗುತ್ತಿಲ್ಲ"
@@ -2613,10 +2625,10 @@
     "messageformat": "ನಿರಾಕರಿಸಿ"
   },
   "icu:declinedIncomingAudioCall": {
-    "messageformat": "ನೀವು ವಾಯ್ಸ್ ಕಾಲ್ ಅನ್ನು ನಿರಾಕರಿಸಿದ್ದೀರಿ"
+    "messageformat": "ನಿರಾಕರಿಸಿದ ಧ್ವನಿ ಕರೆ"
   },
   "icu:declinedIncomingVideoCall": {
-    "messageformat": "ನೀವು ಒಂದು ವೀಡಿಯೊ ಕಾಲ್ ನಿರಾಕರಿಸಿದ್ದೀರಿ"
+    "messageformat": "ನಿರಾಕರಿಸಿದ ವೀಡಿಯೊ ಕರೆ"
   },
   "icu:acceptedIncomingAudioCall": {
     "messageformat": "ಒಳಬರುವ ವಾಯ್ಸ್ ಕಾಲ್"
@@ -2649,10 +2661,10 @@
     "messageformat": "ಅಧಿಸೂಚನೆ ಪ್ರದೇಶದಲ್ಲಿ Signal ಚಾಲನೆಯಲ್ಲಿ ಇರಲಿದೆ. Signal ಸೆಟ್ಟಿಂಗ್‌ ಗಳಲ್ಲಿ ಇದನ್ನು ನೀವು ಬದಲಾಯಿಸಬಹುದು."
   },
   "icu:incomingAudioCall": {
-    "messageformat": "ಒಳಬರುವ ಧ್ವನಿ ಕರೆ..."
+    "messageformat": "ಒಳಬರುವ ವಾಯ್ಸ್ ಕಾಲ್"
   },
   "icu:incomingVideoCall": {
-    "messageformat": "ಒಳಬರುವ ವೀಡಿಯೊ ಕರೆ…"
+    "messageformat": "ಒಳಬರುವ ವೀಡಿಯೊ ಕಾಲ್"
   },
   "icu:outgoingAudioCall": {
     "messageformat": "ಹೊರಹೋಗುವ ವಾಯ್ಸ್ ಕಾಲ್"
@@ -2697,7 +2709,7 @@
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} ಜನರು}}"
   },
   "icu:CallControls__InfoDisplay--audio-call": {
-    "messageformat": "ಆಡಿಯೊ ಕರೆ"
+    "messageformat": "ಧ್ವನಿ ಕರೆ"
   },
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "ಕರೆ ಲಿಂಕ್"
@@ -2760,16 +2772,16 @@
     "messageformat": "{people, plural, one {{people,number} ಕಾಲ್‌ನಲ್ಲಿದ್ದಾರೆ} other {{people,number} ಕಾಲ್‌ನಲ್ಲಿದ್ದಾರೆ}}"
   },
   "icu:calling__call-notification__ended": {
-    "messageformat": "ಗುಂಪು ಕರೆ ಮುಕ್ತಾಯಗೊಂಡಿದೆ"
+    "messageformat": "ವೀಡಿಯೊ ಕರೆ ಮುಕ್ತಾಯವಾಗಿದೆ"
   },
   "icu:calling__call-notification__started-by-someone": {
-    "messageformat": "ಗ್ರೂಪ್ ಕಾಲ್ ಆರಂಭಿಸಲಾಗಿದೆ"
+    "messageformat": "ವೀಡಿಯೊ ಕರೆಯೊಂದನ್ನು ಪ್ರಾರಂಭಿಸಲಾಗಿದೆ"
   },
   "icu:calling__call-notification__started-by-you": {
-    "messageformat": "ನೀವು ಗುಂಪು ಕರೆಯೊಂದನ್ನು ಪ್ರಾರಂಭಿಸಿದ್ದೀರಿ"
+    "messageformat": "ನೀವು ವೀಡಿಯೊ ಕರೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿದ್ದೀರಿ"
   },
   "icu:calling__call-notification__started": {
-    "messageformat": "{name} ಅವರು ಗ್ರೂಪ್ ಕಾಲ್ ಆರಂಭಿಸಿದ್ದಾರೆ"
+    "messageformat": "{name} ಅವರು ವೀಡಿಯೊ ಕರೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿದ್ದಾರೆ"
   },
   "icu:calling__in-another-call-tooltip": {
     "messageformat": "ನೀವು ಈಗಾಗಲೇ ಕಾಲ್‌ನಲ್ಲಿದ್ದೀರಿ"
@@ -2829,13 +2841,13 @@
     "messageformat": "ಈ ವ್ಯಕ್ತಿಯನ್ನು ಕರೆಯಿಂದ ತೆಗೆದುಹಾಕಿ"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogBody": {
-    "messageformat": "Remove {name} from the call?"
+    "messageformat": "{name} ಅವರನ್ನು ಕರೆಯಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--remove": {
-    "messageformat": "Remove"
+    "messageformat": "ತೆಗೆದುಹಾಕಿ"
   },
   "icu:CallingAdhocCallInfo__RemoveClientDialogButton--block": {
-    "messageformat": "Block from call"
+    "messageformat": "ಕರೆಯಿಂದ ನಿರ್ಬಂಧಿಸಿ"
   },
   "icu:CallingAdhocCallInfo__UnknownContactLabel": {
     "messageformat": "{count, plural, one {{count,number} person} other {{count,number} ಜನರು}}"
@@ -3941,6 +3953,12 @@
   "icu:composeIcon": {
     "messageformat": "ಕಂಪೋಸ್ ಬಟನ್"
   },
+  "icu:emptyInbox__title": {
+    "messageformat": "No chats"
+  },
+  "icu:emptyInbox__subtitle": {
+    "messageformat": "Recent chats will appear here."
+  },
   "icu:ForwardMessageModal__title": {
     "messageformat": "ಇವರಿಗೆ ಫಾರ್ವರ್ಡ್ ಮಾಡಿ"
   },
@@ -4250,12 +4268,6 @@
   "icu:ProfileEditor--username--check-starting-character": {
     "messageformat": "ಯೂಸರ್ ನೇಮ್ ಗಳು ಸಂಖ್ಯೆಯಿಂದ ಪ್ರಾರಂಭವಾಗುವುದಿಲ್ಲ."
   },
-  "icu:ProfileEditor--username--check-character-min": {
-    "messageformat": "ಯೂಸರ್‌ನೇಮ್‌ಗಳು ಕನಿಷ್ಠ {min,number} ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು."
-  },
-  "icu:ProfileEditor--username--check-character-max": {
-    "messageformat": "ಯೂಸರ್‌ನೇಮ್‌ಗಳು ಗರಿಷ್ಠ {max,number} ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು."
-  },
   "icu:ProfileEditor--username--check-character-min-plural": {
     "messageformat": "{min, plural, one {ಯೂಸರ್‌ನೇಮ್‌ಗಳು ಕನಿಷ್ಠ {min,number} ಅಕ್ಷರವನ್ನು ಹೊಂದಿರಬೇಕು.} other {ಯೂಸರ್‌ನೇಮ್‌ಗಳು ಕನಿಷ್ಠ {min,number} ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರಬೇಕು.}}"
   },
@@ -4300,9 +4312,6 @@
   },
   "icu:ProfileEditor--username--confirm-delete-button": {
     "messageformat": "ಅಳಿಸಿ"
-  },
-  "icu:ProfileEditor--username--delete-unavailable-notice": {
-    "messageformat": "ನಿಮ್ಮ ಯೂಸರ್ನೇಮ್ ಅನ್ನು ಅಳಿಸಲು, ನಿಮ್ಮ ಫೋನಿನಲ್ಲಿ Signal ತೆರೆಯಿರಿ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್‌ಗಳು > ಪ್ರೊಫೈಲ್‌ಗೆ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ."
   },
   "icu:ProfileEditor--username--context-menu": {
     "messageformat": "ಯೂಸರ್‌ನೇಮ್ ನಕಲಿಸಿ ಅಥವಾ ಅಳಿಸಿ"
@@ -4838,6 +4847,12 @@
   "icu:Stories__list-empty": {
     "messageformat": "ಪ್ರಸ್ತುತ ತೋರಿಸಲು ಯಾವುದೇ ಸ್ಟೋರೀಸ್ ಇಲ್ಲ"
   },
+  "icu:Stories__list__empty--title": {
+    "messageformat": "No stories"
+  },
+  "icu:Stories__list__empty--subtitle": {
+    "messageformat": "New updates will appear here."
+  },
   "icu:Stories__list--sending": {
     "messageformat": "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…"
   },
@@ -4852,6 +4867,9 @@
   },
   "icu:Stories__placeholder--text": {
     "messageformat": "ಸ್ಟೋರಿ ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
+  },
+  "icu:Stories__placeholder-with-icon--text": {
+    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} ನಿಂದ {group} ಗೆ"
@@ -5394,6 +5412,9 @@
   "icu:CallsTab__EmptyStateText": {
     "messageformat": "ಕರೆಯನ್ನು ವೀಕ್ಷಿಸಲು ಅಥವಾ ಪ್ರಾಂಭಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
   },
+  "icu:CallsTab__EmptyStateText--with-icon": {
+    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "ಹುಡುಕಿ"
   },
@@ -5405,6 +5426,18 @@
   },
   "icu:CallsList__EmptyState--noQuery": {
     "messageformat": "ಇತ್ತೀಚಿನ ಯಾವುದೇ ಕರೆಗಳಿಲ್ಲ. ಸ್ನೇಹಿತರಿಗೆ ಕರೆ ಮಾಡುವ ಮೂಲಕ ಪ್ರಾರಂಭಿಸಿ."
+  },
+  "icu:CallsList__EmptyState--noQuery__title": {
+    "messageformat": "No calls"
+  },
+  "icu:CallsList__EmptyState--noQuery__subtitle": {
+    "messageformat": "Recent calls will appear here."
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__title": {
+    "messageformat": "No missed calls"
+  },
+  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
+    "messageformat": "Missed calls will appear here."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "{query} ಗೆ ಫಲಿತಾಂಶಗಳು ಲಭ್ಯವಿಲ್ಲ"
@@ -5421,6 +5454,9 @@
   "icu:CallsList__ItemCallInfo--Missed": {
     "messageformat": "ತಪ್ಪಿಹೋದ"
   },
+  "icu:CallsList__ItemCallInfo--Declined": {
+    "messageformat": "ನಿರಾಕರಿಸಲಾಗಿದೆ"
+  },
   "icu:CallsList__ItemCallInfo--GroupCall": {
     "messageformat": "ಗ್ರೂಪ್ ಕಾಲ್"
   },
@@ -5434,7 +5470,7 @@
     "messageformat": "ಪ್ರಸ್ತುತ ಕರೆಯನ್ನು ತೊರೆಯಬೇಕೇ?"
   },
   "icu:CallsList__LeaveCallDialogBody": {
-    "messageformat": "ಹೊಸ ಕರೆಗೆ ಸೇರುವ ಮೊದಲು ನೀವು ಪ್ರಸ್ತುತ ಕರೆಯನ್ನು ತೊರೆಯಬೇಕು."
+    "messageformat": "ಹೊಸ ಕರೆಯನ್ನು ಪ್ರಾರಂಭಿಸುವ ಅಥವಾ ಸೇರುವ ಮೊದಲು ನೀವು ಪ್ರಸ್ತುತ ಕರೆಯನ್ನು ತೊರೆಯಬೇಕು."
   },
   "icu:CallsList__LeaveCallDialogButton--leave": {
     "messageformat": "ಕರೆ ಬಿಡಿ"
@@ -5466,14 +5502,50 @@
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "ಕರೆ ಲಿಂಕ್"
   },
+  "icu:CallHistory__DescriptionVideoCall--Default": {
+    "messageformat": "{direction, select, Outgoing {ಹೊರಹೋಗುವ ವೀಡಿಯೊ ಕಾಲ್} other {ಒಳಬರುವ ವೀಡಿಯೊ ಕಾಲ್}}"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Missed": {
+    "messageformat": "ಮಿಸ್ಡ್ ವೀಡಿಯೊ ಕಾಲ್"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Unanswered": {
+    "messageformat": "ಉತ್ತರಿಸದ ವೀಡಿಯೊ ಕಾಲ್"
+  },
+  "icu:CallHistory__DescriptionVideoCall--Declined": {
+    "messageformat": "ನಿರಾಕರಿಸಿದ ವೀಡಿಯೊ ಕರೆ"
+  },
   "icu:CallLinkDetails__Join": {
     "messageformat": "ಸೇರಿಕೊಳ್ಳಿ"
+  },
+  "icu:CallLinkDetails__AddCallNameLabel": {
+    "messageformat": "ಕರೆ ಹೆಸರು ಸೇರಿಸಿ"
+  },
+  "icu:CallLinkDetails__EditCallNameLabel": {
+    "messageformat": "ಕರೆ ಹೆಸರು ಎಡಿಟ್ ಮಾಡಿ"
+  },
+  "icu:CallLinkDetails__ApproveAllMembersLabel": {
+    "messageformat": "ಎಲ್ಲಾ ಸದಸ್ಯರನ್ನು ಅನುಮೋದಿಸಿ"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "ಲಿಂಕ್ ನಕಲಿಸಿ"
   },
   "icu:CallLinkDetails__ShareLinkViaSignal": {
     "messageformat": "Signal ಮೂಲಕ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಿ"
+  },
+  "icu:CallLinkDetails__DeleteLink": {
+    "messageformat": "ಲಿಂಕ್ ಅಳಿಸಿ"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Title": {
+    "messageformat": "ಕಾಲ್ ಲಿಂಕ್ ಅಳಿಸಬೇಕೇ?"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Body": {
+    "messageformat": "ಈ ಲಿಂಕ್ ಹೊಂದಿರುವ ಯಾರಿಗೂ ಇನ್ನು ಮುಂದೆ ಈ ಲಿಂಕ್ ಕಾರ್ಯನಿರ್ವಹಿಸುವುದಿಲ್ಲ."
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Cancel": {
+    "messageformat": "ರದ್ದುಮಾಡಿ"
+  },
+  "icu:CallLinkDetails__DeleteLinkModal__Delete": {
+    "messageformat": "ಅಳಿಸಿ"
   },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "ಕಾಲ್ ಲಿಂಕ್ ವಿವರಗಳು"
@@ -5484,17 +5556,23 @@
   "icu:CallLinkEditModal__AddCallNameLabel": {
     "messageformat": "ಕರೆ ಹೆಸರು ಸೇರಿಸಿ"
   },
+  "icu:CallLinkEditModal__EditCallNameLabel": {
+    "messageformat": "ಕರೆ ಹೆಸರು ಎಡಿಟ್ ಮಾಡಿ"
+  },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
     "messageformat": "ಎಲ್ಲಾ ಸದಸ್ಯರನ್ನು ಅನುಮೋದಿಸಿ"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--Off": {
+  "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "ಆಫ಼್"
   },
-  "icu:CallLinkEditModal__ApproveAllMembers__Option--On": {
+  "icu:CallLinkRestrictionsSelect__Option--On": {
     "messageformat": "ಆನ್"
   },
   "icu:CallLinkAddNameModal__Title": {
     "messageformat": "ಕರೆ ಹೆಸರು ಸೇರಿಸಿ"
+  },
+  "icu:CallLinkAddNameModal__Title--Edit": {
+    "messageformat": "ಕರೆ ಹೆಸರು ಎಡಿಟ್ ಮಾಡಿ"
   },
   "icu:CallLinkAddNameModal__NameLabel": {
     "messageformat": "ಕರೆ ಹೆಸರು"
@@ -5539,16 +5617,22 @@
     "messageformat": "ಸಣ್ಣ ಟ್ವೀಕ್‌ಗಳು, ಬಗ್ ಫಿಕ್ಸ್‌ಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆ ವರ್ಧನೆಗಳು. Signal ಬಳಸುತ್ತಿರುವುದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.15--0": {
-    "messageformat": "ಈಗ ನೀವು ಮೊಬೈಲ್ ಸಾಧನದಿಂದ ಕಳುಹಿಸಲಾದ ಸಂಪರ್ಕ ಕಾರ್ಡ್‌ಗಳನ್ನು ಫಾರ್ವರ್ಡ್ ಮಾಡಬಹುದು. ನಿಮ್ಮ ಫೋನ್ ಅನ್ನು ತೆಗೆಯದೆಯೇ ನಿಮ್ಮ ಮೆಚ್ಚಿನ ರೆಸ್ಟೋರೆಂಟ್‌ಗಾಗಿ ಟೇಕ್-ಔಟ್ ಸಂಖ್ಯೆಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ."
+  "icu:WhatsNew__v7.18--0": {
+    "messageformat": "ನಿಧಾನವಾದ ವಿದಾಯಕ್ಕಿಂತ ತ್ವರಿತ ಗುಡ್‌ಬೈ ಕೆಲವೊಮ್ಮೆ ಸುಲಭವಾಗಿರುತ್ತದೆ, ಆದ್ದರಿಂದ ನಾವು ದೊಡ್ಡ ಮೆಸೇಜ್ ಥ್ರೆಡ್‌ಗಳನ್ನು ಅಳಿಸುವ ಪ್ರಕ್ರಿಯೆಯನ್ನು ವೇಗಗೊಳಿಸಿದ್ದೇವೆ."
   },
-  "icu:WhatsNew__v7.15--1": {
-    "messageformat": "ಹೆಚ್ಚಿನ ರೆಸಲ್ಯೂಶನ್ \"ಜಂಬೋಮೊಜಿ\" ಗಾಗಿ ಹೊಸ ಬೆಂಬಲವು ದೊಡ್ಡ ಎಮೋಜಿಗಳಿಗೆ, ವಿಶೇಷವಾಗಿ ಸಣ್ಣ ಪಿಕ್ಸೆಲ್‌ಗಳನ್ನು ಹೊಂದಿರುವ ದೊಡ್ಡ ಸ್ಕ್ರೀನ್‌ಗಳಲ್ಲಿ ಅತ್ಯಂತ ಸ್ಪಷ್ಟವಾದ ವಿವರಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ."
+  "icu:WhatsNew__v7.19--0": {
+    "messageformat": "ಮತ್ತೊಂದು ಕರೆಯು ನಿಮ್ಮ ಹೆಸರನ್ನು ಕರೆಯುತ್ತಿದ್ದರೆ, ಪ್ರಸ್ತುತ ಕರೆಯನ್ನು ತೊರೆಯಲು ಮತ್ತು ಹೊಸದಕ್ಕೆ ಸೇರಲು ನಾವು ಶಾರ್ಟ್‌ಕಟ್ ಅನ್ನು ಸೇರಿಸಿದ್ದೇವೆ. ನಿಮ್ಮ ನಿರ್ಗಮನವನ್ನು ಖಚಿತಪಡಿಸಲು ನಿಮ್ಮನ್ನು ಕೇಳಲಾಗುತ್ತದೆ, ಆದರೆ ನೀವು ಮೊದಲು ವಿದಾಯ ಹೇಳಬೇಕೆ ಅಥವಾ ಬೇಡವೇ ಎಂಬುದು ನಿಮಗೆ ಬಿಟ್ಟದ್ದು."
   },
-  "icu:WhatsNew__v7.15--2": {
-    "messageformat": "ಇತ್ತೀಚಿನ ಎಮೋಜಿಯನ್ನು ಬೆಂಬಲಿಸಲು ನಾವು ಸ್ಟಿಕ್ಕರ್ ಕ್ರಿಯೇಟರ್ ಅನ್ನು ಸಹ ಅಪ್‌ಡೇಟ್ ಮಾಡಿದ್ದೇವೆ, ಆದ್ದರಿಂದ ಇಂದಿನ ಸ್ಟಿಕ್ಕರ್‌ಗಳು ನಿನ್ನೆಯ ಯುನಿಕೋಡ್ ಮಾನದಂಡದೊಂದಿಗೆ ಉಳಿದುಕೊಂಡಿರುವುದಿಲ್ಲ."
+  "icu:WhatsNew__v7.19--1": {
+    "messageformat": "ಲೊಕೇಲ್ ಅನ್ನು `POSIX` ಗೆ ಸೆಟ್ ಮಾಡಿರುವ ಬಳಕೆದಾರರಿಗಾಗಿ Linux ನಲ್ಲಿ ಪ್ರಾರಂಭಿಸುವಾಗಿನ ಕುಸಿತವನ್ನು ಸಹ ಈ ಅಪ್‌ಡೇಟ್ ಸರಿಪಡಿಸುತ್ತದೆ."
   },
-  "icu:WhatsNew__v7.16--0": {
-    "messageformat": "We fixed a bug that prevented the button to minimize a call from appearing while that call was reconnecting. Now you don't need to feel disconnected from previous chats even if the internet is feeling disconnected."
+  "icu:WhatsNew__v7.20--0": {
+    "messageformat": "ದೀರ್ಘ ಶೀರ್ಷಿಕೆಗಳೊಂದಿಗೆ ಸ್ಟೋರಿಗಳನ್ನು ಸೂಕ್ಷ್ಮವಾದ ಗ್ರೇಡಿಯಂಟ್ ಹಿನ್ನೆಲೆಯಲ್ಲಿ ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತದೆ, ಅದು ಕಾಂಟ್ರಾಸ್ಟ್ ಅನ್ನು ಸುಧಾರಿಸುತ್ತದೆ ಮತ್ತು ಪಠ್ಯವನ್ನು ಓದಲು ಸುಲಭಗೊಳಿಸುತ್ತದೆ. ಈಗ ನೀವು ಏನು ಹೇಳುತ್ತಿದ್ದೀರಿ ಎಂಬುದನ್ನು ಜನರು ನೋಡಬಹುದು, ಬರೀ \"ಲೋಲ್\" ಎಂದು ಹೇಳುವ ಬದಲು ಏನಾದರೂ ನಿಮ್ಮನ್ನು ನಿಜವಾಗಿಯೂ ಏಕೆ ನಗಿಸಿತು ಎಂಬುದರ ಕುರಿತು ಒಂದೆರಡು ಪ್ಯಾರಾಗಳನ್ನು ಬರೆಯಲು ಹಿಂಜರಿಯಬೇಡಿ."
+  },
+  "icu:WhatsNew__v7.20--1": {
+    "messageformat": "ಈ ಆವೃತ್ತಿಯು ಲಿಂಕ್ ಪ್ರಿವ್ಯೂ ಜನರೇಷನ್ ನ ಕಾರ್ಯಕ್ಷಮತೆಯನ್ನು ಸುಧಾರಿಸುತ್ತದೆ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್‌ಗಳ ವಿಂಡೋವನ್ನು ಮುಚ್ಚಿದಾಗಲೆಲ್ಲಾ ಅಲ್ಟ್ರಾಮರೀನ್‌ನ ಸುಂದರವಾದ ಛಾಯೆಯನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ಫ್ಲ್ಯಾಷ್ ಮಾಡಲು ಕಾರಣವಾದ ದೋಷವನ್ನು ಸರಿಪಡಿಸುತ್ತದೆ (ಆ ಕ್ಷಣದಲ್ಲೇ ಮುಚ್ಚುವ ಬದಲು)."
+  },
+  "icu:WhatsNew__v7.21--0": {
+    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
   }
 }

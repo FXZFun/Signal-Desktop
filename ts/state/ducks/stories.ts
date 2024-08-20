@@ -8,7 +8,7 @@ import type { ReadonlyDeep } from 'type-fest';
 import * as Errors from '../../types/errors';
 import type { AttachmentType } from '../../types/Attachment';
 import type { DraftBodyRanges } from '../../types/BodyRange';
-import type { MessageAttributesType } from '../../model-types.d';
+import type { ReadonlyMessageAttributesType } from '../../model-types.d';
 import type {
   MessageChangedActionType,
   MessageDeletedActionType,
@@ -25,7 +25,7 @@ import { isAciString } from '../../util/isAciString';
 import * as log from '../../logging/log';
 import { TARGETED_CONVERSATION_CHANGED } from './conversations';
 import { SIGNAL_ACI } from '../../types/SignalConversation';
-import dataInterface from '../../sql/Client';
+import { DataReader, DataWriter } from '../../sql/Client';
 import { ReadStatus } from '../../messages/MessageReadStatus';
 import { SendStatus } from '../../messages/MessageSendState';
 import { SafetyNumberChangeSource } from '../../components/SafetyNumberChangeDialog';
@@ -79,7 +79,7 @@ export type StoryDataType = ReadonlyDeep<
     messageId: string;
     startedDownload?: boolean;
   } & Pick<
-    MessageAttributesType,
+    ReadonlyMessageAttributesType,
     | 'bodyRanges'
     | 'canReplyToStory'
     | 'conversationId'
@@ -124,31 +124,33 @@ export type AddStoryData = ReadonlyDeep<
   | undefined
 >;
 
-// eslint-disable-next-line local-rules/type-alias-readonlydeep
-export type RecipientsByConversation = Record<
-  string, // conversationId
-  {
-    serviceIds: Array<ServiceIdString>;
+export type RecipientEntry = ReadonlyDeep<{
+  serviceIds: Array<ServiceIdString>;
 
-    byDistributionId?: Record<
-      StoryDistributionIdString,
-      {
-        serviceIds: Array<ServiceIdString>;
-      }
-    >;
-  }
+  byDistributionId?: Record<
+    StoryDistributionIdString,
+    {
+      serviceIds: Array<ServiceIdString>;
+    }
+  >;
+}>;
+
+export type RecipientsByConversation = ReadonlyDeep<
+  Record<
+    string, // conversationId
+    RecipientEntry
+  >
 >;
 
 // State
 
-// eslint-disable-next-line local-rules/type-alias-readonlydeep
-export type StoriesStateType = Readonly<{
+export type StoriesStateType = ReadonlyDeep<{
   addStoryData: AddStoryData;
   hasAllStoriesUnmuted: boolean;
   lastOpenedAtTimestamp: number | undefined;
   replyState?: Readonly<{
     messageId: string;
-    replies: Array<MessageAttributesType>;
+    replies: Array<ReadonlyMessageAttributesType>;
   }>;
   selectedStoryData?: SelectedStoryDataType;
   sendStoryModalData?: RecipientsByConversation;
@@ -188,14 +190,13 @@ type ListMembersVerified = ReadonlyDeep<{
   };
 }>;
 
-// eslint-disable-next-line local-rules/type-alias-readonlydeep
-type LoadStoryRepliesActionType = {
+type LoadStoryRepliesActionType = ReadonlyDeep<{
   type: typeof LOAD_STORY_REPLIES;
   payload: {
     messageId: string;
-    replies: Array<MessageAttributesType>;
+    replies: Array<ReadonlyMessageAttributesType>;
   };
-};
+}>;
 
 type MarkStoryReadActionType = ReadonlyDeep<{
   type: typeof MARK_STORY_READ;
@@ -285,7 +286,7 @@ function deleteGroupStoryReply(
   messageId: string
 ): ThunkAction<void, RootStateType, unknown, StoryReplyDeletedActionType> {
   return async dispatch => {
-    await window.Signal.Data.removeMessage(messageId, { singleProtoJobQueue });
+    await DataWriter.removeMessage(messageId, { singleProtoJobQueue });
     dispatch({
       type: STORY_REPLY_DELETED,
       payload: messageId,
@@ -337,7 +338,7 @@ function loadStoryReplies(
 ): ThunkAction<void, RootStateType, unknown, LoadStoryRepliesActionType> {
   return async (dispatch, getState) => {
     const conversation = getConversationSelector(getState())(conversationId);
-    const replies = await dataInterface.getOlderMessagesByConversation({
+    const replies = await DataReader.getOlderMessagesByConversation({
       conversationId,
       limit: 9000,
       storyId: messageId,
@@ -421,7 +422,7 @@ function markStoryRead(
 
     message.set(markViewed(message.attributes, storyReadDate));
     drop(
-      dataInterface.saveMessage(message.attributes, {
+      DataWriter.saveMessage(message.attributes, {
         ourAci: window.textsecure.storage.user.getCheckedAci(),
       })
     );
@@ -459,7 +460,7 @@ function markStoryRead(
       );
     }
 
-    await dataInterface.addNewStoryRead({
+    await DataWriter.addNewStoryRead({
       authorId,
       conversationId: message.attributes.conversationId,
       storyId: messageId,
@@ -1409,7 +1410,7 @@ function removeAllContactStories(
 
     log.info(`${logId}: removing ${messages.length} stories`);
 
-    await dataInterface.removeMessages(messageIds, { singleProtoJobQueue });
+    await DataWriter.removeMessages(messageIds, { singleProtoJobQueue });
 
     dispatch({
       type: 'NOOP',

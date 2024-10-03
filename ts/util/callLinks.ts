@@ -15,13 +15,32 @@ import {
   type CallHistoryDetails,
   CallMode,
 } from '../types/CallDisposition';
+import { DAY } from './durations';
 
-export const CALL_LINK_DEFAULT_STATE = {
+export const CALL_LINK_DEFAULT_STATE: Pick<
+  CallLinkType,
+  'name' | 'restrictions' | 'revoked' | 'expiration' | 'storageNeedsSync'
+> = {
   name: '',
   restrictions: CallLinkRestrictions.Unknown,
   revoked: false,
   expiration: null,
+  storageNeedsSync: false,
 };
+
+export const CALL_LINK_DELETED_STORAGE_RECORD_TTL = 30 * DAY;
+
+export function getKeyFromCallLink(callLink: string): string {
+  const url = new URL(callLink);
+  if (url == null) {
+    throw new Error('Failed to parse call link URL');
+  }
+
+  const hash = url.hash.slice(1);
+  const hashParams = new URLSearchParams(hash);
+
+  return hashParams.get('key') || '';
+}
 
 export function isCallLinksCreateEnabled(): boolean {
   if (isTestOrMockEnvironment()) {
@@ -77,10 +96,12 @@ export function toCallHistoryFromUnusedCallLink(
     callId: generateUuid(),
     peerId: callLink.roomId,
     ringerId: null,
+    startedById: null,
     mode: CallMode.Adhoc,
     type: CallType.Adhoc,
     direction: CallDirection.Incoming,
     timestamp: Date.now(),
+    endedTimestamp: null,
     status: AdhocCallStatus.Pending,
   };
 }

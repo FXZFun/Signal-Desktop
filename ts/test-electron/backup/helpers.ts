@@ -4,7 +4,7 @@
 import { assert } from 'chai';
 import path from 'path';
 import { tmpdir } from 'os';
-import { sortBy } from 'lodash';
+import { omit, sortBy } from 'lodash';
 import { createReadStream } from 'fs';
 import { mkdtemp, rm } from 'fs/promises';
 import * as sinon from 'sinon';
@@ -65,6 +65,11 @@ function sortAndNormalize(
       reactions,
       sendStateByConversationId,
       verifiedChanged,
+      attachments,
+      preview,
+      contact,
+      quote,
+      sticker,
 
       // This is not in the backup
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -121,6 +126,36 @@ function sortAndNormalize(
             sendStateByConversationId: mapSendState(historySendState),
           };
         }),
+
+        attachments: attachments?.map(attachment =>
+          omit(attachment, 'downloadPath')
+        ),
+        preview: preview?.map(previewItem => ({
+          ...previewItem,
+          image: omit(previewItem.image, 'downloadPath'),
+        })),
+        contact: contact?.map(contactItem => ({
+          ...contactItem,
+          avatar: {
+            ...contactItem.avatar,
+            avatar: omit(contactItem.avatar?.avatar, 'downloadPath'),
+          },
+        })),
+        quote: quote
+          ? {
+              ...quote,
+              attachments: quote?.attachments.map(quotedAttachment => ({
+                ...quotedAttachment,
+                thumbnail: omit(quotedAttachment.thumbnail, 'downloadPath'),
+              })),
+            }
+          : undefined,
+        sticker: sticker
+          ? {
+              ...sticker,
+              data: omit(sticker.data, 'downloadPath'),
+            }
+          : undefined,
 
         // Not an original property, but useful
         isUnsupported: isUnsupportedMessage(message),
@@ -198,9 +233,9 @@ export async function asymmetricRoundtripHarness(
   }
 }
 
-async function clearData() {
+export async function clearData(): Promise<void> {
   await DataWriter.removeAll();
-  window.storage.reset();
+  await window.storage.fetch();
   window.ConversationController.reset();
 
   await setupBasics();
@@ -220,7 +255,8 @@ export async function setupBasics(): Promise<void> {
 
   window.Events = {
     ...window.Events,
-    getTypingIndicatorSetting: () => false,
-    getLinkPreviewSetting: () => false,
+    getTypingIndicatorSetting: () =>
+      window.storage.get('typingIndicators', false),
+    getLinkPreviewSetting: () => window.storage.get('linkPreviews', false),
   };
 }

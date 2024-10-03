@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Invia log"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Invia log"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Non puoi selezionare foto e video insieme ai file."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Silenzia"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal non può essere aggiornato. {retry} o visita {url} per installarlo manualmente. Poi {support} riguardo a questo problema"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Impossibile aggiornare Signal. <retryUpdateButton>Riprova l'aggiornamento</retryUpdateButton> oppure visita la pagina {url} per installarlo manualmente. Dopodiché, <contactSupportLink>contatta l'assistenza</contactSupportLink> per riferire il tuo problema."
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal non può essere aggiornato. Visita {url} per installarlo manualmente. Poi {support} riguardo a questo problema"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Impossibile aggiornare Signal. Visita la pagina {url} per installarlo manualmente. Dopodiché, <contactSupportLink>contatta l'assistenza</contactSupportLink> per riferire il tuo problema."
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Appunti"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Visualizza i media recenti"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Tutti i file multimediali"
   },
   "icu:back": {
     "messageformat": "Indietro"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Impossibile unirsi alla chiamata"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Sei già in una chiamata."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Impossibile recuperare le informazioni legate al link della chiamata. Controlla la tua connessione e riprova."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Non è possibile ricevere audio e video da {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Non puoi ricevere audio e video"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Ciò potrebbe essere dovuto al fatto che non è stata verificata la modifica del codice di sicurezza, c'è un problema con il dispositivo o ti hanno bloccato."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal sta condividendo {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Riconnessione…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Ieri {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "È possibile che Signal non riesca a elaborare un messaggio in arrivo."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Il corpo del messaggio è troppo lungo."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Riprova l'aggiornamento"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "contatta l'assistenza"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Clicca per riavviare Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Link chiamata"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Chiamata di gruppo"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "In attesa di entrare…"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Non puoi unirti a questo gruppo tramite il link del gruppo perché un amministratore ti ha rimosso."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Un amministratore di questo gruppo deve approvare la tua richiesta prima che tu possa unirti a questo gruppo. Se approvata, il tuo nome e la tua foto verranno condivisi con i suoi membri."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Unisciti"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "Una richiesta di unirsi al gruppo da {joinerName} è stata rifiutata."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} ha richiesto e annullato la sua richiesta di unirsi tramite il link del gruppo"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} ha richiesto e annullato {numberOfRequests,number} richieste di unirsi tramite il link del gruppo"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} ha richiesto e annullato la sua richiesta di unirsi tramite il link del gruppo} other {{joinerName} ha richiesto e annullato {numberOfRequests,number} richieste di unirsi tramite il link del gruppo}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Hai attivato il link del gruppo senza l'approvazione degli amministratori."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Tocca su \"Dona a Signal\" per diventare un supporter di Signal"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Sincronizzazione messaggi"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Download {currentSize} di {totalSize} ({fractionComplete,number,percent})…"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Preparazione del download…"
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Questo processo potrebbe richiedere qualche minuto a seconda della dimensione del tuo backup"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Annulla trasferimento"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Annullare il trasferimento?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Il ripristino dei tuoi messaggi e media non è stato ancora completato. Se scegli di annullarlo, puoi riprovare il trasferimento dalle Impostazioni."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Continua con il trasferimento"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Annulla trasferimento"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Ripristino dei media in corso"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Ripristino in pausa"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Metti in pausa"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Riprendi il trasferimento"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Annulla trasferimento"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Più opzioni"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Ripristino completato"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} di {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Annullare il trasferimento dei media?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Il ripristino dei tuoi messaggi e media non è stato ancora completato. Se lo annulli, potrai rieffettuare il trasferimento dalle Impostazioni."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Continua con il trasferimento"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Annulla trasferimento"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Espandi"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Rimuovi dal gruppo"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Sei già in una chiamata"
+  "icu:ContactModal--voice": {
+    "messageformat": "Voce"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Colore chat"
@@ -3759,7 +3825,7 @@
     "messageformat": "Reimposta link"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Approva nuovi membri"
+    "messageformat": "Richiedi l'approvazione dell'admin"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Richiedi a un amministratore di approvare i nuovi membri che si uniscono tramite il link del gruppo"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": "0.5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Clicca il {composeIcon} sopra e cerca i tuoi contatti o gruppi a cui inviare messaggi."
-  },
-  "icu:composeIcon": {
-    "messageformat": "pulsante composizione"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Nessuna chat"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Qui vedrai le tue chat più recenti."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Inoltra a"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Impossibile aggiornare il tuo profilo. Per favore riprova."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Caratteri non validi"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Uno o più caratteri che hai inserito non sono validi. Riprova."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Invia un messaggio a un amministratore"
@@ -4848,10 +4914,10 @@
     "messageformat": "Nessuna Storia recente da mostrare al momento"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Nessuna storia"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Qui vedrai tutto ciò che condividerai."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Invio in corso…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Clicca per vedere una Storia"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Clicca <newStoryButtonIcon></newStoryButtonIcon> per inserire un aggiornamento."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} a {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Risposte"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Ha reagito alla Storia"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Ha reagito alla Storia"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Storia"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Mostra Storie"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Nascondi Storia"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Cronologia chiamate eliminata"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Clicca per visualizzare o iniziare una chiamata"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Clicca <newCallButtonIcon></newCallButtonIcon> per iniziare una nuova chiamata vocale o videochiamata."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Cerca"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Aziona"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Nessuna chiamata recente. Inizia chiamando un tuo amico o amica."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Nessuna chiamata"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Qui vedrai le tue chiamate più recenti."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Nessuna chiamata persa"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Qui vedrai le tue chiamate perse."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Nessun risultato per \"{query}\""
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Rifiutata"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Chiamata di gruppo"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Link chiamata"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Ritorna"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Per unirti a una nuova chiamata, devi prima uscire da quella in corso"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Chiamata in uscita} other {Chiamata in arrivo}}} Video {{direction, select, Outgoing {Videochiamata in uscita} other {Videochiamata in arrivo}}} Group {{direction, select, Outgoing {Chiamata di gruppo in uscita} other {Chiamata di gruppo in entrata}}} other {{direction, select, Outgoing {Chiamata in uscita} other {Chiamata in entrata}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Chiamata persa} Video {Videochiamata persa} Group {Chiamata di gruppo persa} other {Chiamata persa}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Chiamata senza risposta} Video {Videochiamata senza risposta} Group {Chiamata di gruppo persa} other {Chiamata persa}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Chiamata vocale rifiutata} Video {Videochiamata rifiutata} Group {Chiamata di gruppo rifiutata} other {Chiamata rifiutata}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Link chiamata"
@@ -5524,7 +5569,10 @@
     "messageformat": "Modifica nome chiamata"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Approva tutti gli utenti"
+    "messageformat": "Richiedi l'approvazione dell'admin"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Non puoi cambiare questa impostazione durante una chiamata in corso"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Copia link"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Elimina"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Non puoi eliminare questo link durante una chiamata in corso"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Dettagli del link della chiamata"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Modifica nome chiamata"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Approva tutti gli utenti"
+    "messageformat": "Richiedi l'approvazione dell'admin"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Accetta richiesta"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Rifiuta richiesta"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Off"
@@ -5617,22 +5674,16 @@
     "messageformat": "Altre piccole modifiche e correzioni di bug per far funzionare l'app senza problemi. Grazie per usare Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Non è mai facile dire addio, quindi meglio farlo nel modo più rapido possibile… questo aggiornamento può aiutare, visto che velocizza tutto il processo di eliminazione dei messaggi."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "A volte è bello rivangare il passato… abbiamo risolto un bug che rendeva difficile cercare i gruppi di cui facevi parte ma ancora presenti nell'elenco delle tue chat (e, chissà, forse anche nei tuoi ricordi?)."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Se ti chiamano mentre stai partecipando a una chiamata, non preoccuparti. Abbiamo aggiunto una scorciatoia per lasciare (di fretta o con calma) la chiamata attuale e unirti a quella nuova. Noi ti chiederemo conferma dell'operazione, tu però ricordati di salutare!"
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Da ora puoi rimuovere le risposte citate dai messaggi modificati. Perché ammettiamolo: a chi non è mai capitato di rispondere al messaggio sbagliato?"
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Questo aggiornamento risolve anche dei casi di crash su Linux durante la fase di avvio di Signal per gli utenti che avevano le impostazioni locali impostate su \"POSIX\"."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Ora le Storie che contengono testi lunghi verranno mostrate su uno sfondo sfumato per migliorare il contrasto e rendere i testi più leggibili. Perciò sì, se sei un amante dei muri di testo, oggi è il tuo giorno fortunato!"
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Questo aggiornamento risolve anche dei problemi legati alla visualizzazione delle anteprime dei link, oltre a un bug che faceva sì che la finestra delle Impostazioni lampeggiasse in blu ogni volta che veniva chiusa (invece di chiudersi immediatamente)."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

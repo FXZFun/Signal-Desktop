@@ -32,6 +32,7 @@
 @import './components/AvatarModalButtons.scss';
 @import './components/AvatarPreview.scss';
 @import './components/AvatarTextEditor.scss';
+@import './components/BackupMediaDownloadProgress.scss';
 @import './components/BadgeCarouselIndex.scss';
 @import './components/BadgeDialog.scss';
 @import './components/BadgeSustainerInstructionsDialog.scss';
@@ -53,6 +54,7 @@
 @import './components/CallLinkAddNameModal.scss';
 @import './components/CallLinkDetails.scss';
 @import './components/CallLinkEditModal.scss';
+@import './components/CallLinkPendingParticipantModal.scss';
 @import './components/CallLinkRestrictionsSelect.scss';
 @import './components/CallingRaisedHandsList.scss';
 @import './components/CallingRaisedHandsToasts.scss';
@@ -100,9 +102,11 @@
 @import './components/GroupDialog.scss';
 @import './components/GroupInput.scss';
 @import './components/HueSlider.scss';
+@import './components/InAnotherCallTooltip.scss';
 @import './components/Inbox.scss';
 @import './components/IncomingCallBar.scss';
 @import './components/Input.scss';
+@import './components/InstallScreenBackupImportStep.scss';
 @import './components/InstallScreenChoosingDeviceNameStep.scss';
 @import './components/InstallScreenErrorStep.scss';
 @import './components/InstallScreenLinkInProgressStep.scss';
@@ -135,6 +139,8 @@
 @import './components/PlaybackRateButton.scss';
 @import './components/Preferences.scss';
 @import './components/ProfileEditor.scss';
+@import './components/ProgressBar.scss';
+@import './components/ProgressCircle.scss';
 @import './components/Quote.scss';
 @import './components/ReactionPickerPicker.scss';
 @import './components/RecordingComposer.scss';

@@ -36,9 +36,13 @@ import { clearInterval } from 'timers';
 import { random } from 'lodash';
 import type { ChatServiceDebugInfo } from '@signalapp/libsignal-client/Native';
 
-import type { Net } from '@signalapp/libsignal-client';
+import type { LibSignalError, Net } from '@signalapp/libsignal-client';
 import { Buffer } from 'node:buffer';
-import type { ChatServerMessageAck } from '@signalapp/libsignal-client/dist/net';
+import type {
+  ChatServerMessageAck,
+  ChatServiceListener,
+  ConnectionEventsListener,
+} from '@signalapp/libsignal-client/dist/net';
 import type { EventHandler } from './EventTarget';
 import EventTarget from './EventTarget';
 
@@ -57,6 +61,8 @@ import { isProduction } from '../util/version';
 import { ToastType } from '../types/Toast';
 import { AbortableProcess } from '../util/AbortableProcess';
 import type { WebAPICredentials } from './Types';
+import { NORMAL_DISCONNECT_CODE } from './SocketManager';
+import { parseUnknown } from '../util/schemas';
 
 const THIRTY_SECONDS = 30 * durations.SECOND;
 
@@ -88,7 +94,6 @@ const AggregatedStatsSchema = z.object({
   connectionFailures: z.number(),
   requestsCompared: z.number(),
   ipVersionMismatches: z.number(),
-  unexpectedReconnects: z.number(),
   healthcheckFailures: z.number(),
   healthcheckBadStatus: z.number(),
   lastToastTimestamp: z.number(),
@@ -103,7 +108,7 @@ export namespace AggregatedStats {
     try {
       const json = localStorage.getItem(key);
       return json != null
-        ? AggregatedStatsSchema.parse(JSON.parse(json))
+        ? parseUnknown(AggregatedStatsSchema, JSON.parse(json) as unknown)
         : createEmpty();
     } catch (error) {
       log.warn(
@@ -133,7 +138,6 @@ export namespace AggregatedStats {
       connectionFailures: a.connectionFailures + b.connectionFailures,
       healthcheckFailures: a.healthcheckFailures + b.healthcheckFailures,
       ipVersionMismatches: a.ipVersionMismatches + b.ipVersionMismatches,
-      unexpectedReconnects: a.unexpectedReconnects + b.unexpectedReconnects,
       healthcheckBadStatus: a.healthcheckBadStatus + b.healthcheckBadStatus,
       lastToastTimestamp: Math.max(a.lastToastTimestamp, b.lastToastTimestamp),
     };
@@ -144,7 +148,6 @@ export namespace AggregatedStats {
       requestsCompared: 0,
       connectionFailures: 0,
       ipVersionMismatches: 0,
-      unexpectedReconnects: 0,
       healthcheckFailures: 0,
       healthcheckBadStatus: 0,
       lastToastTimestamp: 0,
@@ -156,12 +159,11 @@ export namespace AggregatedStats {
     if (timeSinceLastToast < durations.DAY || stats.requestsCompared < 1000) {
       return false;
     }
-    return (
+    const totalFailuresSinceLastToast =
       stats.healthcheckBadStatus +
-        stats.healthcheckFailures +
-        stats.connectionFailures >
-        20 || stats.unexpectedReconnects > 50
-    );
+      stats.healthcheckFailures +
+      stats.connectionFailures;
+    return totalFailuresSinceLastToast > 20;
   }
 
   export function localStorageKey(name: string): string {
@@ -325,19 +327,45 @@ export interface IWebSocketResource extends IResource {
 
   shutdown(): void;
 
-  close(): void;
+  close(code?: number, reason?: string): void;
 
   localPort(): number | undefined;
 }
 
+type LibsignalWebSocketResourceHolder = {
+  resource: LibsignalWebSocketResource | undefined;
+};
+
+const UNEXPECTED_DISCONNECT_CODE = 3001;
+
 export function connectUnauthenticatedLibsignal({
   libsignalNet,
   name,
+  keepalive,
 }: {
   libsignalNet: Net.Net;
   name: string;
+  keepalive: KeepAliveOptionsType;
 }): AbortableProcess<LibsignalWebSocketResource> {
-  return connectLibsignal(libsignalNet.newUnauthenticatedChatService(), name);
+  const logId = `LibsignalWebSocketResource(${name})`;
+  const listener: LibsignalWebSocketResourceHolder & ConnectionEventsListener =
+    {
+      resource: undefined,
+      onConnectionInterrupted(cause: LibSignalError | null): void {
+        if (!this.resource) {
+          logDisconnectedListenerWarn(logId, 'onConnectionInterrupted');
+          return;
+        }
+        this.resource.onConnectionInterrupted(cause);
+        this.resource = undefined;
+      },
+    };
+  return connectLibsignal(
+    libsignalNet.newUnauthenticatedChatService(listener),
+    listener,
+    logId,
+    keepalive
+  );
 }
 
 export function connectAuthenticatedLibsignal({
@@ -346,19 +374,24 @@ export function connectAuthenticatedLibsignal({
   credentials,
   handler,
   receiveStories,
+  keepalive,
 }: {
   libsignalNet: Net.Net;
   name: string;
   credentials: WebAPICredentials;
   handler: (request: IncomingWebSocketRequest) => void;
   receiveStories: boolean;
+  keepalive: KeepAliveOptionsType;
 }): AbortableProcess<LibsignalWebSocketResource> {
-  const listener = {
+  const logId = `LibsignalWebSocketResource(${name})`;
+  const listener: LibsignalWebSocketResourceHolder & ChatServiceListener = {
+    resource: undefined,
     onIncomingMessage(
       envelope: Buffer,
       timestamp: number,
       ack: ChatServerMessageAck
     ): void {
+      // Handle incoming messages even if we've disconnected.
       const request = new IncomingWebSocketRequestLibsignal(
         ServerRequestType.ApiMessage,
         envelope,
@@ -368,6 +401,10 @@ export function connectAuthenticatedLibsignal({
       handler(request);
     },
     onQueueEmpty(): void {
+      if (!this.resource) {
+        logDisconnectedListenerWarn(logId, 'onQueueEmpty');
+        return;
+      }
       const request = new IncomingWebSocketRequestLibsignal(
         ServerRequestType.ApiEmptyQueue,
         undefined,
@@ -376,8 +413,13 @@ export function connectAuthenticatedLibsignal({
       );
       handler(request);
     },
-    onConnectionInterrupted(): void {
-      log.warn(`LibsignalWebSocketResource(${name}): connection interrupted`);
+    onConnectionInterrupted(cause): void {
+      if (!this.resource) {
+        logDisconnectedListenerWarn(logId, 'onConnectionInterrupted');
+        return;
+      }
+      this.resource.onConnectionInterrupted(cause);
+      this.resource = undefined;
     },
   };
   return connectLibsignal(
@@ -387,33 +429,43 @@ export function connectAuthenticatedLibsignal({
       receiveStories,
       listener
     ),
-    name
+    listener,
+    logId,
+    keepalive
   );
+}
+
+function logDisconnectedListenerWarn(logId: string, method: string): void {
+  log.warn(`${logId} received ${method}, but listener already disconnected`);
 }
 
 function connectLibsignal(
   chatService: Net.ChatService,
-  name: string
+  resourceHolder: LibsignalWebSocketResourceHolder,
+  logId: string,
+  keepalive: KeepAliveOptionsType
 ): AbortableProcess<LibsignalWebSocketResource> {
   const connectAsync = async () => {
     try {
       const debugInfo = await chatService.connect();
-      log.info(`LibsignalWebSocketResource(${name}) connected`, debugInfo);
-      return new LibsignalWebSocketResource(
+      log.info(`${logId} connected`, debugInfo);
+      const resource = new LibsignalWebSocketResource(
         chatService,
-        IpVersion.fromDebugInfoCode(debugInfo.ipType)
+        IpVersion.fromDebugInfoCode(debugInfo.ipType),
+        logId,
+        keepalive
       );
+      // eslint-disable-next-line no-param-reassign
+      resourceHolder.resource = resource;
+      return resource;
     } catch (error) {
       // Handle any errors that occur during connection
-      log.error(
-        `LibsignalWebSocketResource(${name}) connection failed`,
-        Errors.toLogFormat(error)
-      );
+      log.error(`${logId} connection failed`, Errors.toLogFormat(error));
       throw error;
     }
   };
   return new AbortableProcess<LibsignalWebSocketResource>(
-    `LibsignalWebSocketResource.connect(${name})`,
+    `${logId}.connect`,
     {
       abort() {
         // if interrupted, trying to disconnect
@@ -428,11 +480,23 @@ export class LibsignalWebSocketResource
   extends EventTarget
   implements IWebSocketResource
 {
+  closed = false;
+
+  // Unlike WebSocketResource, libsignal will automatically attempt to keep the
+  // socket alive using websocket pings, so we don't need a timer-based
+  // keepalive mechanism. But we still send one-off keepalive requests when
+  // things change (see forceKeepAlive()).
+  private keepalive: KeepAliveSender;
+
   constructor(
     private readonly chatService: Net.ChatService,
-    private readonly socketIpVersion: IpVersion | undefined
+    private readonly socketIpVersion: IpVersion | undefined,
+    private readonly logId: string,
+    keepalive: KeepAliveOptionsType
   ) {
     super();
+
+    this.keepalive = new KeepAliveSender(this, this.logId, keepalive);
   }
 
   public localPort(): number | undefined {
@@ -452,16 +516,48 @@ export class LibsignalWebSocketResource
     return super.addEventListener(name, handler);
   }
 
-  public close(_code?: number, _reason?: string): void {
+  public close(code = NORMAL_DISCONNECT_CODE, reason?: string): void {
+    if (this.closed) {
+      log.info(`${this.logId}.close: Already closed! ${code}/${reason}`);
+      return;
+    }
     drop(this.chatService.disconnect());
+
+    // On linux the socket can wait a long time to emit its close event if we've
+    //   lost the internet connection. On the order of minutes. This speeds that
+    //   process up.
+    Timers.setTimeout(
+      () => this.onConnectionInterrupted(null),
+      5 * durations.SECOND
+    );
   }
 
   public shutdown(): void {
-    drop(this.chatService.disconnect());
+    this.close(NORMAL_DISCONNECT_CODE, 'Shutdown');
   }
 
-  public forceKeepAlive(): void {
-    // no-op
+  onConnectionInterrupted(cause: LibSignalError | null): void {
+    if (this.closed) {
+      log.warn(
+        `${this.logId}.onConnectionInterrupted called after resource is closed`
+      );
+      return;
+    }
+    this.closed = true;
+    log.warn(`${this.logId}: connection closed`);
+
+    let event;
+    if (cause) {
+      event = new CloseEvent(UNEXPECTED_DISCONNECT_CODE, cause.message);
+    } else {
+      // The cause was an intentional disconnect. Report normal closure.
+      event = new CloseEvent(NORMAL_DISCONNECT_CODE, 'normal');
+    }
+    this.dispatchEvent(event);
+  }
+
+  public forceKeepAlive(timeout?: number): void {
+    drop(this.keepalive.send(timeout));
   }
 
   public async sendRequest(options: SendRequestOptions): Promise<Response> {
@@ -576,10 +672,10 @@ export class WebSocketResourceWithShadowing implements IWebSocketResource {
     this.main.addEventListener(name, handler);
   }
 
-  public close(): void {
-    this.main.close();
+  public close(code = NORMAL_DISCONNECT_CODE, reason?: string): void {
+    this.main.close(code, reason);
     if (this.shadowing) {
-      this.shadowing.close();
+      this.shadowing.close(code, reason);
       this.shadowing = undefined;
     } else {
       this.shadowingConnection.abort();
@@ -627,12 +723,11 @@ export class WebSocketResourceWithShadowing implements IWebSocketResource {
       return;
     }
     try {
-      const [healthCheckResult, debugInfo] =
-        await this.shadowing.sendRequestGetDebugInfo({
-          verb: 'GET',
-          path: '/v1/keepalive',
-          timeout: KEEPALIVE_TIMEOUT_MS,
-        });
+      const healthCheckResult = await this.shadowing.sendRequest({
+        verb: 'GET',
+        path: '/v1/keepalive',
+        timeout: KEEPALIVE_TIMEOUT_MS,
+      });
       this.stats.requestsCompared += 1;
       if (!isSuccessfulStatusCode(healthCheckResult.status)) {
         this.stats.healthcheckBadStatus += 1;
@@ -640,7 +735,6 @@ export class WebSocketResourceWithShadowing implements IWebSocketResource {
           `${this.logId}: keepalive via libsignal responded with status [${healthCheckResult.status}]`
         );
       }
-      this.stats.unexpectedReconnects = debugInfo.reconnectCount;
     } catch (error) {
       this.stats.healthcheckFailures += 1;
       log.warn(
@@ -792,7 +886,7 @@ export default class WebSocketResource
       let timer = options.timeout
         ? Timers.setTimeout(() => {
             this.removeActive(idString);
-            this.close(3001, 'Request timed out');
+            this.close(UNEXPECTED_DISCONNECT_CODE, 'Request timed out');
             reject(new Error(`Request timed out; id: [${idString}]`));
           }, options.timeout)
         : undefined;
@@ -822,7 +916,7 @@ export default class WebSocketResource
     drop(this.keepalive.send(timeout));
   }
 
-  public close(code = 3000, reason?: string): void {
+  public close(code = NORMAL_DISCONNECT_CODE, reason?: string): void {
     if (this.closed) {
       log.info(`${this.logId}.close: Already closed! ${code}/${reason}`);
       return;
@@ -857,7 +951,7 @@ export default class WebSocketResource
 
     if (this.activeRequests.size === 0) {
       log.info(`${this.logId}.shutdown: no active requests, closing`);
-      this.close(3000, 'Shutdown');
+      this.close(NORMAL_DISCONNECT_CODE, 'Shutdown');
       return;
     }
 
@@ -870,7 +964,7 @@ export default class WebSocketResource
       }
 
       log.warn(`${this.logId}.shutdown: Failed to shutdown gracefully`);
-      this.close(3000, 'Shutdown');
+      this.close(NORMAL_DISCONNECT_CODE, 'Shutdown');
     }, THIRTY_SECONDS);
   }
 
@@ -970,7 +1064,7 @@ export default class WebSocketResource
     }
 
     log.info(`${this.logId}.removeActive: shutdown complete`);
-    this.close(3000, 'Shutdown');
+    this.close(NORMAL_DISCONNECT_CODE, 'Shutdown');
   }
 
   private static intoResponse(sendRequestResult: SendRequestResult): Response {
@@ -1012,48 +1106,35 @@ const KEEPALIVE_TIMEOUT_MS = 30 * durations.SECOND;
 
 const LOG_KEEPALIVE_AFTER_MS = 500;
 
-class KeepAlive {
-  private keepAliveTimer: Timers.Timeout | undefined;
-
+/**
+ * References an {@link IWebSocketResource} and a request path that should
+ * return promptly to determine whether the connection is still alive.
+ *
+ * The response to the request must have a 2xx status code but is otherwise
+ * ignored. A failing response or a timeout results in the socket being closed
+ * with {@link UNEXPECTED_DISCONNECT_CODE}.
+ *
+ * Use the subclass {@link KeepAlive} if you want to send the request at regular
+ * intervals.
+ */
+class KeepAliveSender {
   private path: string;
 
-  private wsr: WebSocketResource;
+  protected wsr: IWebSocketResource;
 
-  private lastAliveAt: number = Date.now();
-
-  private logId: string;
+  protected logId: string;
 
   constructor(
-    websocketResource: WebSocketResource,
+    websocketResource: IWebSocketResource,
     name: string,
     opts: KeepAliveOptionsType = {}
   ) {
     this.logId = `WebSocketResources.KeepAlive(${name})`;
-    if (websocketResource instanceof WebSocketResource) {
-      this.path = opts.path ?? '/';
-      this.wsr = websocketResource;
-    } else {
-      throw new TypeError('KeepAlive expected a WebSocketResource');
-    }
+    this.path = opts.path ?? '/';
+    this.wsr = websocketResource;
   }
 
-  public stop(): void {
-    this.clearTimers();
-  }
-
-  public async send(timeout = KEEPALIVE_TIMEOUT_MS): Promise<void> {
-    this.clearTimers();
-
-    const isStale = isOlderThan(this.lastAliveAt, STALE_THRESHOLD_MS);
-    if (isStale) {
-      log.info(`${this.logId}.send: disconnecting due to stale state`);
-      this.wsr.close(
-        3001,
-        `Last keepalive request was too far in the past: ${this.lastAliveAt}`
-      );
-      return;
-    }
-
+  public async send(timeout = KEEPALIVE_TIMEOUT_MS): Promise<boolean> {
     log.info(`${this.logId}.send: Sending a keepalive message`);
     const sentAt = Date.now();
 
@@ -1068,12 +1149,18 @@ class KeepAlive {
 
       if (status < 200 || status >= 300) {
         log.warn(`${this.logId}.send: keepalive response status ${status}`);
-        this.wsr.close(3001, `keepalive response with ${status} code`);
-        return;
+        this.wsr.close(
+          UNEXPECTED_DISCONNECT_CODE,
+          `keepalive response with ${status} code`
+        );
+        return false;
       }
     } catch (error) {
-      this.wsr.close(3001, 'No response to keepalive request');
-      return;
+      this.wsr.close(
+        UNEXPECTED_DISCONNECT_CODE,
+        'No response to keepalive request'
+      );
+      return false;
     }
 
     const responseTime = Date.now() - sentAt;
@@ -1084,8 +1171,57 @@ class KeepAlive {
       );
     }
 
+    return true;
+  }
+}
+
+/**
+ * Manages a timer that checks if a particular {@link WebSocketResource} is
+ * still alive.
+ *
+ * The resource must specifically be a {@link WebSocketResource}. Other kinds of
+ * resource are expected to manage their own liveness checks. If you want to
+ * manually send keepalive requests to such resources, use the base class
+ * {@link KeepAliveSender}.
+ */
+class KeepAlive extends KeepAliveSender {
+  private keepAliveTimer: Timers.Timeout | undefined;
+
+  private lastAliveAt: number = Date.now();
+
+  constructor(
+    websocketResource: WebSocketResource,
+    name: string,
+    opts: KeepAliveOptionsType = {}
+  ) {
+    super(websocketResource, name, opts);
+  }
+
+  public stop(): void {
+    this.clearTimers();
+  }
+
+  public override async send(timeout = KEEPALIVE_TIMEOUT_MS): Promise<boolean> {
+    this.clearTimers();
+
+    const isStale = isOlderThan(this.lastAliveAt, STALE_THRESHOLD_MS);
+    if (isStale) {
+      log.info(`${this.logId}.send: disconnecting due to stale state`);
+      this.wsr.close(
+        UNEXPECTED_DISCONNECT_CODE,
+        `Last keepalive request was too far in the past: ${this.lastAliveAt}`
+      );
+      return false;
+    }
+
+    const isAlive = await super.send(timeout);
+    if (!isAlive) {
+      return false;
+    }
+
     // Successful response on time
     this.reset();
+    return true;
   }
 
   public reset(): void {

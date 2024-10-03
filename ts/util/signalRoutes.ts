@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { strictAssert } from './assert';
 import * as log from '../logging/log';
 import * as Errors from '../types/errors';
+import { parsePartial, parseUnknown, safeParseUnknown } from './schemas';
 
 function toUrl(input: URL | string): URL | null {
   if (input instanceof URL) {
@@ -49,7 +50,7 @@ type AllHostnamePatterns =
   | 'show-conversation'
   | 'start-call-lobby'
   | 'show-window'
-  | 'set-is-presenting'
+  | 'cancel-presenting'
   | ':captchaId(.+)'
   | '';
 
@@ -164,7 +165,10 @@ function _route<Key extends string, Args extends object>(
             );
             return null;
           }
-          const parseResult = config.schema.safeParse(rawArgs);
+          const parseResult = safeParseUnknown(
+            config.schema,
+            rawArgs as unknown
+          );
           if (parseResult.success) {
             const args = parseResult.data;
             return {
@@ -183,13 +187,13 @@ function _route<Key extends string, Args extends object>(
     },
     toWebUrl(args) {
       if (config.toWebUrl) {
-        return config.toWebUrl(config.schema.parse(args));
+        return config.toWebUrl(parseUnknown(config.schema, args as unknown));
       }
       throw new Error('Route does not support web URLs');
     },
     toAppUrl(args) {
       if (config.toAppUrl) {
-        return config.toAppUrl(config.schema.parse(args));
+        return config.toAppUrl(parseUnknown(config.schema, args as unknown));
       }
       throw new Error('Route does not support app URLs');
     },
@@ -219,7 +223,7 @@ export const contactByPhoneNumberRoute = _route('contactByPhoneNumber', {
   }),
   parse(result) {
     return {
-      phoneNumber: paramSchema.parse(result.hash.groups.phoneNumber),
+      phoneNumber: parsePartial(paramSchema, result.hash.groups.phoneNumber),
     };
   },
   toWebUrl(args) {
@@ -535,18 +539,18 @@ export const showWindowRoute = _route('showWindow', {
  * Set is presenting
  * @example
  * ```ts
- * setIsPresentingRoute.toAppUrl({})
- * // URL { "sgnl://set-is-presenting" }
+ * cancelPresentingRoute.toAppUrl({})
+ * // URL { "sgnl://cancel-presenting" }
  * ```
  */
-export const setIsPresentingRoute = _route('setIsPresenting', {
-  patterns: [_pattern('sgnl:', 'set-is-presenting', '{/}?', {})],
+export const cancelPresentingRoute = _route('cancelPresenting', {
+  patterns: [_pattern('sgnl:', 'cancel-presenting', '{/}?', {})],
   schema: z.object({}),
   parse() {
     return {};
   },
   toAppUrl() {
-    return new URL('sgnl://set-is-presenting');
+    return new URL('sgnl://cancel-presenting');
   },
 });
 
@@ -565,7 +569,7 @@ const _allSignalRoutes = [
   showConversationRoute,
   startCallLobbyRoute,
   showWindowRoute,
-  setIsPresentingRoute,
+  cancelPresentingRoute,
 ] as const;
 
 strictAssert(

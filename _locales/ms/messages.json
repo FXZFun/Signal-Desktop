@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Hantar log"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Hantar log"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Anda tidak boleh memilih foto dan video bersama-sama dengan fail."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Redamkan"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal tidak dapat dikemas kini. {retry} atau layari {url} untuk memasangnya secara manual. Kemudian, {support} tentang masalah ini"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal tidak dapat dikemas kini. <retryUpdateButton>Cuba kemas kini semula</retryUpdateButton> atau layari {url} untuk memasangnya secara manual. Kemudian, <contactSupportLink>hubungi sokongan</contactSupportLink> tentang masalah ini"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal tidak dapat dikemas kini. Layari {url} untuk memasangnya secara manual. Kemudian, {support} tentang masalah ini"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal tidak dapat dikemas kini. Layari {url} untuk memasangnya secara manual. Kemudian, <contactSupportLink>hubungi sokongan</contactSupportLink> tentang masalah ini"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Nota"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Lihat media terkini"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Semua media"
   },
   "icu:back": {
     "messageformat": "Kembali"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Tidak dapat menyertai panggilan"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Anda sudah berada dalam panggilan."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Tidak dapat mengambil maklumat pautan panggilan. Sila periksa sambungan rangkaian anda dan cuba lagi."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Tidak dapat menerima audio dan video daripada {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Tidak dapat menerima audio dan video"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Ini mungkin kerana mereka belum mengesahkan perubahan nombor keselamatan anda, terdapat masalah dengan peranti mereka atau mereka telah menyekat anda."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal sedang kongsikan {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Menyambung semula..."
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Semalam {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal mungkin gagal memproses mesej masuk."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Isi mesej terlalu panjang"
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Cuba semula kemas kini"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "hubungi sokongan"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Klik untuk membuka semula Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Pautan panggilan"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Panggilan kumpulan"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Menunggu untuk dibenarkan masuk"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Anda tidak boleh menyertai kumpulan ini melalui pautan kumpulan kerana pentadbir telah mengalih keluar anda."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Pentadbir kumpulan ini mesti meluluskan permintaan anda sebelum anda dapat menyertai kumpulan ini. Sekiranya diluluskan, nama dan foto anda akan dikongsikan dengan ahli-ahlinya."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Sertai"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "Permintaan untuk menyertai kumpulan daripada {joinerName} telah ditolak."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} meminta dan membatalkan permintaan mereka untuk menyertai melalui pautan kumpulan"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} meminta dan membatalkan {numberOfRequests,number} permintaan untuk menyertai melalui pautan kumpulan"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, other {{joinerName} meminta dan telah membatalkan {numberOfRequests,number} permintaan untuk menyertai melalui pautan kumpulan}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Anda telah menghidupkan pautan kumpulan dengan kelulusan pentadbir dinyahdayakan."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Ketik \"Derma kepada Signal\" dan langgan"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Menyegerakkan mesej"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Memuat turun {currentSize} daripada {totalSize} ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Bersedia untuk memuat turun..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Ini mungkin mengambil masa beberapa minit bergantung pada saiz sandaran anda"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Batalkan pemindahan"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Batalkan pemindahan?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Mesej dan media anda belum selesai dipulihkan. Jika anda memilih untuk membatalkan, anda boleh memindahkan sekali lagi daripada Tetapan."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Teruskan pemindahan"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Batalkan pemindahan"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Memulihkan media"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Pemulihan dijeda"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Jeda pemindahan"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Sambung semula pemindahan"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Batalkan pemindahan"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Lebih pilihan"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Restore selesai"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} daripada {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Batalkan pemindahan media?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Mesej dan media anda belum selesai dipulihkan. Jika anda memilih untuk membatalkan, anda boleh memindahkan sekali lagi daripada Tetapan."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Teruskan pemindahan"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Batalkan pemindahan"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Kembangkan"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Alih keluar daripada kumpulan"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Anda sudah berada dalam panggilan"
+  "icu:ContactModal--voice": {
+    "messageformat": "Suara"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Warna sembang"
@@ -3759,7 +3825,7 @@
     "messageformat": "Pautan tetapan semula"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Luluskan ahli baharu"
+    "messageformat": "Memerlukan Kelulusan Pentadbir"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Memerlukan pentadbir untuk meluluskan ahli baharu yang menyertai kumpulan melalui pautan kumpulan"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Klik {composeIcon} di atas dan cari kenalan atau kumpulan anda untuk menghantar mesej."
-  },
-  "icu:composeIcon": {
-    "messageformat": "butang mengarang"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Tiada sembang"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Sembang terbaharu akan dipaparkan di sini."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Majukan Kepada"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Profil anda tidak dapat dikemas kini. Sila cuba lagi."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Aksara tidak sah"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Satu atau lebih aksara yang anda masukkan tidak boleh digunakan. Cuba lagi."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Mesej pentadbir"
@@ -4848,10 +4914,10 @@
     "messageformat": "Tiada cerita terkini untuk ditunjukkan sekarang"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Tiada cerita"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Kemas kini baharu akan dipaparkan di sini."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Menghantar..."
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Klik untuk menonton cerita"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Klik <newStoryButtonIcon></newStoryButtonIcon> untuk menambah kemas kini."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} kepada {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Balasan"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Telah beri reaksi kepada cerita"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Telah beri reaksi kepada cerita"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Cerita"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Tunjukkan cerita"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Sembunyikan cerita"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Sejarah panggilan dikosongkan"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Klik untuk melihat atau memulakan panggilan"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Klik <newCallButtonIcon></newCallButtonIcon> untuk memulakan panggilan suara atau video baharu."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Cari"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Togol"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Tiada panggilan terbaru. Mulakan dengan menghubungi rakan."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Tiada panggilan"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Panggilan terbaharu akan dipaparkan di sini."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Tiada panggilan terlepas"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Panggilan terlepas akan dipaparkan di sini."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Tiada hasil untuk “{query}”"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Tolak"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Panggilan kumpulan"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Pautan panggilan"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Kembali"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Anda mesti meninggalkan panggilan semasa sebelum menyertai panggilan baharu"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Panggilan suara keluar} other {Panggilan suara masuk}}} Video {{direction, select, Outgoing {Panggilan video keluar} other {Panggilan video masuk}}} Group {{direction, select, Outgoing {Panggilan kumpulan keluar} other {Panggilan kumpulan masuk}}} other {{direction, select, Outgoing {Panggilan keluar} other {Panggilan masuk}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Panggilan suara terlepas} Video {Panggilan video tidak dijawab} Group {Panggilan kumpulan terlepas} other {Panggilan tidak dijawab}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Panggilan suara tidak dijawab} Video {Panggilan video tidak dijawab} Group {Panggilan kumpulan tidak dijawab} other {Panggilan tidak dijawab}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Panggilan suara ditolak} Video {Panggilan video ditolak} Group {Panggilan kumpulan ditolak} other {Panggilan ditolak}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Pautan panggilan"
@@ -5524,7 +5569,10 @@
     "messageformat": "Edit nama panggilan"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Luluskan semua ahli"
+    "messageformat": "Memerlukan Kelulusan Pentadbir"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Tetapan ini tidak boleh diubah semasa panggilan aktif"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Salin pautan"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Padam"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Pautan ini tidak boleh dipadamkan semasa panggilan aktif"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Butiran pautan panggilan"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Edit nama panggilan"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Luluskan semua ahli"
+    "messageformat": "Memerlukan Kelulusan Pentadbir"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Luluskan kemasukan"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Tolak kemasukan"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Mati"
@@ -5617,22 +5674,16 @@
     "messageformat": "Sedikit pengubahsuaian, pembaikan pepijat dan peningkatan prestasi. Terima kasih kerana menggunakan Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Keluaran ini mempercepatkan proses memadamkan urutan mesej yang besar."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Kemas kini ini membaiki pepijat yang menjadikannya sukar untuk mencari kumpulan selepas keluar daripada kumpulan itu."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Kami telah menambahkan pintasan untuk meletakkan panggilan atau menyertai panggilan baharu apabila panggilan lain sedang berjalan."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Kini anda boleh mengalih keluar balasan yang dipetik daripada mesej yang diedit."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Kemas kini ini juga membaiki ranap permulaan pada Linux untuk pengguna yang tempatnya ditetapkan kepada 'POSIX'."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Cerita dengan kapsyen panjang kini dipaparkan dengan kontras yang lebih baik, menjadikan teks lebih mudah untuk dibaca."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Keluaran ini juga meningkatkan prestasi penjanaan pratonton pautan dan membetulkan pepijat paparan kecil semasa menutup tetingkap Tetapan."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

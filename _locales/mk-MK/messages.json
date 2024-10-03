@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Испрати запис"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Испрати запис"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Не можете да изберете слики и видеа заедно со датотеки."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Исклучи известувања"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal не можеше да се ажурира. {retry}или посетете ја {url}за рачна инсталација. Потоа, {support} за проблемот"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal не можеше да се ажурира. <retryUpdateButton>Обидете се повторно да ажурирате</retryUpdateButton> или посетете ја {url} за рачна инсталација. Потоа, <contactSupportLink>контактирајте со тимот за корисничка поддршка</contactSupportLink> за проблемот"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal не можеше да се ажурира. Посетете ја {url} за рачна инсталација. Потоа, {support}за проблемот"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal не можеше да се ажурира. Посетете ја {url} за рачна инсталација. Потоа, <contactSupportLink>контактирајте со тимот за корисничка поддршка</contactSupportLink> за проблемот"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Белешка"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Погледни скорешна медиумска датотека"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Сите медиумски датотеки"
   },
   "icu:back": {
     "messageformat": "Назад"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Не може да се приклучите на повикот"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Веќе сте на повик."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Не можат да се преземат податоци за линкот за повикот. Ве молиме проверете ја вашата интернет конекција и обидете се повторно."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Не можам да примам аудио и видео од {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Не може да се прима аудио и видео"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Ова може да се случи бидејќи тие ја немаат потврдено проментата на вашиот безбедносен број, има некаков проблем со нивниот уред, или ве имаат блокирано."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal споделува {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Повторно поврзување…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Вчера {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Можно е Signal да има проблем со процесирање дојдовна порака."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Телото на пораката е предолго."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Обидете се повторно да ажурирате"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "контактирајте го тимот за корисничка поддршка"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Кликнете за да го рестартирате Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Линк за повик"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Групен повик"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Чекате да се вклучите"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Не можете да се приклучите на оваа група преку групниот линк бидејќи администратор ве отстрани."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Администраторот на оваа група мора да го одобри Вашето барање пред да се приклучите на групата. Ако ви биде одоборено барањето Вашето име и слика ќе бидат споделени со членовите на групата."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Приклучи сѐ"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "Барањето на {joinerName} за приклучување на групата е одбиено."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName}поднесе и откажа барање за придружување преку линкот на групата"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName}поднесе и откажа {numberOfRequests,number} барања за придружување преку линкот на групата"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} побара и откажа барање за да се придружи преку линкот на групата} other {{joinerName} побара и откажа {numberOfRequests,number} барања за да се придружи преку линкот на групата}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Го вклучивте линкот на групата со оневозможено одобрување од администратор."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Допри на „Донирај на Signal“ и претплати се"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Пораките се синхронизираат"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Се преземаат {currentSize} од {totalSize} ({fractionComplete,number,percent})…"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Се подготвува за преземање…"
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Ова може да потрае неколку минути, во зависност од големината на вашата резервна копија"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Откажи пренос"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Да се откаже преносот?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Не е завршено враќањето на вашите пораки и медиумски датотеки. Ако одлучите да откажете, ќе можете повторно да ги пренесете преку поставувањата."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Продолжи со пренос"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Откажи пренос"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Враќање на медиумски датотеки"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Враќањето е паузирано"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Паузирајте го преносот"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Продолжете го преносот"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Откажи пренос"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Повеќе опции"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Враќањето е завршено"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} од {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Да се откаже преносот на медиумски датотеки?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Не е завршено враќањето на вашите пораки и медиумски датотеки. Ако одлучите да откажете, ќе можете повторно да ги пренесете преку поставувањата."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Продолжи со пренос"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Откажи пренос"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Прошири"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Отстрани од група"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Веќе сте на повик"
+  "icu:ContactModal--voice": {
+    "messageformat": "Гласовен повик"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Боја на разговор"
@@ -3759,7 +3825,7 @@
     "messageformat": "Ресетирај линк"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Одобри нови членови"
+    "messageformat": "Барај одобрение од администратор"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Барајте администратор да треба да ги одобри новите членови кои се придружуваат преку линкот на групата"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Кликнете на {composeIcon} погоре и пребарајте контакти или групи на кои сакате да им пишете"
-  },
-  "icu:composeIcon": {
-    "messageformat": "копче за составување нова порака"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Нема разговори"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Неодамнешните разговори ќе се појават овде."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Препрати до"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Вашиот профил не можеше да се ажурира. Ве молиме обидете се повторно."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Неважечки знаци"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Еден или повеќе од знаците коишто ги внесовте не може да се користат. Обидете се повторно."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Испрати порака на админ"
@@ -4848,10 +4914,10 @@
     "messageformat": "Нема неодамнешни приказни за прикажување моментално"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Нема приказни"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Новостите ќе се прикажат тука."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Се испраќа…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Кликнете за да погледнете приказна"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Кликнете на <newStoryButtonIcon></newStoryButtonIcon> за да додадете новост."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} до {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Одговори"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Реагиравте на приказната"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Реагираше на приказната"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Приказна"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Прикажи приказни"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Скријте ја приказна"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Избришана е историјата на повици"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Кликнете за да ги прегледате повиците или за да започнете нов повик"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Кликнете на <newCallButtonIcon></newCallButtonIcon> за да започнете нов гласовен или видео повик."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Барај"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Смени"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Нема скорешни повици. Започнете со јавување на пријател."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Нема повици"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Неодамнешните повици ќе се појават овде."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Нема пропуштени повици"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Пропуштените повици ќе се појават овде."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Не се пронајдени резултати за „{query}“"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Одбиено"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Групен повик"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Линк за повик"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Вратете се"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Мора да го напуштите тековниот повик пред да се приклучите на нов"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Појдовен гласовен повик} other {Дојдовен гласовен повик}}} Video {{direction, select, Outgoing {Појдовен видео повик} other {Дојдовен видео повик}}} Group {{direction, select, Outgoing {Појдовен групен повик} other {Дојдовен групен повик}}} other {{direction, select, Outgoing {Појдовен повик} other {Дојдовен повик}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Пропуштен гласовен повик} Video {Испуштен видео повик} Group {Пропуштен групен повик} other {Пропуштен повик}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Неодговорен гласовен повик} Video {Неодоговорен видео повик} Group {Неодговорен групен повик} other {Неодговорен  повик}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Одбиен гласовен повик} Video {Одбиен видео повик} Group {Одбиен групен повик} other {Одбиен  повик}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Линк за повик"
@@ -5524,7 +5569,10 @@
     "messageformat": "Изменете го името на повикот"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Одобрете ги сите членови"
+    "messageformat": "Барај одобрение од администратор"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Ова поставување не може да се промени додека е повикот активен"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Копирај линк"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Избриши"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Овој линк не може да се избрише додека е повикот активен"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Детали за линкот за повикот"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Изменете го името на повикот"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Одобрете ги сите членови"
+    "messageformat": "Барај одобрение од администратор"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Одобри влез"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Одбиј влез"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Исклучи"
@@ -5617,22 +5674,16 @@
     "messageformat": "Mали подобрувања, решени багови и подобрувања на перформансот. Ви благодариме што користите Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Во оваа верзија процесот на бришење големи разговори е забрзан."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Во оваа верзија е решена грешка која го отежнуваше пронаоѓањето на група по нејзино напуштање."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Додадовме кратенка за да можете да го прекинете тековниот повик и да се приклучите на нов."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Сега можете да ги отстраните цитираните одговори од изменетите пораки."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Во оваа верзија е поправен пад при отворање на апликацијата за корисници на Linux со „POSIX“ стандарди."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Приказните со појаснителен текст сега се прикажуваат со подобрен контраст за полесно да се чита текстот."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Во оваа верзија е исто така подобренo создавањето на преглед на линк и решена е мала грешка на дисплејот која се јавува при затворање на прозорецот со поставувања."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

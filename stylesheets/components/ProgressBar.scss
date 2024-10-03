@@ -1,0 +1,20 @@
+// Copyright 2024 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
+.ProgressBar {
+  position: relative;
+  overflow: hidden;
+  background: rgba($color-ultramarine, 0.2);
+  height: 5px;
+  border-radius: 2px;
+}
+
+.ProgressBar__fill {
+  position: absolute;
+  background-color: $color-ultramarine;
+  border-radius: 2px;
+  display: block;
+  height: 100%;
+  width: 100%;
+  transition: transform 500ms ease-out;
+}

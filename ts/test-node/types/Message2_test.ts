@@ -673,7 +673,7 @@ describe('Message', () => {
         contact: [
           {
             name: {
-              displayName: 'Someone somewhere',
+              nickname: 'Someone somewhere',
             },
           },
         ],
@@ -683,13 +683,43 @@ describe('Message', () => {
         contact: [
           {
             name: {
-              displayName: 'Someone somewhere',
+              nickname: 'Someone somewhere',
             },
           },
         ],
       });
       const result = await upgradeVersion(message, getDefaultContext());
       assert.deepEqual(result, expected);
+    });
+  });
+  describe('migrateBodyAttachmentToDisk', () => {
+    it('writes long text attachment to disk, but does not truncate body', async () => {
+      const message = getDefaultMessage({
+        body: 'a'.repeat(3000),
+      });
+      const expected = getDefaultMessage({
+        body: 'a'.repeat(3000),
+        bodyAttachment: {
+          contentType: MIME.LONG_MESSAGE,
+          ...FAKE_LOCAL_ATTACHMENT,
+        },
+      });
+      const result = await Message.migrateBodyAttachmentToDisk(
+        message,
+        getDefaultContext()
+      );
+      assert.deepEqual(result, expected);
+    });
+    it('does nothing if body is not too long', async () => {
+      const message = getDefaultMessage({
+        body: 'a'.repeat(2048),
+      });
+
+      const result = await Message.migrateBodyAttachmentToDisk(
+        message,
+        getDefaultContext()
+      );
+      assert.deepEqual(result, message);
     });
   });
 });

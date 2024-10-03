@@ -43,7 +43,11 @@ import type {
 } from '../../components/conversation/GroupNotification';
 import type { PropsType as ProfileChangeNotificationPropsType } from '../../components/conversation/ProfileChangeNotification';
 
-import { getDomain, isCallLink, isStickerPack } from '../../types/LinkPreview';
+import {
+  getSafeDomain,
+  isCallLink,
+  isStickerPack,
+} from '../../types/LinkPreview';
 import type {
   AciString,
   PniString,
@@ -390,7 +394,7 @@ const getPreviewsForMessage = ({
     ...preview,
     isStickerPack: isStickerPack(preview.url),
     isCallLink: isCallLink(preview.url),
-    domain: getDomain(preview.url),
+    domain: getSafeDomain(preview.url),
     image: preview.image ? getPropsForAttachment(preview.image) : undefined,
   }));
 };
@@ -577,6 +581,7 @@ export const getPropsForQuote = (
 
 export type GetPropsForMessageOptions = Pick<
   GetPropsForBubbleOptions,
+  | 'activeCall'
   | 'conversationSelector'
   | 'ourConversationId'
   | 'ourAci'
@@ -676,6 +681,7 @@ export const getPropsForMessage = (
   const payment = getPayment(message);
 
   const {
+    activeCall,
     accountSelector,
     conversationSelector,
     ourConversationId,
@@ -699,6 +705,7 @@ export const getPropsForMessage = (
   const { sticker } = message;
 
   const isMessageTapToView = isTapToView(message);
+  const activeCallConversationId = activeCall?.conversationId;
 
   const isTargeted = message.id === targetedMessageId;
   const isSelected = selectedMessageIds?.includes(message.id) ?? false;
@@ -726,6 +733,7 @@ export const getPropsForMessage = (
     attachmentDroppedDueToSize,
     author,
     bodyRanges,
+    activeCallConversationId,
     previews,
     quote,
     reactions,
@@ -1888,6 +1896,7 @@ function canReplyOrReact(
     | 'deletedForEveryone'
     | 'payment'
     | 'sendStateByConversationId'
+    | 'sms'
     | 'type'
   >,
   ourConversationId: string | undefined,
@@ -1926,6 +1935,10 @@ function canReplyOrReact(
     return false;
   }
 
+  if (message.sms) {
+    return false;
+  }
+
   if (isOutgoing(message)) {
     return (
       isMessageJustForMe(sendStateByConversationId ?? {}, ourConversationId) ||
@@ -1960,6 +1973,7 @@ export function canReply(
     | 'conversationId'
     | 'deletedForEveryone'
     | 'sendStateByConversationId'
+    | 'sms'
     | 'type'
   >,
   ourConversationId: string | undefined,
@@ -1981,6 +1995,7 @@ export function canReact(
     | 'conversationId'
     | 'deletedForEveryone'
     | 'sendStateByConversationId'
+    | 'sms'
     | 'type'
   >,
   ourConversationId: string | undefined,
@@ -1999,11 +2014,17 @@ export function canCopy(
 export function canDeleteForEveryone(
   message: Pick<
     MessageWithUIFieldsType,
-    'type' | 'deletedForEveryone' | 'sent_at' | 'sendStateByConversationId'
+    | 'type'
+    | 'deletedForEveryone'
+    | 'sent_at'
+    | 'sendStateByConversationId'
+    | 'sms'
   >,
   isMe: boolean
 ): boolean {
   return (
+    // Is this an SMS restored from backup?
+    !message.sms &&
     // Is this a message I sent?
     isOutgoing(message) &&
     // Has the message already been deleted?

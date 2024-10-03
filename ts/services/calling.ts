@@ -1,7 +1,6 @@
 // Copyright 2020 Signal Messenger, LLC
 // SPDX-License-Identifier: AGPL-3.0-only
 
-import type { DesktopCapturerSource } from 'electron';
 import { ipcRenderer } from 'electron';
 import type {
   AudioDevice,
@@ -64,7 +63,6 @@ import type {
   AvailableIODevicesType,
   CallEndedReason,
   MediaDeviceSettings,
-  PresentableSource,
   PresentedSource,
 } from '../types/Calling';
 import {
@@ -77,7 +75,6 @@ import {
   findBestMatchingAudioDeviceIndex,
   findBestMatchingCameraId,
 } from '../calling/findBestMatchingDevice';
-import type { LocalizerType } from '../types/Util';
 import { normalizeAci } from '../util/normalizeAci';
 import { isAciString } from '../util/isAciString';
 import * as Errors from '../types/errors';
@@ -99,10 +96,12 @@ import {
   REQUESTED_VIDEO_WIDTH,
   REQUESTED_VIDEO_HEIGHT,
   REQUESTED_VIDEO_FRAMERATE,
+  REQUESTED_SCREEN_SHARE_WIDTH,
+  REQUESTED_SCREEN_SHARE_HEIGHT,
+  REQUESTED_SCREEN_SHARE_FRAMERATE,
 } from '../calling/constants';
 import { callingMessageToProto } from '../util/callingMessageToProto';
 import { requestMicrophonePermissions } from '../util/requestMicrophonePermissions';
-import OS from '../util/os/osMain';
 import { SignalService as Proto } from '../protobuf';
 import { DataReader, DataWriter } from '../sql/Client';
 import {
@@ -153,12 +152,10 @@ import {
 import type { CallLinkType, CallLinkStateType } from '../types/CallLink';
 import { CallLinkRestrictions } from '../types/CallLink';
 import { getConversationIdForLogging } from '../util/idForLogging';
-import {
-  sendCallLinkDeleteSync,
-  sendCallLinkUpdateSync,
-} from '../util/sendCallLinkUpdateSync';
+import { sendCallLinkUpdateSync } from '../util/sendCallLinkUpdateSync';
 import { createIdenticon } from '../util/createIdenticon';
 import { getColorForCallLink } from '../util/getColorForCallLink';
+import { getUseRingrtcAdm } from '../util/ringrtc/ringrtcAdm';
 
 const { wasGroupCallRingPreviouslyCanceled } = DataReader;
 const {
@@ -195,6 +192,7 @@ type CallingReduxInterface = Pick<
   CallingReduxActionsType,
   | 'callStateChange'
   | 'cancelIncomingGroupCallRing'
+  | 'cancelPresenting'
   | 'groupCallAudioLevelsChange'
   | 'groupCallEnded'
   | 'groupCallRaisedHandsChange'
@@ -207,7 +205,6 @@ type CallingReduxInterface = Pick<
   | 'refreshIODevices'
   | 'remoteSharingScreenChange'
   | 'remoteVideoChange'
-  | 'setPresenting'
   | 'startCallingLobby'
   | 'startCallLinkLobby'
   | 'startCallLinkLobbyByRoomId'
@@ -216,9 +213,13 @@ type CallingReduxInterface = Pick<
   areAnyCallsActiveOrRinging(): boolean;
 };
 
-function isScreenSource(source: PresentedSource): boolean {
-  return source.id.startsWith('screen');
-}
+export type SetPresentingOptionsType = Readonly<{
+  conversationId: string;
+  hasLocalVideo: boolean;
+  mediaStream?: MediaStream;
+  source?: PresentedSource;
+  callLinkRootKey?: string;
+}>;
 
 function truncateForLogging(name: string | undefined): string | undefined {
   if (!name || name.length <= 4) {
@@ -252,29 +253,6 @@ function cleanForLogging(settings?: MediaDeviceSettings): unknown {
     selectedSpeaker: truncateForLogging(settings.selectedSpeaker?.name),
     selectedCamera: settings.selectedCamera,
   };
-}
-
-function translateSourceName(
-  i18n: LocalizerType,
-  source: PresentedSource
-): string {
-  const { name } = source;
-  if (!isScreenSource(source)) {
-    return name;
-  }
-
-  if (name === 'Entire Screen') {
-    return i18n('icu:calling__SelectPresentingSourcesModal--entireScreen');
-  }
-
-  const match = name.match(/^Screen (\d+)$/);
-  if (match) {
-    return i18n('icu:calling__SelectPresentingSourcesModal--screen', {
-      id: match[1],
-    });
-  }
-
-  return name;
 }
 
 function protoToCallingMessage({
@@ -349,9 +327,13 @@ export type NotifyScreenShareStatusOptionsType = Readonly<
 >;
 
 export class CallingClass {
-  readonly videoCapturer: GumVideoCapturer;
+  private readonly videoCapturer: GumVideoCapturer;
 
   readonly videoRenderer: CanvasVideoRenderer;
+
+  private localPreviewContainer: HTMLDivElement | null = null;
+
+  private localPreview: HTMLVideoElement | undefined;
 
   private reduxInterface?: CallingReduxInterface;
 
@@ -397,6 +379,7 @@ export class CallingClass {
 
     RingRTC.setConfig({
       field_trials: undefined,
+      use_ringrtc_adm: getUseRingrtcAdm(),
     });
 
     RingRTC.handleOutgoingSignaling = this.handleOutgoingSignaling.bind(this);
@@ -419,7 +402,7 @@ export class CallingClass {
     });
 
     ipcRenderer.on('stop-screen-share', () => {
-      reduxInterface.setPresenting();
+      reduxInterface.cancelPresenting();
     });
     ipcRenderer.on(
       'calling:set-rtc-stats-interval',
@@ -677,6 +660,7 @@ export class CallingClass {
       roomId: roomIdHex,
       rootKey: rootKey.toString(),
       adminKey: adminKey.toString('base64'),
+      storageNeedsSync: true,
       ...state,
     };
 
@@ -716,8 +700,6 @@ export class CallingClass {
       log.error(`${logId}: ${message}`);
       throw new Error(message);
     }
-
-    drop(sendCallLinkDeleteSync(callLink));
   }
 
   async updateCallLinkName(
@@ -885,49 +867,63 @@ export class CallingClass {
     hasLocalAudio: boolean,
     hasLocalVideo: boolean
   ): Promise<void> {
-    log.info('CallingClass.startOutgoingDirectCall()');
-
-    if (!this.reduxInterface) {
-      throw new Error('Redux actions not available');
-    }
-
     const conversation = window.ConversationController.get(conversationId);
     if (!conversation) {
-      log.error('Could not find conversation, cannot start call');
+      log.error(
+        `startOutgoingCall: Could not find conversation ${conversationId}, cannot start call`
+      );
       this.stopCallingLobby();
       return;
     }
 
+    const idForLogging = getConversationIdForLogging(conversation.attributes);
+    const logId = `startOutgoingDirectCall(${idForLogging}`;
+    log.info(logId);
+
+    if (!this.reduxInterface) {
+      throw new Error(`${logId}: Redux actions not available`);
+    }
+
     const remoteUserId = this.getRemoteUserIdFromConversation(conversation);
     if (!remoteUserId || !this.localDeviceId) {
-      log.error('Missing identifier, new call not allowed.');
+      log.error(`${logId}: Missing identifier, new call not allowed.`);
       this.stopCallingLobby();
       return;
     }
 
     const haveMediaPermissions = await this.requestPermissions(hasLocalVideo);
     if (!haveMediaPermissions) {
-      log.info('Permissions were denied, new call not allowed.');
+      log.info(`${logId}: Permissions were denied, new call not allowed.`);
       this.stopCallingLobby();
       return;
     }
 
-    log.info('CallingClass.startOutgoingDirectCall(): Getting call settings');
-
+    log.info(`${logId}: Getting call settings`);
     // Check state after awaiting to debounce call button.
     if (RingRTC.call && RingRTC.call.state !== CallState.Ended) {
-      log.info('Call already in progress, new call not allowed.');
+      log.info(`${logId}: Call already in progress, new call not allowed.`);
       this.stopCallingLobby();
       return;
     }
 
-    log.info('CallingClass.startOutgoingDirectCall(): Starting in RingRTC');
-
+    log.info(`${logId}: Starting in RingRTC`);
     const call = RingRTC.startOutgoingCall(
       remoteUserId,
       hasLocalVideo,
       this.localDeviceId
     );
+
+    // Send profile key to conversation recipient since call protos don't include it
+    if (!conversation.get('profileSharing')) {
+      log.info(`${logId}: Setting profileSharing=true`);
+      conversation.set({ profileSharing: true });
+      await DataWriter.updateConversation(conversation.attributes);
+    }
+    log.info(`${logId}: Sending profile key`);
+    await conversationJobQueue.add({
+      conversationId: conversation.id,
+      type: 'ProfileKey',
+    });
 
     RingRTC.setOutgoingAudio(call.callId, hasLocalAudio);
     RingRTC.setVideoCapturer(call.callId, this.videoCapturer);
@@ -961,6 +957,21 @@ export class CallingClass {
           Buffer.from(member.uuidCiphertext)
         )
     );
+  }
+
+  public setLocalPreviewContainer(container: HTMLDivElement | null): void {
+    // Reuse HTMLVideoElement between different containers so that the preview
+    // of the last frame stays valid even if there are no new frames on the
+    // underlying MediaStream.
+    if (this.localPreview == null) {
+      this.localPreview = document.createElement('video');
+      this.localPreview.autoplay = true;
+      this.videoCapturer.setLocalPreview({ current: this.localPreview });
+    }
+
+    this.localPreviewContainer?.removeChild(this.localPreview);
+    this.localPreviewContainer = container;
+    this.localPreviewContainer?.appendChild(this.localPreview);
   }
 
   public async cleanupStaleRingingCalls(): Promise<void> {
@@ -1219,21 +1230,25 @@ export class CallingClass {
       return;
     }
 
+    const logId = `joinGroupCall(${getConversationIdForLogging(conversation)})`;
+    log.info(logId);
+
     if (
       !conversation.groupId ||
       !conversation.publicParams ||
       !conversation.secretParams
     ) {
       log.error(
-        'Conversation is missing required parameters. Cannot join group call'
+        `${logId}: Conversation is missing required parameters. Cannot join group call`
       );
       return;
     }
 
-    const logId = `joinGroupCall(${getConversationIdForLogging(conversation)})`;
     const haveMediaPermissions = await this.requestPermissions(hasLocalVideo);
     if (!haveMediaPermissions) {
-      log.info('Permissions were denied, but allow joining group call');
+      log.info(
+        `${logId}: Permissions were denied, but allow joining group call`
+      );
     }
 
     await this.startDeviceReselectionTimer();
@@ -1252,6 +1267,7 @@ export class CallingClass {
       groupCall.ringAll();
     }
 
+    log.info(`${logId}: Joining in RingRTC`);
     groupCall.join();
   }
 
@@ -1546,9 +1562,14 @@ export class CallingClass {
     hasLocalAudio: boolean;
     hasLocalVideo: boolean;
   }): Promise<void> {
+    const logId = `joinCallLinkCall(${roomId})`;
+    log.info(logId);
+
     const haveMediaPermissions = await this.requestPermissions(hasLocalVideo);
     if (!haveMediaPermissions) {
-      log.info('Permissions were denied, but allow joining call link call');
+      log.info(
+        `${logId}: Permissions were denied, but allow joining call link call`
+      );
     }
 
     await this.startDeviceReselectionTimer();
@@ -1570,6 +1591,7 @@ export class CallingClass {
     groupCall.setOutgoingVideoMuted(!hasLocalVideo);
     drop(this.enableCaptureAndSend(groupCall));
 
+    log.info(`${logId}: Joining in RingRTC`);
     groupCall.join();
   }
 
@@ -2025,51 +2047,13 @@ export class CallingClass {
     }
   }
 
-  async getPresentingSources(): Promise<Array<PresentableSource>> {
-    // There's a Linux Wayland Electron bug where requesting desktopCapturer.
-    // getSources() with types as ['screen', 'window'] (the default) pops 2
-    // OS permissions dialogs in an unusable state (Dialog 1 for Share Window
-    // is the foreground and ignores input; Dialog 2 for Share Screen is background
-    // and requires input. As a workaround, request both sources sequentially.
-    // https://github.com/signalapp/Signal-Desktop/issues/5350#issuecomment-1688614149
-    const sources: ReadonlyArray<DesktopCapturerSource> =
-      OS.isLinux() && OS.isWaylandEnabled()
-        ? (
-            await ipcRenderer.invoke('getScreenCaptureSources', ['screen'])
-          ).concat(
-            await ipcRenderer.invoke('getScreenCaptureSources', ['window'])
-          )
-        : await ipcRenderer.invoke('getScreenCaptureSources');
-
-    const presentableSources: Array<PresentableSource> = [];
-
-    sources.forEach(source => {
-      // If electron can't retrieve a thumbnail then it won't be able to
-      // present this source so we filter these out.
-      if (source.thumbnail.isEmpty()) {
-        return;
-      }
-      presentableSources.push({
-        appIcon:
-          source.appIcon && !source.appIcon.isEmpty()
-            ? source.appIcon.toDataURL()
-            : undefined,
-        id: source.id,
-        name: translateSourceName(window.i18n, source),
-        isScreen: isScreenSource(source),
-        thumbnail: source.thumbnail.toDataURL(),
-      });
-    });
-
-    return presentableSources;
-  }
-
-  async setPresenting(
-    conversationId: string,
-    hasLocalVideo: boolean,
-    source?: PresentedSource,
-    callLinkRootKey?: string
-  ): Promise<void> {
+  async setPresenting({
+    conversationId,
+    hasLocalVideo,
+    mediaStream,
+    source,
+    callLinkRootKey,
+  }: SetPresentingOptionsType): Promise<void> {
     const call = getOwn(this.callsLookup, conversationId);
     if (!call) {
       log.warn('Trying to set presenting for a non-existent call');
@@ -2077,15 +2061,15 @@ export class CallingClass {
     }
 
     this.videoCapturer.disable();
-    if (source) {
+    const isPresenting = mediaStream != null;
+    if (isPresenting) {
       this.hadLocalVideoBeforePresenting = hasLocalVideo;
       drop(
         this.enableCaptureAndSend(call, {
-          // 15fps is much nicer but takes up a lot more CPU.
-          maxFramerate: 5,
-          maxHeight: 1800,
-          maxWidth: 2880,
-          screenShareSourceId: source.id,
+          maxFramerate: REQUESTED_SCREEN_SHARE_FRAMERATE,
+          maxHeight: REQUESTED_SCREEN_SHARE_HEIGHT,
+          maxWidth: REQUESTED_SCREEN_SHARE_WIDTH,
+          mediaStream,
         })
       );
       this.setOutgoingVideo(conversationId, true);
@@ -2097,11 +2081,10 @@ export class CallingClass {
       this.hadLocalVideoBeforePresenting = undefined;
     }
 
-    const isPresenting = Boolean(source);
     this.setOutgoingVideoIsScreenShare(call, isPresenting);
 
-    if (source) {
-      ipcRenderer.send('show-screen-share', source.name);
+    if (isPresenting) {
+      ipcRenderer.send('show-screen-share', source?.name);
 
       let url: string;
       let absolutePath: string | undefined;
@@ -2795,7 +2778,7 @@ export class CallingClass {
       const callId = getCallIdFromRing(ringId);
       const callDetails = getCallDetailsFromGroupCallMeta(groupId, {
         callId,
-        ringerId: ringerUuid,
+        ringerId: ringerAci,
       });
       let localEventForCall;
       if (localEventFromRing === LocalCallEvent.Missed) {

@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "લૉગ સબમિટ કરો"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "લૉગ સબમિટ કરો"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "તમે ફાઇલની સાથે ફોટા અને વીડિયો પસંદ કરી શકતા નથી."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "મ્યૂટ કરો"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal અપડેટ ન થઈ શક્યું. {retry} અથવા તેને જાતે ઇન્સ્ટોલ કરવા {url}ની મુલાકાત લો. પછી, આ સમસ્યા વિશે {support}."
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal અપડેટ ન થઈ શક્યું. <retryUpdateButton>અપડેટનો ફરી પ્રયાસ કરો</retryUpdateButton> અથવા તેને મેન્યુઅલી ઇન્સ્ટોલ કરવા માટે {url}ની મુલાકાત લો. પછી, આ સમસ્યા વિશે <contactSupportLink>સપોર્ટનો સંપર્ક કરો</contactSupportLink>"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal અપડેટ ન થઈ શક્યું. તેને જાતે ઇન્સ્ટોલ કરવા {url}ની મુલાકાત લો. પછી, આ સમસ્યા વિશે {support}."
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal અપડેટ ન થઈ શક્યું. તેને મેન્યુઅલી ઇન્સ્ટોલ કરવા માટે {url}ની મુલાકાત લો. પછી આ સમસ્યા વિશે <contactSupportLink>સપોર્ટનો સંપર્ક કરો</contactSupportLink>"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "નોંધ"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "તાજેતરના મીડિયા જુઓ"
+  "icu:allMediaMenuItem": {
+    "messageformat": "બધા મીડિયા"
   },
   "icu:back": {
     "messageformat": "પાછળ"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "કૉલમાં જોડાઈ શકતાં નથી"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "તમે પહેલેથી જ કૉલમાં છો."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "કૉલ લિંકની માહિતી લઈ શક્યા નહીં. કૃપા કરીને તમારું નેટવર્ક કનેક્શન તપાસો અને ફરી પ્રયાસ કરો."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "{name} તરફથી ઓડિયો અને વિડિયો પ્રાપ્ત કરી શકતા નથી"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "ઓડિયો અને વીડિયો પ્રાપ્ત કરી શકતાં નથી"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "આ એટલા માટે હોઈ શકે છે કારણ કે તેઓએ તમારા સલામતી નંબર બદલાવની ચકાસણી કરી નથી, તેમના ડિવાઇસમાં સમસ્યા છે, અથવા તેઓએ તમને બ્લૉક કર્યા છે."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal {window} શેર કરી રહ્યું છે."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "ફરીથી કનેક્ટ થઈ રહ્યું છે..."
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "ગઈકાલે {time} વાગ્યે"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal ઇનકમિંગ મેસેજની પ્રક્રિયા કરવામાં નિષ્ફળ થઈ શકે છે."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "મેસેજનો મુખ્ય ભાગ ખૂબ લાંબો છે."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "અપડેટ કરવાનો ફરી પ્રયાસ કરો"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "સપોર્ટનો સંપર્ક કરો"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Signalને રિસ્ટાર્ટ કરવા ક્લિક કરો"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "કૉલ લિંક"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "ગ્રૂપ કૉલ"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "અંદર આવવા દેવાની પ્રતીક્ષા છે"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "તમે ગ્રુપ લિંક દ્વારા આ ગ્રુપમાં જોડાઈ શકતા નથી કારણ કે એક એડમિને તમને દૂર કર્યા."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "તમે આ ગ્રુપમાં જોડાઈ શકો તે પહેલા આ ગ્રુપના એડમીને તમારી વિનંતી મંજૂર કરવી જોઈએ. જો મંજૂર થાય, તો તમારું નામ અને ફોટો તેના મેમ્બર્સ સાથે શેર કરવામાં આવશે."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "જોડાઓ"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "{joinerName}માંથી ગ્રુપમાં જોડાવાની વિનંતી નકારી કાઢવામાં આવી હતી."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName}એ ગ્રુપ લિંક વડે જોડાવાની વિનંતી કરી અને તેમની વિનંતી રદ કરી"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName}એ ગ્રુપ લિંક વડે જોડાવાની વિનંતી કરી અને {numberOfRequests,number} વિનંતી રદ કરી"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName}એ ગ્રૂપ લિંક વડે જોડાવાની તેમની વિનંતી કરી અને રદ કરી} other {{joinerName} એ ગ્રૂપ લિંક વડે જોડાવાની {numberOfRequests,number} વિનંતીઓ કરી અને રદ કરી}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "તમે એડમિન મંજૂરી અક્ષમ સાથે ગ્રુપ લિંક ચાલુ કરી."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "\"Signalમાં દાન કરો\" પર ટૅપ કરો અને સબ્સ્ક્રાઇબ કરો"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "મેસેજ સિંક થઈ રહ્યાં છે"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "{totalSize} માંથી {currentSize} ડાઉનલોડ થઈ રહ્યું છે ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "ડાઉનલોડ કરવાની તૈયારી કરી ચાલુ છે..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "તમારા બેકઅપની સાઇઝના આધારે આમાં થોડો સમય લાગી શકે છે"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "ટ્રાન્સફર રદ કરો"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "ટ્રાન્સફર રદ કરીએ?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "તમારા મેસેજ અને મીડિયા રિસ્ટોર કરવાનું પૂર્ણ થયું નથી. જો તમે રદ કરવાનું પસંદ કરો છો, તો તમે સેટિંગ્સમાંથી ફરીથી ટ્રાન્સફર કરી શકો છો."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "ટ્રાન્સફર ચાલુ રાખો"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "ટ્રાન્સફર રદ કરો"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "મીડિયા રિસ્ટોર થાય છે"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "રિસ્ટોર થોભાવ્યું"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "ટ્રાન્સફર થોભાવો"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "ટ્રાન્સફર ફરી શરૂ કરો"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "ટ્રાન્સફર રદ કરો"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "વધુ વિકલ્પો"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "રિસ્ટોર પૂર્ણ થયું"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize}ની{totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "મીડિયા ટ્રાન્સફર રદ કરીએ?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "તમારા મેસેજ અને મીડિયા રિસ્ટોર કરવાનું પૂર્ણ થયું નથી. જો તમે રદ કરવાનું પસંદ કરો છો, તો તમે સેટિંગ્સમાંથી ફરીથી ટ્રાન્સફર કરી શકો છો."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "ટ્રાન્સફર ચાલુ રાખો"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "ટ્રાન્સફર રદ કરો"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "વિસ્તૃત કરો"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "ગ્રુપમાંથી દૂર કરો"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "તમે પહેલેથી જ કૉલમાં છો"
+  "icu:ContactModal--voice": {
+    "messageformat": "વૉઇસ"
   },
   "icu:showChatColorEditor": {
     "messageformat": "ચેટ કલર"
@@ -3759,7 +3825,7 @@
     "messageformat": "રીસેટ લિંક"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "નવા મેમ્બર્સને મંજૂરી આપો"
+    "messageformat": "એડમિનની મંજૂરી ફરજીયાત કરો"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "ગ્રુપ લિંક દ્વારા જોડાયેલા નવા મેમ્બર્સને મંજૂરી આપવા માટે એડમિનની જરૂર છે"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": "0.5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "{composeIcon} પર ક્લિક કરો અને મેસેજ માટે તમારા સંપર્કો અથવા ગ્રુપ શોધો."
-  },
-  "icu:composeIcon": {
-    "messageformat": "કંપોઝ બટન"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "કોઈ ચેટ નથી"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "તાજેતરની ચેટ અહીં દેખાશે."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "આમને ફોરવર્ડ કરો"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "તમારી પ્રોફાઇલ અપડેટ કરી શકાઈ નથી. મેહરબાની કરીને ફરીથી પ્રયાસ કરો."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "અમાન્ય અક્ષરો"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "તમે દાખલ કરેલ એક કે વધુ અક્ષરોનો ઉપયોગ કરી શકાતો નથી. ફરીથી પ્રયત્ન કરો."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "એડમિનને મેસેજ કરો"
@@ -4848,10 +4914,10 @@
     "messageformat": "અત્યારે બતાવવા માટે કોઈ તાજેતરની સ્ટોરી નથી"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "કોઈ સ્ટોરી નથી"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "નવા અપડેટ્સ અહીં દેખાશે."
   },
   "icu:Stories__list--sending": {
     "messageformat": "મોકલાઈ રહી છે..."
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "સ્ટોરી જોવા ક્લિક કરો"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "અપડેટ ઉમેરવા માટે <newStoryButtonIcon></newStoryButtonIcon> ક્લિક કરો."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name}એ {group}માં"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "જવાબો"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "સ્ટોરી પર પ્રતિક્રિયા આપી"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "સ્ટોરી પર પ્રતિક્રિયા આપી"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "સ્ટોરી"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "સ્ટોરી બતાવો"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "સ્ટોરી છુપાવો"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "કૉલ હિસ્ટ્રી સાફ કરી"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "જોવા અથવા કૉલ શરૂ કરવા માટે ક્લિક કરો"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "નવો વૉઇસ અથવા વીડિયો કૉલ શરૂ કરવા માટે <newCallButtonIcon></newCallButtonIcon> ક્લિક કરો."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "શોધો"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "ટોગલ"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "કોઈ તાજેતરના કૉલ નથી. કોઈ મિત્રને કૉલ કરીને શરૂઆત કરો."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "કોઈ કૉલ નથી"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "તાજેતરના કૉલ અહીં દેખાશે."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "કોઈ મિસ્ડ કૉલ નથી"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "મિસ્ડ કૉલ અહીં દેખાશે."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "“{query}” માટે કોઈ પરિણામ નથી"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "નકાર્યો"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "ગ્રુપ કૉલ"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "કૉલ લિંક"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "પાછા ફરો"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "નવા કૉલમાં જોડાતા પહેલાં તમારે હાલના કૉલને છોડવો આવશ્યક છે"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {આઉટગોઇંગ વૉઇસ કૉલ} other {ઇનકમિંગ વૉઇસ કૉલ}}} Video {{direction, select, Outgoing {આઉટગોઈંગ વિડિયો કૉલ} other {ઈનકમિંગ વિડિયો કૉલ}}} Group {{direction, select, Outgoing {આઉટગોઇંગ ગ્રૂપ કૉલ} other {ઇનકમિંગ ગ્રૂપ કૉલ}}} other {{direction, select, Outgoing {આઉટગોઇંગ કૉલ} other {આવી રહેલ કોલ}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {મિસ્ડ વૉઇસ કૉલ} Video {મિસ્ડ વિડિયો કૉલ} Group {મિસ્ડ ગ્રૂપ કૉલ} other {મિસ કૉલ}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {અનુત્તરિત વૉઇસ કૉલ} Video {અનુત્તરિત વિડિયો કૉલ} Group {ન ઉપાડેલો ગ્રૂપ કૉલ} other {ન ઉપાડેલો કૉલ}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {નકારેલ વૉઇસ કૉલ} Video {નકારેલ વીડિયો કૉલ} Group {નકારેલ ગ્રૂપ કૉલ} other {નકારેલ કૉલ}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "કૉલ લિંક"
@@ -5524,7 +5569,10 @@
     "messageformat": "કૉલના નામમાં ફેરફાર કરો"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "બધા સભ્યોને મંજૂર કરો"
+    "messageformat": "એડમિનની મંજૂરી ફરજીયાત કરો"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "કૉલ ચાલુ હોય ત્યારે આ સેટિંગ બદલી શકાતું નથી"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "લિંક કૉપિ કરો"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "ડિલીટ કરો"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "કૉલ ચાલુ હોય ત્યારે આ લિંક ડિલીટ કરી શકાતી નથી"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "કૉલ લિંકની વિગતો"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "કૉલના નામમાં ફેરફાર કરો"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "બધા સભ્યોને મંજૂર કરો"
+    "messageformat": "એડમિનની મંજૂરી ફરજીયાત કરો"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "પ્રવેશ મંજૂર કરો"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "પ્રવેશ નકારો"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "બંધ"
@@ -5617,22 +5674,16 @@
     "messageformat": "નાના ફેરફારો, ભૂલ સુધારા અને પ્રદર્શનમાં વધારો. Signalનો ઉપયોગ કરવા બદલ આભાર!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "આ રિલીઝ મોટા મેસેજ થ્રેડને ડિલીટ કરવાની પ્રક્રિયાને ઝડપી બનાવે છે."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "આ અપડેટમાં એ બગને ઠીક કરવામાં આવ્યો છે જે કોઈ ગ્રૂપને છોડ્યા પછી તેને શોધવાનું મુશ્કેલ બનાવતો હતો."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "જ્યારે અન્ય કૉલ પહેલાંથી જ ચાલુ હોય તો તેને મૂકી દેવા અને નવા કૉલમાં જોડાવા માટે અમે એક શૉર્ટકટ ઉમેર્યું છે."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "હવે તમે એડિટ કરેલા મેસેજમાંથી ક્વોટ કરેલા જવાબો દૂર કરી શકો છો."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "આ અપડેટ એવા વપરાશકર્તા માટે Linux પર સ્ટાર્ટઅપ ક્રેશને પણ ઠીક કરે છે કે જેમનું લોકેલ `POSIX` પર સેટ હોય."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "લાંબા કેપ્શન ધરાવતી સ્ટોરી હવે બહેતર કોન્ટ્રાસ્ટ સાથે પ્રદર્શિત થાય છે જે તેમને વાંચવાનું વધુ સરળ બનાવે છે."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "આ રિલીઝ લિંક પ્રિવ્યૂ જનરેશનના પ્રદર્શનને પણ સુધારે છે અને સેટિંગ્સ વિન્ડોને બંધ કરતી વખતે આવતા એક નાનકડા પ્રદર્શન સંબંધી બગને ઠીક કરે છે."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

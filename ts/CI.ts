@@ -1,14 +1,16 @@
 // Copyright 2021 Signal Messenger, LLC
 // SPDX-License-Identifier: AGPL-3.0-only
 
+import { format } from 'node:util';
 import { ipcRenderer } from 'electron';
+import { BackupLevel } from '@signalapp/libsignal-client/zkgroup';
 
 import type { IPCResponse as ChallengeResponseType } from './challenge';
 import type { MessageAttributesType } from './model-types.d';
 import * as log from './logging/log';
 import { explodePromise } from './util/explodePromise';
 import { AccessType, ipcInvoke } from './sql/channels';
-import { backupsService } from './services/backups';
+import { backupsService, BackupType } from './services/backups';
 import { SECOND } from './util/durations';
 import { isSignalRoute } from './util/signalRoutes';
 import { strictAssert } from './util/assert';
@@ -22,6 +24,7 @@ export type CIType = {
   getMessagesBySentAt(
     sentAt: number
   ): Promise<ReadonlyArray<MessageAttributesType>>;
+  getPendingEventCount: (event: string) => number;
   handleEvent: (event: string, data: unknown) => unknown;
   setProvisioningURL: (url: string) => unknown;
   solveChallenge: (response: ChallengeResponseType) => unknown;
@@ -34,7 +37,9 @@ export type CIType = {
   ) => unknown;
   openSignalRoute(url: string): Promise<void>;
   exportBackupToDisk(path: string): Promise<void>;
+  exportPlaintextBackupToDisk(path: string): Promise<void>;
   unlink: () => void;
+  print: (...args: ReadonlyArray<unknown>) => void;
 };
 
 export type GetCIOptionsType = Readonly<{
@@ -92,6 +97,11 @@ export function getCI({ deviceName, backupData }: GetCIOptionsType): CIType {
     });
 
     return promise;
+  }
+
+  function getPendingEventCount(event: string): number {
+    const completed = completedEvents.get(event) || [];
+    return completed.length;
   }
 
   function setProvisioningURL(url: string): void {
@@ -161,11 +171,23 @@ export function getCI({ deviceName, backupData }: GetCIOptionsType): CIType {
   }
 
   async function exportBackupToDisk(path: string) {
-    await backupsService.exportToDisk(path);
+    await backupsService.exportToDisk(path, BackupLevel.Media);
+  }
+
+  async function exportPlaintextBackupToDisk(path: string) {
+    await backupsService.exportToDisk(
+      path,
+      BackupLevel.Media,
+      BackupType.TestOnlyPlaintext
+    );
   }
 
   function unlink() {
     window.Whisper.events.trigger('unlinkAndDisconnect');
+  }
+
+  function print(...args: ReadonlyArray<unknown>) {
+    handleEvent('print', format(...args));
   }
 
   return {
@@ -179,6 +201,9 @@ export function getCI({ deviceName, backupData }: GetCIOptionsType): CIType {
     waitForEvent,
     openSignalRoute,
     exportBackupToDisk,
+    exportPlaintextBackupToDisk,
     unlink,
+    getPendingEventCount,
+    print,
   };
 }

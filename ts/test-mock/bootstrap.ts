@@ -164,7 +164,7 @@ export class Bootstrap {
   private readonly randomId = crypto.randomBytes(8).toString('hex');
 
   constructor(options: BootstrapOptions = {}) {
-    this.cdn3Path = path.join(os.tmpdir(), 'mock-signal-cdn3-');
+    this.cdn3Path = path.join(os.tmpdir(), `mock-signal-cdn3-${this.randomId}`);
     this.server = new Server({
       // Limit number of storage read keys for easier testing
       maxStorageReadKeys: MAX_STORAGE_READ_KEYS,
@@ -260,6 +260,15 @@ export class Bootstrap {
     return path.join(this.storagePath, 'logs');
   }
 
+  public get ephemeralConfigPath(): string {
+    assert(
+      this.storagePath !== undefined,
+      'Bootstrap has to be initialized first, see: bootstrap.init()'
+    );
+
+    return path.join(this.storagePath, 'ephemeral.json');
+  }
+
   public getBackupPath(fileName: string): string {
     assert(
       this.backupPath !== undefined,
@@ -342,6 +351,11 @@ export class Bootstrap {
         // eslint-disable-next-line no-await-in-loop
         await contact.addSingleUseKey(this.desktop, contactKey, serviceIdKind);
       }
+    }
+
+    if (extraConfig?.ciBackupPath) {
+      debug('waiting for backup import to complete');
+      await app.waitForBackupImportComplete();
     }
 
     await this.phone.waitForSync(this.desktop);
@@ -476,7 +490,10 @@ export class Bootstrap {
     const window = await app.getWindow();
     await callback(window, async (name: string) => {
       debug('creating screenshot');
-      snapshots.push({ name, data: await window.screenshot() });
+      snapshots.push({
+        name,
+        data: await window.screenshot(),
+      });
     });
 
     let index = 0;
@@ -507,12 +524,14 @@ export class Bootstrap {
           {}
         );
 
-        if (numPixels === 0) {
+        if (numPixels === 0 && !process.env.FORCE_ARTIFACT_SAVE) {
           debug('no screenshot difference');
           return;
         }
 
-        debug('screenshot difference', numPixels);
+        debug(
+          `screenshot difference for ${name}: ${numPixels}/${width * height}`
+        );
 
         const outDir = await this.getArtifactsDir(test?.fullTitle());
         if (outDir != null) {

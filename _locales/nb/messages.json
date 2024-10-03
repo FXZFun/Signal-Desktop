@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Send inn logg"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Send inn logg"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Du kan ikke sende bilder og videoer sammen med filer."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Demp"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal kunne ikke oppdateres. {retry}, eller gå inn på {url} for å installere oppdateringen manuelt. Deretter kan du {support} om problemet."
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal kunne ikke oppdateres. <retryUpdateButton>Prøv på nytt</retryUpdateButton>, eller gå til {url} for å installere oppdateringen manuelt. Etterpå kan du <contactSupportLink>gi Signals brukerstøtte beskjed</contactSupportLink> om problemet."
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal kunne ikke oppdateres. Gå inn på {url} for å installere oppdateringen manuelt. Deretter kan du {support} om problemet."
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal kunne ikke oppdateres. Gå til {url} for å installere oppdateringen manuelt. Etterpå kan du <contactSupportLink>gi Signals brukerstøtte beskjed</contactSupportLink> om problemet."
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Notat"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Vis nyere media"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Alle mediefiler"
   },
   "icu:back": {
     "messageformat": "Tilbake"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Kunne ikke bli med i samtalen"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Du har allerede en samtale på gang."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Kunne ikke hente samtalelenken. Sjekk internettilkoblingen, og prøv igjen."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Kan ikke motta lyd og bilde fra {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Lyd og video er ikke tilgjengelig"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Dette kan være fordi vedkommende ikke har verifisert det endrede sikkerhetsnummeret ditt, det er et problem med personens enhet eller hen har blokkert deg."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal deler {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Kobler til på nytt …"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "I går kl. {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Det kan hende at Signal har problemer med å behandle en innkommende melding."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Meldingsteksten er for lang."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Prøv å oppdatere på nytt"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "ta kontakt med kundestøtte"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Klikk for å starte Signal på nytt"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Samtalelenke"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Gruppesamtale"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Venter på tilgang"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Du kan ikke bli med i denne gruppen via gruppelenken fordi en administrator fjernet deg fra gruppen."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "En administrator av denne gruppen må godkjenne forespørselen din før du kan bli med. Hvis den godkjennes, deles ditt navn og bilde med gruppemedlemmene."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Bli med"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "En forespørsel fra {joinerName} om å bli med i gruppen ble avslått."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} ba om å bli medlem og kansellerte så forespørselen via gruppelenken."
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} ba om å bli medlem og kansellerte så {numberOfRequests,number} forespørsler via gruppelenken."
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} ba om å bli medlem av gruppen, men trakk så tilbake forespørselen via gruppelenken.} other {{joinerName} ba om å bli medlem av gruppen, men trakk så tilbake {numberOfRequests,number} forespørsler via gruppelenken.}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Du slo på gruppelenken med administrativ godkjenning avslått."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Trykk på «Gi penger til Signal» for å abonnere"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Synkroniserer meldinger"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Laster ned {currentSize} av {totalSize} ({fractionComplete,number,percent}) …"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Gjør klart for nedlasting …"
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Dette kan ta et par minutter, avhengig av størrelsen på sikkerhetskopien"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Avbryt overføring"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Vil du avbryte overføringen?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Meldingene og mediefilene har ikke blitt gjenopprettet. Dersom du avbryter overføringen, kan du starte den igjen via innstillingene."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Fortsett overføring"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Avbryt overføring"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Gjenoppretter mediefiler"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Nedlastingen er satt på pause"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Sett overføring på pause"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Gjenoppta overføringen"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Avbryt overføringen"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Flere muligheter"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Gjenoppretting er utført"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} av {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Vil du avbryte overføringen?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Meldingene og mediefilene har ikke blitt gjenopprettet. Dersom du avbryter overføringen, kan du starte den igjen via innstillingene."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Fortsett overføringen"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Avbryt overføringen"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Ekspander"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Fjern fra gruppen"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Du er allerede i en samtale"
+  "icu:ContactModal--voice": {
+    "messageformat": "Tale"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Samtalefarge"
@@ -3759,7 +3825,7 @@
     "messageformat": "Reset link"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Godkjenn nye medlemmer"
+    "messageformat": "Krev godkjenning fra administrator"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Krev administratorgodkjenning for nye medlemmer som blir med via gruppelenken."
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": "0.5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Klikk på {composeIcon} ovenfor og søk etter kontakter eller grupper å melde til."
-  },
-  "icu:composeIcon": {
-    "messageformat": "opprett-knapp"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Ingen samtaler"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Nylige samtaler dukker opp her."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Videresend til"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Profilen din kunne ikke oppdateres. Prøv igjen."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Ugyldige tegn"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Teksten inneholder ugyldige tegn. Prøv på nytt."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Send melding til en administrator"
@@ -4848,10 +4914,10 @@
     "messageformat": "Ingen nylige storyer å vise"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Ingen storyer"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Nye oppdateringer dukker opp her."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Sender …"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Klikk for å se en story"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Trykk på <newStoryButtonIcon></newStoryButtonIcon> for å legge ut en oppdatering."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} til {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Svar"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Reagerte på storyen"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Reagerte på storyen"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Story"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Vis storyer"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Skjul story"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Anropslogg slettet"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Trykk for å se eller foreta et anrop"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Trykk på <newCallButtonIcon></newCallButtonIcon> for å starte en ny lyd- eller videosamtale."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Søk"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Slå på/av"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Ingen nylige samtaler. Kom i gang ved å ringe en venn."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Ingen anrop"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Nylige samtaler dukker opp her."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Ingen ubesvarte anrop"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Tapte anrop dukker opp her."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "«{query}» ga ingen resultater"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Avvist"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Gruppesamtale"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Samtalelenke"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Tilbake"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Du må forlate denne samtalen før du kan bli med i en annen"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Utgående taleanrop} other {Innkommende taleanrop}}} Video {{direction, select, Outgoing {Utgående videosamtale} other {Innkommende videosamtale}}} Group {{direction, select, Outgoing {Utgående gruppeanrop} other {Innkommende gruppeanrop}}} other {{direction, select, Outgoing {Utgående anrop} other {Innkommende anrop}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Tapt taleanrop} Video {Tapt videosamtale} Group {Ubesvart gruppeanrop} other {Tapt anrop}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Ubesvart taleanrop} Video {Ubesvart videosamtale} Group {Ubesvart gruppeanrop} other {Ubesvart anrop}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Avvist taleanrop} Video {Avvist videoanrop} Group {Avvist gruppeanrop} other {Avvist anrop}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Samtalelenke"
@@ -5524,7 +5569,10 @@
     "messageformat": "Endre navnet på samtalen"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Godkjenn alle medlemmene"
+    "messageformat": "Krev godkjenning fra administrator"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Innstillingen kan ikke endres når en samtale pågår"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopier lenken"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Slett"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Lenken kan ikke slettes når en samtale pågår"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Informasjon om anropslenke"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Endre navnet på samtalen"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Godkjenn alle medlemmene"
+    "messageformat": "Krev godkjenning fra administrator"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Slipp inn"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Ikke slipp inn"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Av"
@@ -5617,22 +5674,16 @@
     "messageformat": "Noen små justeringer, feilrettinger og ytelsesforbedringer. Takk for at du bruker Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "I denne oppdateringen har det blitt lettere å slette lange meldingstråder."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "I denne oppdateringen har vi gjort det mulig å søke etter grupper som du har meldt deg ut av tidligere."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Vi har lagt til en knapp som lar deg forlate samtalen du er i og bli med i en annen, på en kjapp og enkel måte."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Nå er det mulig å fjerne siterte svar fra redigerte meldinger."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Oppdateringen fikser også et oppstartsproblem for Linux-brukere med lokaliteten satt til «POSIX»."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Storyer med lange undertekster vises nå med mer kontrast slik at teksten blir lettere å lese."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "I denne oppdateringen har også forhåndsvisninger av lenker blitt bedre, og en liten feil ved lukking av innstillingsvinduet er fikset."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

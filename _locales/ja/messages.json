@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "ログを送信"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "ログを送信"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "写真や動画をファイルと一緒に選択することはできません。"
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "ミュート"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signalをアップデートできませんでした。{retry} か {url} から手動でインストールしてください。{support}"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signalをアップデートできませんでした。<retryUpdateButton>もう一度アップデートを試す</retryUpdateButton>か、{url}から手動でインストールしてください。その後、この問題を<contactSupportLink>サポートまでお知らせください</contactSupportLink>"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signalをアップデートできませんでした。{url}から手動でインストールしてください。またこの問題を、{support}までお知らせください。"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signalをアップデートできませんでした。{url}から手動でインストールしてください。その後、この問題について<contactSupportLink>サポートに連絡してください</contactSupportLink>"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "メモ"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "最近使用したメディア"
+  "icu:allMediaMenuItem": {
+    "messageformat": "すべてのメディア"
   },
   "icu:back": {
     "messageformat": "戻る"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "通話に参加できません"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "すでに通話中です。"
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "通話リンク情報を取得できませんでした。ネットワーク接続を確認して再度試してください。"
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "{name} からの音声と映像を受信できません"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "音声と動画を受信できません"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "相手があなたの安全番号の変更を検証していないか、相手の端末に問題があるか、あなたがブロックされている可能性があります。"
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signalが {window} を共有しています。"
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "再接続しています…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "昨日 {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signalが受信メッセージの処理に失敗している可能性があります。"
   },
   "icu:messageBodyTooLong": {
     "messageformat": "メッセージが長すぎます。"
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "アップデートを再試行"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "お問い合わせ"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Signalを再起動する"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "通話リンク"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "グループ通話"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "承認待ちです"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "管理者があなたを削除したため、グループリンクからはこのグループに参加できません。"
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "このグループに参加するには、グループ管理者の承認が必要です。承認されると、あなたの名前と画像がそのメンバーと共有されます。"
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "参加する"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "{joinerName} からのグループ参加申請が拒否されました。"
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} は、グループリンクからの参加申請をキャンセルしました。"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} は、グループリンクからの参加申請を{numberOfRequests,number}件キャンセルしました。"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, other {{joinerName} がグループリンクから参加を申請して、{numberOfRequests,number}件の申請をキャンセルしました。}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "管理者承認が不要なグループリンクを有効にしました。"
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "「シグナルに寄付する」をタップして申し込む"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "メッセージを同期しています"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "{totalSize} のうち {currentSize}（{fractionComplete,number,percent}）"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "ダウンロード中..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "バックアップのサイズによっては、数分かかる場合があります"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "転送をキャンセルする"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "転送をキャンセルしますか？"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "メッセージとメディアの復元が完了していません。キャンセルした場合は、設定からもう一度転送できます。"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "転送を続行する"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "転送をキャンセルする"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "メディアを復元中"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "復元が中断されました"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "転送を一時停止する"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "転送を再開する"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "転送をキャンセルする"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "その他のオプション"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "復元が完了しました"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize}/{totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "メディアの転送をキャンセルしますか？"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "メッセージとメディアの復元が完了していません。キャンセルした場合は、設定からもう一度転送できます。"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "転送を続行する"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "転送をキャンセルする"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "大きく"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "グループから削除"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "あなたはすでに通話中です"
+  "icu:ContactModal--voice": {
+    "messageformat": "音声通話"
   },
   "icu:showChatColorEditor": {
     "messageformat": "チャットの色"
@@ -3759,7 +3825,7 @@
     "messageformat": "リンクをリセット"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "新メンバーを承認制にする"
+    "messageformat": "管理者の承認を必要とする"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "グループリンク経由での新メンバー参加時に、管理者の承認を要求します。"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "上にある{composeIcon}をクリックして、メッセージを送りたい相手やグループを探してください。"
-  },
-  "icu:composeIcon": {
-    "messageformat": "作成ボタン"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "チャットがありません"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "最近のチャットがここに表示されます。"
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "転送先"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "プロフィールを更新できませんでした。再度試してください。"
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "無効な文字です"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "入力した文字のうち、または1文字以上が使用できません。もう一度入力してください。"
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "管理者に連絡"
@@ -4848,10 +4914,10 @@
     "messageformat": "表示できる最近のストーリーはありません"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "ストーリーがありません"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "新しい更新がここに表示されます"
   },
   "icu:Stories__list--sending": {
     "messageformat": "送信中…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "クリックしてストーリーを表示"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "<newStoryButtonIcon></newStoryButtonIcon> をクリックしてストーリーに追加する。"
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} から {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "返信"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "ストーリーにリアクションしました"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "ストーリーにリアクションがありました"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "ストーリー"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "ストーリーを表示"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "ストーリーを非表示にする"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "通話履歴がクリアされました"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "クリックして通話を表示、または通話を開始します"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "<newCallButtonIcon></newCallButtonIcon>をクリックして新しい音声通話またはビデオ通話を開始する。"
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "検索"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "切り替え"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "最近の通話はありません。 友達に電話をかけましょう。"
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "通話がありません"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "最近の通話がここに表示されます。"
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "不在着信はありません"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "最近の不在着信がここに表示されます。"
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "“{query}” の検索結果はありません"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "拒否"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "グループ通話"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "通話リンク"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "戻る"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "新しい通話に参加するには、現在の通話を終了する必要があります"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {音声通話発信} other {音声通話着信}}} Video {{direction, select, Outgoing {ビデオ通話発信} other {ビデオ通話着信}}} Group {{direction, select, Outgoing {グループ通話発信} other {グループ通話着信}}} other {{direction, select, Outgoing {発信} other {着信}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {音声通話着信あり} Video {ビデオ通話着信あり} Group {グループ通話着信あり} other {不在着信}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {音声通話応答なし} Video {ビデオ通話応答なし} Group {グループ通話に応答がありませんでした} other {音声通話に応答がありませんでした}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {音声通話が拒否されました} Video {ビデオ通話が拒否されました} Group {グループ通話が拒否されました} other {ビデオ通話が拒否されました}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "通話リンク"
@@ -5524,7 +5569,10 @@
     "messageformat": "通話名を編集する"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "全メンバーを承認制にする"
+    "messageformat": "管理者の承認を必要とする"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "通話中は、この設定を変更できません"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "リンクをコピーします"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "消去"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "通話中は、このリンクを消去できません"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "通話リンク詳細"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "通話名を編集する"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "全メンバーを承認制にする"
+    "messageformat": "管理者の承認を必要とする"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "承認する"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "拒否する"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "オフ"
@@ -5617,22 +5674,16 @@
     "messageformat": "細かな微調整、バグ修正、パフォーマンスの向上。 Signalをご利用いただきありがとうございます。",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "このリリースでは、サイズの大きいメッセージスレッドの消去プロセスが高速化されました。"
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "このアップデートでは、抜けた後も会話リストに残っているグループを検索することが困難になっていたバグが修正されました。"
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "別の通話が進行中の場合、現在の通話を終了して新しい通話に参加するためのショートカットを追加しました。"
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "編集したメッセージから引用返信を削除できるようになりました。"
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "このアップデートでは、ロケールが「POSIX」に設定されているユーザーのLinuxでの起動クラッシュも修正されています。"
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "長いキャプションがあるストーリーは、テキストが読みやすくなるようにコントラストを改善して表示されるようになりました。"
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "このリリースでは、リンクプレビュー生成のパフォーマンスも改善され、設定画面を閉じた時の軽微な表示バグも修正されました。"
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

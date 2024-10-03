@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Журналды тапшыруу"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Журналды тапшыруу"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Файлдар менен кошо сүрөттөрдү жана видеолорду тандай албайсыз."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Үнүн басуу"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal жаңыртылган жок. {retry} же кол менен орнотуу үчүн {url} дарегине баш багыңыз. Андан кийин, бул көйгөй жөнүндө {support} кызматына билдириңиз"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal'ды жаңыртуу мүмкүн болбой жатат. <retryUpdateButton>Кайталап көрүңүз</retryUpdateButton> же бул жерге өтүп {url}, кол менен орнотуңуз. Андан соң, бул көйгөй тууралуу <contactSupportLink>кардарларды тейлөө кызматына</contactSupportLink> кабарлаңыз"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal жаңыртылган жок. Кол менен орнотуу үчүн {url} дарегине баш багыңыз. Андан кийин, бул көйгөй жөнүндө {support} кызматына билдириңиз"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal'ды жаңыртуу мүмкүн болбой жатат. Бул жерге өтүп {url}, аны кол менен орнотуп көрүңүз. Андан соң, бул көйгөй тууралуу <contactSupportLink>кардарларды тейлөө кызматына</contactSupportLink> кабарлаңыз"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Эскертме"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Акыркы медианы көрүү"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Бардык медиафайлдар"
   },
   "icu:back": {
     "messageformat": "Артка"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Чалууга кошула албайсыз"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Сиз чалуудасыз."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Чалуу шилтемеси тууралуу маалымат алынган жок. Тармак туташууңузду текшерип, кайра аракет кылыңыз."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Бул адамдын ({name}) аудио жана видео билдирүүлөрүн ала албайсыз"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Аудио же видео алынган жок"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Бул адам өзгөрүлгөн коопсуздук кодун ырастаган жок же түзмөгүндө кандайдыр бир көйгөй бар же ал сизди бөгөттөп салган."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal {window} менен бөлүшүүдө."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Кайра байланышып жатасыз…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Кечээ {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal келген билдирүүнү иштете албай жатат окшойт."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Билдирүүнүн тексти өтө узун."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Жаңыртууну кайра аракет кылуу"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "Кардарларды колдоо кызматына кайрылуу"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Signal'ды кайра иштетүү үчүн басыңыз"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Чалуу шилтемеси"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Топтук чалуу"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Күтө туралы"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Администратор сизди топтон алып салгандыктан, ага шилтеме аркылуу кошула албайсыз."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Бул топко кошулуу үчүн бул топтун администратору сиздин өтүнүчүңүздү бекитиши керек. Эгер бекитсе, сиздин атыңыз жана сүрөтүңүз анын мүчөлөрү менен бөлүшүлөт."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Кошулуу"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "{joinerName} жөнөткөн топко кошулуу өтүнүчү четке кагылды."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} топ шилтемеси аркылуу кошулуу өтүнүчүн жөнөтүп, жокко чыгарды"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} шилтеме боюнча топко кошулуу үчүн {numberOfRequests,number} өтүнүчтөрүн жиберди жана жокко чыгарды"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, other {{joinerName} топко шилтеме аркылуу кошулууну {numberOfRequests,number} жолу суранып, жокко чыгарды}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Сиз администратордун уруксаты өчүрүлгөн топко шилтеме коштуңуз."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "\"Signal'га колдоо көрсөтүү\" дегенди басып туруп, жазылыңыз"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Билдирүүлөр шайкештирилүүдө"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "{totalSize} ичинен {currentSize} жүктөлүп алынууда ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Жүктөлүп алынганы жатат..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Камдык көчүрмөңүздүн көлөмүнө жараша бир нече мүнөт кетиши мүмкүн"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Өткөрүүнү токтотуу"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Өткөрүүнү токтотосузбу?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Билдирүүлөрүңүз менен медиа файлдарыңыз толук калыбына келген жок. Токтото турган болсоңуз, аларды кайра Параметрлерден өткөрсөңүз болот."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Жок"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Ооба"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Медиа файлдарыңыз калыбына келүүдө"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Калыбына келтирүү тындырылды"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Өткөрүүнү тындыруу"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Өтөрүүнү улантуу"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Өткөрүүнү токтотуу"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Дагы параметрлер"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Калыбына келтирилди"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{totalSize} ичинен {currentSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Медиа файлдарды өткөрүү токтотулсунбу?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Билдирүүлөрүңүз менен медиа файлдарыңыз толук калыбына келген жок. Токтото турган болсоңуз, аларды кайра Параметрлерден өткөрсөңүз болот."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Өткөрүүнү улантуу"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Өткөрүүнү токтотуу"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Кеңейтүү"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Топтон алып салуу"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Сиз чалуудасыз"
+  "icu:ContactModal--voice": {
+    "messageformat": "Аудио"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Маектин түсү"
@@ -3759,7 +3825,7 @@
     "messageformat": "Шилтемени кайра коюу"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Жаңы мүчөлөрдү ырастоо"
+    "messageformat": "Администратор уруксат бериши керек"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Администратор топко шилтеме аркылуу кошулуп жаткан жаңы мүчөлөрдү ырасташы керек"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Жогорудагы {composeIcon} дегенди басып, баарлаша турган байланышты же топту табыңыз."
-  },
-  "icu:composeIcon": {
-    "messageformat": "жазуу баскычы"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Эч нерсе жок"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Соңку маектер ушул жерде көрүнөт."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Багыттоо"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Профилиңиз жаңыртылган жок. Кайра аракет кылыңыз."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Жараксыз символдор"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Бир же бир нече символ жарабайт. Кайталап көрүңүз."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Администраторго билдирүү жөнөтүү"
@@ -4848,10 +4914,10 @@
     "messageformat": "Учурда көрсөтүлө турган соңку окуялар жок"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Эч нерсе жок"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Жаңы окуялар ушул жерде көрүнөт."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Жөнөтүлүүдө..."
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Окуяны көрүү үчүн басыңыз"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Жаңыртууну кошуу үчүн <newStoryButtonIcon></newStoryButtonIcon> дегенди басыңыз."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} -> {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Жооптор"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Окуяга сезимиңизди билдирдиңиз"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Окуяга сезимин билдирди"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Окуя"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Окуяларды көрсөтүү"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Окуяны жашыруу"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Чалуу таржымалы тазаланды"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Көрүү же чалып баштоо үчүн басыңыз"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Жаңы аудио же видео чалуу баштоо үчүн <newCallButtonIcon></newCallButtonIcon> дегенди басыңыз."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Издөө"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Өтүү"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Эч нерсе жок. Досуңузга чалып баштаңыз."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Эч нерсе жок"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Соңку чалуулар ушул жерде көрүнөт."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Эч нерсе жок"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Жооп бербей калган чалуулар ушул жерде көрүнөт"
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "“{query}” боюнча эч нерсе табылган жок"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Четке кагылды"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Топтук чалуу"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Чалуу шилтемеси"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Кайтуу"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Жаңы чалууга кошулуу үчүн учурдагы чалуудан чыгышыңыз керек"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Чыгуучу аудио чалуу} other {Келүүчү аудио чалуу}}} Video {{direction, select, Outgoing {Чыгуучу видео чалуу} other {Кирүүчү видео чалуу}}} Group {{direction, select, Outgoing {Чыгуучу топтук чалуу} other {Келүүчү топтук чалуу}}} other {{direction, select, Outgoing {Чыгуучу  чалуу} other {Кирүүчү  чалуу}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Кабыл алынбаган аудио чалуу} Video {Жооп берилбеген видео чалуу} Group {Жооп берилбеген топтук чалуу} other {Жооп берилбеген  чалуу}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Жооп берилбеген аудио чалуу} Video {Жоопсуз видео чалуу} Group {Жооп берилбеген топтук чалуу} other {Жооп берилбеген  чалуу}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Четке кагылган аудио чалуу} Video {Четке кагылган видео чалуу} Group {Четке кагылган топтук чалуу} other {Четке кагылган  чалуу}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Чалуу шилтемеси"
@@ -5524,7 +5569,10 @@
     "messageformat": "Чалуунун аталышын өзгөртүү"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Бардык мүчөлөрдү жактыруу"
+    "messageformat": "Администратор уруксат бериши керек"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Чалуу учурунда бул параметрди өзгөртүүгө болбойт"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Шилтемени көчүрүү"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Өчүрүү"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Чалуу учурунда бул шилтемени өчүрө албайсыз"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Чалуу шилтемесинин чоо-жайы"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Чалуунун аталышын өзгөртүү"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Бардык мүчөлөрдү жактыруу"
+    "messageformat": "Администратор уруксат бериши керек"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Ырастоо"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Четке кагуу"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Өчүк"
@@ -5617,22 +5674,16 @@
     "messageformat": "Майда-барат өзгөрүүлөрдү киргизип, мүчүлүштүктөрдү оңдоп, колдонмонун иштешин жакшыртып жатабыз. Signal'ды колдонгонуңуз үчүн чоң рахмат!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Эми көлөмдүү билдирүүлөр тезирээк өчөт."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Кээде бир нерсени артка калтыргандан кийин гана баркын сезесиң. Ошол сыңары, чыгып кеткен тобуңузду кайра оңой тапкыдай мүмкүнчүлүк бердик."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Учурдагы чалууну токтото туруп, жаңы чалууга кошулууга мүмкүнчүлүк берген функцияны коштук. Башка чалууга кетип жатканыңызды эскертпей деле койсоңуз болот."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Эми оңдолгон билдирүүлөрдөгү тырмакчаланган жоопторду өчүрүп салсаңыз болот. \"Мен да сени сүйөм\" деп жаңылыш билдирүү жөнөтүп алган учурларга жакшы."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Бул жаңы версияда тили `POSIX` деп коюлган колдонуучулардын Linux'ту иштетүү катасы оңдолду."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Окуялардын фону эми билинер-билинбеген градиент түрүндө болгондуктан, анын тексти оңой окулат. Эми адамдар айткан нерселериңизди көрүп, аябай күлкүлүү көрүнүштөргө сезимдерин кенен билдире алышат."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Бул версияда алдын ала көрүү шилтемелери жакшыраак иштеп, Параметр терезесин жапкандагы мүчүлүштүктөр оңдолду."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

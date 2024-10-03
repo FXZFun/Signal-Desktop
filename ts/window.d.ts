@@ -27,7 +27,6 @@ import type * as Crypto from './Crypto';
 import type * as Curve from './Curve';
 import type * as RemoteConfig from './RemoteConfig';
 import type { OSType } from './util/os/shared';
-import type { getEnvironment } from './environment';
 import type { LocalizerType, ThemeType } from './types/Util';
 import type { Receipt } from './types/Receipt';
 import type { ConversationController } from './ConversationController';
@@ -122,7 +121,7 @@ type PermissionsWindowPropsType = {
 
 type ScreenShareWindowPropsType = {
   onStopSharing: () => void;
-  presentedSourceName: string;
+  presentedSourceName: string | undefined;
   getStatus: () => ScreenShareStatus;
   setRenderCallback: (cb: () => void) => void;
 };
@@ -194,7 +193,6 @@ declare global {
     getConversations: () => ConversationModelCollectionType;
     getBuildCreation: () => number;
     getBuildExpiration: () => number;
-    getEnvironment: typeof getEnvironment;
     getHostName: () => string;
     getInteractionMode: () => 'mouse' | 'keyboard';
     getServerPublicParams: () => string;
@@ -307,6 +305,11 @@ declare global {
 
   interface SharedArrayBuffer {
     __arrayBuffer: never;
+  }
+
+  interface Set<T> {
+    // Needed until TS upgrade
+    difference<U>(other: ReadonlySet<U>): Set<T>;
   }
 }
 

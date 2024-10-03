@@ -42,6 +42,10 @@ import {
   isVideoTypeSupported,
 } from '../util/GoogleChrome';
 import type { MIMEType } from '../types/MIME';
+import { AttachmentDownloadSource } from '../sql/Interface';
+import { drop } from '../util/drop';
+import { getAttachmentCiphertextLength } from '../AttachmentCrypto';
+import { safeParsePartial } from '../util/schemas';
 
 export enum AttachmentDownloadUrgency {
   IMMEDIATE = 'immediate',
@@ -55,6 +59,7 @@ export type NewAttachmentDownloadJobType = {
   receivedAt: number;
   sentAt: number;
   attachmentType: AttachmentDownloadJobTypeType;
+  source: AttachmentDownloadSource;
   urgency?: AttachmentDownloadUrgency;
 };
 
@@ -69,6 +74,10 @@ const DEFAULT_RETRY_CONFIG = {
     maxBackoffTime: 6 * durations.HOUR,
   },
 };
+const BACKUP_RETRY_CONFIG = {
+  ...DEFAULT_RETRY_CONFIG,
+  maxAttempts: Infinity,
+};
 type AttachmentDownloadManagerParamsType = Omit<
   JobManagerParamsType<CoreAttachmentDownloadJobType>,
   'getNextJobs' | 'runJob'
@@ -76,6 +85,7 @@ type AttachmentDownloadManagerParamsType = Omit<
   getNextJobs: (options: {
     limit: number;
     prioritizeMessageIds?: Array<string>;
+    sources?: Array<AttachmentDownloadSource>;
     timestamp?: number;
   }) => Promise<Array<AttachmentDownloadJobType>>;
   runDownloadAttachmentJob: (args: {
@@ -117,7 +127,10 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
     },
     getJobId,
     getJobIdForLogging,
-    getRetryConfig: () => DEFAULT_RETRY_CONFIG,
+    getRetryConfig: job =>
+      job.attachment.backupLocator?.mediaName
+        ? BACKUP_RETRY_CONFIG
+        : DEFAULT_RETRY_CONFIG,
     maxConcurrentJobs: MAX_CONCURRENT_JOBS,
   };
 
@@ -128,6 +141,9 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
         return params.getNextJobs({
           limit,
           prioritizeMessageIds: [...this.visibleTimelineMessages],
+          sources: window.storage.get('backupMediaDownloadPaused')
+            ? [AttachmentDownloadSource.STANDARD]
+            : undefined,
           timestamp: Date.now(),
         });
       },
@@ -157,9 +173,10 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
       attachmentType,
       receivedAt,
       sentAt,
+      source,
       urgency = AttachmentDownloadUrgency.STANDARD,
     } = newJobData;
-    const parseResult = coreAttachmentDownloadJobSchema.safeParse({
+    const parseResult = safeParsePartial(coreAttachmentDownloadJobSchema, {
       messageId,
       receivedAt,
       sentAt,
@@ -167,7 +184,9 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
       digest: attachment.digest,
       contentType: attachment.contentType,
       size: attachment.size,
+      ciphertextSize: getAttachmentCiphertextLength(attachment.size),
       attachment,
+      source,
     });
 
     if (!parseResult.success) {
@@ -251,11 +270,22 @@ async function runDownloadAttachmentJob({
       dependencies,
     });
 
-    if (result.onlyAttemptedBackupThumbnail) {
+    if (result.downloadedVariant === AttachmentVariant.ThumbnailFromBackup) {
       return {
         status: 'finished',
         newJob: { ...job, attachment: result.attachmentWithThumbnail },
       };
+    }
+
+    if (job.attachment.backupLocator?.mediaName) {
+      const currentDownloadedSize =
+        window.storage.get('backupMediaDownloadCompletedBytes') ?? 0;
+      drop(
+        window.storage.put(
+          'backupMediaDownloadCompletedBytes',
+          currentDownloadedSize + job.ciphertextSize
+        )
+      );
     }
 
     return {
@@ -319,11 +349,9 @@ async function runDownloadAttachmentJob({
 }
 
 type DownloadAttachmentResultType =
+  | { downloadedVariant: AttachmentVariant.Default }
   | {
-      onlyAttemptedBackupThumbnail: false;
-    }
-  | {
-      onlyAttemptedBackupThumbnail: true;
+      downloadedVariant: AttachmentVariant.ThumbnailFromBackup;
       attachmentWithThumbnail: AttachmentType;
     };
 
@@ -386,7 +414,7 @@ export async function runDownloadAttachmentJobInner({
         type: attachmentType,
       });
       return {
-        onlyAttemptedBackupThumbnail: true,
+        downloadedVariant: AttachmentVariant.ThumbnailFromBackup,
         attachmentWithThumbnail,
       };
     } catch (e) {
@@ -411,14 +439,14 @@ export async function runDownloadAttachmentJobInner({
 
     const upgradedAttachment =
       await window.Signal.Migrations.processNewAttachment({
-        ...omit(attachment, ['error', 'pending']),
+        ...omit(attachment, ['error', 'pending', 'downloadPath']),
         ...downloaded,
       });
 
     await addAttachmentToMessage(messageId, upgradedAttachment, logId, {
       type: attachmentType,
     });
-    return { onlyAttemptedBackupThumbnail: false };
+    return { downloadedVariant: AttachmentVariant.Default };
   } catch (error) {
     if (
       !job.attachment.thumbnailFromBackup &&
@@ -430,20 +458,24 @@ export async function runDownloadAttachmentJobInner({
         Errors.toLogFormat(error)
       );
       try {
-        const attachmentWithThumbnail = await downloadBackupThumbnail({
-          attachment,
-          dependencies,
-        });
+        const attachmentWithThumbnail = omit(
+          await downloadBackupThumbnail({
+            attachment,
+            dependencies,
+          }),
+          'pending'
+        );
         await addAttachmentToMessage(
           messageId,
-          omit(attachmentWithThumbnail, 'pending'),
+          attachmentWithThumbnail,
           logId,
           {
             type: attachmentType,
           }
         );
         return {
-          onlyAttemptedBackupThumbnail: false,
+          downloadedVariant: AttachmentVariant.ThumbnailFromBackup,
+          attachmentWithThumbnail,
         };
       } catch (thumbnailError) {
         log.error(

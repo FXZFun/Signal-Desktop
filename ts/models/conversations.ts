@@ -34,6 +34,7 @@ import {
   getAvatar,
   getRawAvatarPath,
   getLocalAvatarUrl,
+  getLocalProfileAvatarUrl,
 } from '../util/avatarUtils';
 import { getDraftPreview } from '../util/getDraftPreview';
 import { hasDraft } from '../util/hasDraft';
@@ -84,6 +85,7 @@ import {
   decryptProfile,
   decryptProfileName,
   deriveAccessKey,
+  hashProfileKey,
 } from '../Crypto';
 import { decryptAttachmentV2 } from '../AttachmentCrypto';
 import * as Bytes from '../Bytes';
@@ -137,6 +139,7 @@ import {
   isIncoming,
   isStory,
 } from '../state/selectors/message';
+import { getPreloadedConversationId } from '../state/selectors/conversations';
 import {
   conversationJobQueue,
   conversationQueueJobEnum,
@@ -180,7 +183,10 @@ import {
   getConversationToDelete,
   getMessageToDelete,
 } from '../util/deleteForMe';
+import { explodePromise } from '../util/explodePromise';
 import { getCallHistorySelector } from '../state/selectors/callHistory';
+import { migrateLegacyReadStatus } from '../messages/migrateLegacyReadStatus';
+import { migrateLegacySendAttributes } from '../messages/migrateLegacySendAttributes';
 
 /* eslint-disable more/no-then */
 window.Whisper = window.Whisper || {};
@@ -224,6 +230,8 @@ const ATTRIBUTES_THAT_DONT_INVALIDATE_PROPS_CACHE = new Set([
   'storageUnknownFields',
 ]);
 
+const MAX_EXPIRE_TIMER_VERSION = 0xffffffff;
+
 type CachedIdenticon = {
   readonly color: AvatarColorType;
   readonly text?: string;
@@ -264,9 +272,9 @@ export class ConversationModel extends window.Backbone
 
   throttledBumpTyping?: () => void;
 
-  throttledFetchSMSOnlyUUID?: () => Promise<void> | undefined;
+  throttledFetchSMSOnlyUUID?: () => Promise<void>;
 
-  throttledMaybeMigrateV1Group?: () => Promise<void> | undefined;
+  throttledMaybeMigrateV1Group?: () => Promise<void>;
 
   throttledGetProfiles?: () => Promise<void>;
 
@@ -296,12 +304,15 @@ export class ConversationModel extends window.Backbone
 
   private isShuttingDown = false;
 
+  private savePromises = new Set<Promise<void>>();
+
   override defaults(): Partial<ConversationAttributesType> {
     return {
       unreadCount: 0,
       verified: window.textsecure.storage.protocol.VerifiedStatus.DEFAULT,
       messageCount: 0,
       sentMessageCount: 0,
+      expireTimerVersion: 1,
     };
   }
 
@@ -459,6 +470,16 @@ export class ConversationModel extends window.Backbone
       // the convo saving. If that is indeed the case and it's too disruptive
       // we should add batched saving.
     }
+  }
+
+  addSavePromise(promise: Promise<void>): void {
+    this.savePromises.add(promise);
+  }
+  removeSavePromise(promise: Promise<void>): void {
+    this.savePromises.delete(promise);
+  }
+  getSavePromises(): Array<Promise<void>> {
+    return Array.from(this.savePromises);
   }
 
   toSenderKeyTarget(): SenderKeyTargetType {
@@ -1500,24 +1521,32 @@ export class ConversationModel extends window.Backbone
     }
   }
 
-  private setInProgressFetch(): () => unknown {
+  private async setInProgressFetch(): Promise<() => void> {
     const logId = `setInProgressFetch(${this.idForLogging()})`;
+    while (this.inProgressFetch != null) {
+      log.warn(`${logId}: blocked, waiting`);
+      // eslint-disable-next-line no-await-in-loop
+      await this.inProgressFetch;
+    }
     const start = Date.now();
 
-    let resolvePromise: (value?: unknown) => void;
-    this.inProgressFetch = new Promise(resolve => {
-      resolvePromise = resolve;
-    });
+    const { resolve, promise } = explodePromise<void>();
+    this.inProgressFetch = promise;
 
+    let isFinished = false;
     let timeout: NodeJS.Timeout;
     const finish = () => {
+      strictAssert(!isFinished, 'inProgressFetch.finish called twice');
+      isFinished = true;
+
       const duration = Date.now() - start;
       if (duration > 500) {
         log.warn(`${logId}: in progress fetch took ${duration}ms`);
       }
 
-      resolvePromise();
+      resolve();
       clearTimeout(timeout);
+      strictAssert(this.inProgressFetch === promise, `${logId}: conflict`);
       this.inProgressFetch = undefined;
     };
     timeout = setTimeout(() => {
@@ -1528,13 +1557,88 @@ export class ConversationModel extends window.Backbone
     return finish;
   }
 
+  async preloadNewestMessages(): Promise<void> {
+    const logId = `preloadNewestMessages/${this.idForLogging()}`;
+
+    const { addPreloadData } = window.reduxActions.conversations;
+
+    // Bail-out of complex paths
+    if (!this.getAccepted()) {
+      log.info(`${logId}: not accepted, skipping`);
+      return;
+    }
+
+    const finish = await this.setInProgressFetch();
+    log.info(`${logId}: starting`);
+    try {
+      let metrics = await getMessageMetricsForConversation({
+        conversationId: this.id,
+        includeStoryReplies: !isGroup(this.attributes),
+      });
+
+      let messages: ReadonlyArray<MessageAttributesType>;
+      let unboundedFetch = true;
+      if (metrics.oldestUnseen) {
+        const unseen = await getMessageById(metrics.oldestUnseen.id);
+        if (!unseen) {
+          throw new Error(
+            `preloadNewestMessages: failed to load oldestUnseen ${metrics.oldestUnseen.id}`
+          );
+        }
+
+        const receivedAt = unseen.received_at;
+        const sentAt = unseen.sent_at;
+        const {
+          older,
+          newer,
+          metrics: freshMetrics,
+        } = await getConversationRangeCenteredOnMessage({
+          conversationId: this.id,
+          includeStoryReplies: !isGroup(this.attributes),
+          limit: MESSAGE_LOAD_CHUNK_SIZE,
+          messageId: unseen.id,
+          receivedAt,
+          sentAt,
+          storyId: undefined,
+        });
+        messages = [...older, unseen, ...newer];
+
+        metrics = freshMetrics;
+        unboundedFetch = false;
+      } else {
+        messages = await getOlderMessagesByConversation({
+          conversationId: this.id,
+          includeStoryReplies: !isGroup(this.attributes),
+          limit: MESSAGE_LOAD_CHUNK_SIZE,
+          storyId: undefined,
+        });
+      }
+
+      const cleaned = await this.cleanAttributes(messages);
+
+      log.info(
+        `${logId}: preloaded ${cleaned.length} messages, ` +
+          `latest timestamp=${cleaned.at(-1)?.sent_at}`
+      );
+
+      addPreloadData({
+        conversationId: this.id,
+        messages: cleaned,
+        metrics,
+        unboundedFetch,
+      });
+    } finally {
+      finish();
+    }
+  }
+
   async loadNewestMessages(
     newestMessageId: string | undefined,
     setFocus: boolean | undefined
   ): Promise<void> {
     const logId = `loadNewestMessages/${this.idForLogging()}`;
 
-    const { messagesReset, setMessageLoadingState } =
+    const { messagesReset, setMessageLoadingState, consumePreloadData } =
       window.reduxActions.conversations;
     const conversationId = this.id;
 
@@ -1542,10 +1646,28 @@ export class ConversationModel extends window.Backbone
       conversationId,
       TimelineMessageLoadingState.DoingInitialLoad
     );
-    const finish = this.setInProgressFetch();
+    let finish: undefined | (() => void) = await this.setInProgressFetch();
 
+    const preloadedId = getPreloadedConversationId(
+      window.reduxStore.getState()
+    );
     try {
       let scrollToLatestUnread = true;
+
+      if (
+        // Arguments provided by onConversationOpened
+        newestMessageId == null &&
+        !setFocus &&
+        // Cache conditions for preloadNewestMessages above (in case they are
+        // invalidated after loading cache)
+        this.getAccepted() &&
+        // Existing preload
+        preloadedId === conversationId
+      ) {
+        log.info(`${logId}: preload cache still valid, skipping`);
+        consumePreloadData(preloadedId);
+        return;
+      }
 
       if (newestMessageId) {
         const newestInMemoryMessage = await getMessageById(newestMessageId);
@@ -1578,7 +1700,11 @@ export class ConversationModel extends window.Backbone
         metrics.oldest
       ) {
         log.info(`${logId}: scrolling to oldest ${metrics.oldest.sent_at}`);
-        void this.loadAndScroll(metrics.oldest.id, { disableScroll: true });
+        void this.loadAndScroll(metrics.oldest.id, {
+          disableScroll: true,
+          onFinish: finish,
+        });
+        finish = undefined;
         return;
       }
 
@@ -1588,7 +1714,9 @@ export class ConversationModel extends window.Backbone
         );
         void this.loadAndScroll(metrics.oldestUnseen.id, {
           disableScroll: !setFocus,
+          onFinish: finish,
         });
+        finish = undefined;
         return;
       }
 
@@ -1625,7 +1753,7 @@ export class ConversationModel extends window.Backbone
       setMessageLoadingState(conversationId, undefined);
       throw error;
     } finally {
-      finish();
+      finish?.();
     }
   }
   async loadOlderMessages(oldestMessageId: string): Promise<void> {
@@ -1639,7 +1767,7 @@ export class ConversationModel extends window.Backbone
       conversationId,
       TimelineMessageLoadingState.LoadingOlderMessages
     );
-    const finish = this.setInProgressFetch();
+    const finish = await this.setInProgressFetch();
 
     try {
       const message = await getMessageById(oldestMessageId);
@@ -1696,7 +1824,7 @@ export class ConversationModel extends window.Backbone
       conversationId,
       TimelineMessageLoadingState.LoadingNewerMessages
     );
-    const finish = this.setInProgressFetch();
+    const finish = await this.setInProgressFetch();
 
     try {
       const message = await getMessageById(newestMessageId);
@@ -1741,7 +1869,7 @@ export class ConversationModel extends window.Backbone
 
   async loadAndScroll(
     messageId: string,
-    options?: { disableScroll?: boolean }
+    options: { disableScroll?: boolean; onFinish?: () => void } = {}
   ): Promise<void> {
     const { messagesReset, setMessageLoadingState } =
       window.reduxActions.conversations;
@@ -1751,7 +1879,10 @@ export class ConversationModel extends window.Backbone
       conversationId,
       TimelineMessageLoadingState.DoingInitialLoad
     );
-    const finish = this.setInProgressFetch();
+    let { onFinish: finish } = options;
+    if (!finish) {
+      finish = await this.setInProgressFetch();
+    }
 
     try {
       const message = await getMessageById(messageId);
@@ -1804,34 +1935,71 @@ export class ConversationModel extends window.Backbone
         `cleanAttributes: Eliminated ${eliminated} messages without an id`
       );
     }
-    const ourAci = window.textsecure.storage.user.getCheckedAci();
 
     let upgraded = 0;
+    const ourConversationId =
+      window.ConversationController.getOurConversationId();
+
     const hydrated = await Promise.all(
       present.map(async message => {
-        const { schemaVersion } = message;
+        let migratedMessage = message;
 
-        const model = window.MessageCache.__DEPRECATED$register(
-          message.id,
-          message,
-          'cleanAttributes'
-        );
-
-        let upgradedMessage = message;
-        if ((schemaVersion || 0) < Message.VERSION_NEEDED_FOR_DISPLAY) {
-          // Yep, we really do want to wait for each of these
-          upgradedMessage = await upgradeMessageSchema(model.attributes);
-          model.set(upgradedMessage);
-          await DataWriter.saveMessage(upgradedMessage, { ourAci });
-          upgraded += 1;
+        const readStatus = migrateLegacyReadStatus(migratedMessage);
+        if (readStatus !== undefined) {
+          migratedMessage = {
+            ...migratedMessage,
+            readStatus,
+            seenStatus:
+              readStatus === ReadStatus.Unread
+                ? SeenStatus.Unseen
+                : SeenStatus.Seen,
+          };
         }
+
+        if (ourConversationId) {
+          const sendStateByConversationId = migrateLegacySendAttributes(
+            migratedMessage,
+            window.ConversationController.get.bind(
+              window.ConversationController
+            ),
+            ourConversationId
+          );
+          if (sendStateByConversationId) {
+            migratedMessage = {
+              ...migratedMessage,
+              sendStateByConversationId,
+            };
+          }
+        }
+
+        const upgradedMessage = await window.MessageCache.upgradeSchema(
+          migratedMessage,
+          Message.VERSION_NEEDED_FOR_DISPLAY
+        );
 
         const patch = await hydrateStoryContext(message.id, undefined, {
           shouldSave: true,
         });
+
+        const didMigrate = migratedMessage !== message;
+        const didUpgrade = upgradedMessage !== migratedMessage;
+        const didPatch = Boolean(patch);
+
+        if (didMigrate || didUpgrade || didPatch) {
+          upgraded += 1;
+        }
+        if (didMigrate && !didUpgrade && !didPatch) {
+          await window.MessageCache.setAttributes({
+            messageId: message.id,
+            messageAttributes: migratedMessage,
+            skipSaveToDatabase: false,
+          });
+        }
+
         if (patch) {
           return { ...upgradedMessage, ...patch };
         }
+
         return upgradedMessage;
       })
     );
@@ -2198,9 +2366,9 @@ export class ConversationModel extends window.Backbone
 
       if (didResponseChange) {
         if (response === messageRequestEnum.ACCEPT) {
-          // Only add a message when the user took an explicit action to accept
-          // the message request on one of their devices
-          if (!viaStorageServiceSync) {
+          // Only add a message if the user unblocked this conversation, or took an
+          // explicit action to accept the message request on one of their devices
+          if (!viaStorageServiceSync || didUnblock) {
             drop(
               this.addMessageRequestResponseEventMessage(
                 didUnblock
@@ -3349,6 +3517,7 @@ export class ConversationModel extends window.Backbone
 
       await this.updateExpirationTimer(expireTimer, {
         reason: 'maybeApplyUniversalTimer',
+        version: undefined,
       });
     }
   }
@@ -4165,11 +4334,13 @@ export class ConversationModel extends window.Backbone
     if (preview) {
       const inMemory = window.MessageCache.accessAttributes(preview.id);
       preview = inMemory || preview;
+      preview = (await this.cleanAttributes([preview]))?.[0] || preview;
     }
 
     if (activity) {
       const inMemory = window.MessageCache.accessAttributes(activity.id);
       activity = inMemory || activity;
+      activity = (await this.cleanAttributes([activity]))?.[0] || activity;
     }
 
     if (
@@ -4434,6 +4605,7 @@ export class ConversationModel extends window.Backbone
       receivedAtMS = Date.now(),
       sentAt: providedSentAt,
       source: providedSource,
+      version,
       fromSync = false,
       isInitialSync = false,
     }: {
@@ -4442,6 +4614,7 @@ export class ConversationModel extends window.Backbone
       receivedAtMS?: number;
       sentAt?: number;
       source?: string;
+      version: number | undefined;
       fromSync?: boolean;
       isInitialSync?: boolean;
     }
@@ -4482,6 +4655,29 @@ export class ConversationModel extends window.Backbone
     if (!expireTimer) {
       expireTimer = undefined;
     }
+
+    const logId =
+      `updateExpirationTimer(${this.idForLogging()}, ` +
+      `${expireTimer || 'disabled'}, version=${version || 0}) ` +
+      `source=${source ?? '?'} reason=${reason}`;
+
+    if (isSetByOther) {
+      const expireTimerVersion = this.getExpireTimerVersion();
+      if (version) {
+        if (expireTimerVersion && version < expireTimerVersion) {
+          log.warn(
+            `${logId}: not updating, local version is ${expireTimerVersion}`
+          );
+          return;
+        }
+        if (version === expireTimerVersion) {
+          log.warn(`${logId}: expire version glare`);
+        } else {
+          this.set({ expireTimerVersion: version });
+          log.info(`${logId}: updating expire version`);
+        }
+      }
+    }
     if (
       this.get('expireTimer') === expireTimer ||
       (!expireTimer && !this.get('expireTimer'))
@@ -4489,16 +4685,11 @@ export class ConversationModel extends window.Backbone
       return;
     }
 
-    const logId =
-      `updateExpirationTimer(${this.idForLogging()}, ` +
-      `${expireTimer || 'disabled'}) ` +
-      `source=${source ?? '?'} reason=${reason}`;
-
-    log.info(`${logId}: updating`);
-
-    // if change wasn't made remotely, send it to the number/group
     if (!isSetByOther) {
+      log.info(`${logId}: queuing send job`);
+      // if change wasn't made remotely, send it to the number/group
       try {
+        await this.incrementExpireTimerVersion();
         await conversationJobQueue.add({
           type: conversationQueueJobEnum.enum.DirectExpirationTimerUpdate,
           conversationId: this.id,
@@ -4513,12 +4704,17 @@ export class ConversationModel extends window.Backbone
       }
     }
 
+    log.info(`${logId}: updating`);
+
     const ourConversation =
       window.ConversationController.getOurConversationOrThrow();
     source = source || ourConversation.id;
-    const sourceServiceId = ourConversation.get('serviceId');
+    const sourceServiceId =
+      window.ConversationController.get(source)?.get('serviceId');
 
-    this.set({ expireTimer });
+    this.set({
+      expireTimer,
+    });
 
     // This call actually removes universal timer notification and clears
     // the pending flags.
@@ -4769,7 +4965,10 @@ export class ConversationModel extends window.Backbone
 
   async setProfileKey(
     profileKey: string | undefined,
-    { viaStorageServiceSync = false } = {}
+    {
+      viaStorageServiceSync = false,
+      reason,
+    }: { viaStorageServiceSync?: boolean; reason: string }
   ): Promise<boolean> {
     const oldProfileKey = this.get('profileKey');
 
@@ -4778,9 +4977,12 @@ export class ConversationModel extends window.Backbone
       return false;
     }
 
-    log.info(
-      `Setting sealedSender to UNKNOWN for conversation ${this.idForLogging()}`
-    );
+    const serviceId = this.get('serviceId');
+    const aci = isAciString(serviceId) ? serviceId : undefined;
+    const profileKeyHash = aci ? hashProfileKey(profileKey, aci) : 'no-aci';
+    const logId = `setProfileKey(${this.idForLogging()}/${profileKeyHash}/${reason})`;
+
+    log.info(`${logId}: Profile key changed. Setting sealedSender to UNKNOWN`);
     this.set({
       profileKeyCredential: null,
       profileKeyCredentialExpiration: null,
@@ -4791,10 +4993,7 @@ export class ConversationModel extends window.Backbone
     // We messaged the contact when it had either phone number or username
     // title.
     if (this.get('needsTitleTransition')) {
-      log.info(
-        `setProfileKey(${this.idForLogging()}): adding a ` +
-          'title transition notification'
-      );
+      log.info(`${logId}: adding a title transition notification`);
 
       const { type, e164, username } = this.attributes;
 
@@ -4896,7 +5095,7 @@ export class ConversationModel extends window.Backbone
         'deriveProfileKeyVersion: Failed to derive profile key version, ' +
           'clearing profile key.'
       );
-      void this.setProfileKey(undefined);
+      void this.setProfileKey(undefined, { reason: 'deriveProfileKeyVersion' });
       return;
     }
 
@@ -5117,7 +5316,7 @@ export class ConversationModel extends window.Backbone
   }
 
   unblurAvatar(): void {
-    const avatarUrl = getRawAvatarPath(this.attributes);
+    const avatarUrl = getLocalProfileAvatarUrl(this.attributes);
     if (avatarUrl) {
       this.set('unblurredAvatarUrl', avatarUrl);
     } else {
@@ -5127,6 +5326,46 @@ export class ConversationModel extends window.Backbone
 
   areWeAdmin(): boolean {
     return areWeAdmin(this.attributes);
+  }
+
+  getExpireTimerVersion(): number | undefined {
+    return isDirectConversation(this.attributes)
+      ? Math.min(this.get('expireTimerVersion') || 0, MAX_EXPIRE_TIMER_VERSION)
+      : undefined;
+  }
+
+  async incrementExpireTimerVersion(): Promise<void> {
+    const logId = `incrementExpireTimerVersion(${this.idForLogging()})`;
+    if (!isDirectConversation(this.attributes)) {
+      return;
+    }
+    const { expireTimerVersion, capabilities } = this.attributes;
+
+    // This should not happen in practice, but be ready to handle
+    if (expireTimerVersion >= MAX_EXPIRE_TIMER_VERSION) {
+      log.warn(`${logId}: expire version overflow`);
+      return;
+    }
+
+    if (expireTimerVersion <= 2) {
+      if (!capabilities?.versionedExpirationTimer) {
+        log.warn(`${logId}: missing recipient capability`);
+        return;
+      }
+      const me = window.ConversationController.getOurConversationOrThrow();
+      if (!me.get('capabilities')?.versionedExpirationTimer) {
+        log.warn(`${logId}: missing sender capability`);
+        return;
+      }
+
+      // Increment only if sender and receiver are both capable
+    } else {
+      // If we or them updated the timer version past 2 - we are both capable
+    }
+
+    const newVersion = expireTimerVersion + 1;
+    this.set('expireTimerVersion', newVersion);
+    await DataWriter.updateConversation(this.attributes);
   }
 
   // Set of items to captureChanges on:
@@ -5153,7 +5392,7 @@ export class ConversationModel extends window.Backbone
     this.set({ needsStorageServiceSync: true });
 
     void this.queueJob('captureChange', async () => {
-      storageServiceUploadJob();
+      storageServiceUploadJob({ reason: `captureChange/${logMessage}` });
     });
   }
 

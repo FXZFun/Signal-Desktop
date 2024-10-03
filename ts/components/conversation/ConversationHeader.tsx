@@ -39,6 +39,7 @@ import {
 } from './MessageRequestActionsConfirmation';
 import type { MinimalConversation } from '../../hooks/useMinimalConversation';
 import { LocalDeleteWarningModal } from '../LocalDeleteWarningModal';
+import { InAnotherCallTooltip } from './InAnotherCallTooltip';
 
 function HeaderInfoTitle({
   name,
@@ -93,6 +94,7 @@ export type PropsDataType = {
   conversationName: ContactNameData;
   hasPanelShowing?: boolean;
   hasStories?: HasStories;
+  hasActiveCall?: boolean;
   localDeleteWarningShown: boolean;
   isDeleteSyncSendEnabled: boolean;
   isMissingMandatoryProfileSharing?: boolean;
@@ -128,8 +130,8 @@ export type PropsActionsType = {
   onSearchInConversation: () => void;
   onSelectModeEnter: () => void;
   onShowMembers: () => void;
+  onViewAllMedia: () => void;
   onViewConversationDetails: () => void;
-  onViewRecentMedia: () => void;
   onViewUserStories: () => void;
 };
 
@@ -149,6 +151,7 @@ export const ConversationHeader = memo(function ConversationHeader({
   cannotLeaveBecauseYouAreLastAdmin,
   conversation,
   conversationName,
+  hasActiveCall,
   hasPanelShowing,
   hasStories,
   i18n,
@@ -177,8 +180,8 @@ export const ConversationHeader = memo(function ConversationHeader({
   onSearchInConversation,
   onSelectModeEnter,
   onShowMembers,
+  onViewAllMedia,
   onViewConversationDetails,
-  onViewRecentMedia,
   onViewUserStories,
   outgoingCallButtonStyle,
   setLocalDeleteWarningShown,
@@ -295,6 +298,7 @@ export const ConversationHeader = memo(function ConversationHeader({
             {!isSMSOnly && !isSignalConversation && (
               <OutgoingCallButtons
                 conversation={conversation}
+                hasActiveCall={hasActiveCall}
                 i18n={i18n}
                 isNarrow={isNarrow}
                 onOutgoingAudioCall={onOutgoingAudioCall}
@@ -376,7 +380,7 @@ export const ConversationHeader = memo(function ConversationHeader({
                 setHasCustomDisappearingTimeoutModal(true);
               }}
               onShowMembers={onShowMembers}
-              onViewRecentMedia={onViewRecentMedia}
+              onViewAllMedia={onViewAllMedia}
               onViewConversationDetails={onViewConversationDetails}
               triggerId={triggerId}
             />
@@ -540,7 +544,7 @@ function HeaderMenu({
   onSelectModeEnter,
   onSetupCustomDisappearingTimeout,
   onShowMembers,
-  onViewRecentMedia,
+  onViewAllMedia,
   onViewConversationDetails,
   triggerId,
 }: {
@@ -566,7 +570,7 @@ function HeaderMenu({
   onSelectModeEnter: () => void;
   onSetupCustomDisappearingTimeout: () => void;
   onShowMembers: () => void;
-  onViewRecentMedia: () => void;
+  onViewAllMedia: () => void;
   onViewConversationDetails: () => void;
   triggerId: string;
 }) {
@@ -635,8 +639,8 @@ function HeaderMenu({
     return (
       <ContextMenu id={triggerId}>
         <MenuItem onClick={onShowMembers}>{i18n('icu:showMembers')}</MenuItem>
-        <MenuItem onClick={onViewRecentMedia}>
-          {i18n('icu:viewRecentMedia')}
+        <MenuItem onClick={onViewAllMedia}>
+          {i18n('icu:allMediaMenuItem')}
         </MenuItem>
         <MenuItem divider />
         {conversation.isArchived ? (
@@ -746,8 +750,8 @@ function HeaderMenu({
                 : i18n('icu:showConversationDetails--direct')}
             </MenuItem>
           ) : null}
-          <MenuItem onClick={onViewRecentMedia}>
-            {i18n('icu:viewRecentMedia')}
+          <MenuItem onClick={onViewAllMedia}>
+            {i18n('icu:allMediaMenuItem')}
           </MenuItem>
           <MenuItem divider />
           <MenuItem onClick={onSelectModeEnter}>
@@ -806,6 +810,7 @@ function HeaderMenu({
 
 function OutgoingCallButtons({
   conversation,
+  hasActiveCall,
   i18n,
   isNarrow,
   onOutgoingAudioCall,
@@ -815,23 +820,38 @@ function OutgoingCallButtons({
   PropsType,
   | 'i18n'
   | 'conversation'
+  | 'hasActiveCall'
   | 'onOutgoingAudioCall'
   | 'onOutgoingVideoCall'
   | 'outgoingCallButtonStyle'
 >): JSX.Element | null {
+  const disabled =
+    conversation.type === 'group' &&
+    conversation.announcementsOnly &&
+    !conversation.areWeAdmin;
+  const inAnotherCall = !disabled && hasActiveCall;
+
   const videoButton = (
     <button
       aria-label={i18n('icu:makeOutgoingVideoCall')}
       className={classNames(
         'module-ConversationHeader__button',
         'module-ConversationHeader__button--video',
-        conversation.announcementsOnly && !conversation.areWeAdmin
+        disabled
           ? 'module-ConversationHeader__button--show-disabled'
+          : undefined,
+        inAnotherCall
+          ? 'module-ConversationHeader__button--in-another-call'
           : undefined
       )}
       onClick={onOutgoingVideoCall}
       type="button"
     />
+  );
+  const videoElement = inAnotherCall ? (
+    <InAnotherCallTooltip i18n={i18n}>{videoButton}</InAnotherCallTooltip>
+  ) : (
+    videoButton
   );
 
   const startCallShortcuts = useStartCallShortcuts(
@@ -844,31 +864,49 @@ function OutgoingCallButtons({
     case OutgoingCallButtonStyle.None:
       return null;
     case OutgoingCallButtonStyle.JustVideo:
-      return videoButton;
+      return videoElement;
     case OutgoingCallButtonStyle.Both:
+      // eslint-disable-next-line no-case-declarations
+      const audioButton = (
+        <button
+          type="button"
+          onClick={onOutgoingAudioCall}
+          className={classNames(
+            'module-ConversationHeader__button',
+            'module-ConversationHeader__button--audio',
+            inAnotherCall
+              ? 'module-ConversationHeader__button--in-another-call'
+              : undefined
+          )}
+          aria-label={i18n('icu:makeOutgoingCall')}
+        />
+      );
+
       return (
         <>
-          {videoButton}
-          <button
-            type="button"
-            onClick={onOutgoingAudioCall}
-            className={classNames(
-              'module-ConversationHeader__button',
-              'module-ConversationHeader__button--audio'
-            )}
-            aria-label={i18n('icu:makeOutgoingCall')}
-          />
+          {videoElement}
+          {inAnotherCall ? (
+            <InAnotherCallTooltip i18n={i18n}>
+              {audioButton}
+            </InAnotherCallTooltip>
+          ) : (
+            audioButton
+          )}
         </>
       );
     case OutgoingCallButtonStyle.Join:
-      return (
+      // eslint-disable-next-line no-case-declarations
+      const joinButton = (
         <button
           aria-label={i18n('icu:joinOngoingCall')}
           className={classNames(
             'module-ConversationHeader__button',
             'module-ConversationHeader__button--join-call',
-            conversation.announcementsOnly && !conversation.areWeAdmin
+            disabled
               ? 'module-ConversationHeader__button--show-disabled'
+              : undefined,
+            inAnotherCall
+              ? 'module-ConversationHeader__button--in-another-call'
               : undefined
           )}
           onClick={onOutgoingVideoCall}
@@ -876,6 +914,11 @@ function OutgoingCallButtons({
         >
           {isNarrow ? null : i18n('icu:joinOngoingCall')}
         </button>
+      );
+      return inAnotherCall ? (
+        <InAnotherCallTooltip i18n={i18n}>{joinButton}</InAnotherCallTooltip>
+      ) : (
+        joinButton
       );
     default:
       throw missingCaseError(outgoingCallButtonStyle);

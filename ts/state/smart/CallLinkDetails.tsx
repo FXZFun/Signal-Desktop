@@ -5,12 +5,17 @@ import { useSelector } from 'react-redux';
 import type { CallHistoryGroup } from '../../types/CallDisposition';
 import { getIntl } from '../selectors/user';
 import { CallLinkDetails } from '../../components/CallLinkDetails';
-import { getCallLinkSelector } from '../selectors/calling';
+import {
+  getActiveCallState,
+  getAdhocCallSelector,
+  getCallLinkSelector,
+} from '../selectors/calling';
 import { useGlobalModalActions } from '../ducks/globalModals';
 import { useCallingActions } from '../ducks/calling';
 import * as log from '../../logging/log';
 import { strictAssert } from '../../util/assert';
 import type { CallLinkRestrictions } from '../../types/CallLink';
+import { isAnybodyInGroupCall } from '../ducks/callingHelpers';
 
 export type SmartCallLinkDetailsProps = Readonly<{
   roomId: string;
@@ -60,6 +65,18 @@ export const SmartCallLinkDetails = memo(function SmartCallLinkDetails({
     [roomId, updateCallLinkRestrictions]
   );
 
+  const adhocCallSelector = useSelector(getAdhocCallSelector);
+  const adhocCall = adhocCallSelector(roomId);
+  const hasActiveCall = isAnybodyInGroupCall(adhocCall?.peekInfo);
+
+  const activeCall = useSelector(getActiveCallState);
+  const isInAnotherCall = Boolean(
+    activeCall && callLink && activeCall.conversationId !== callLink.roomId
+  );
+  const isInCall = Boolean(
+    activeCall && callLink && activeCall.conversationId === callLink.roomId
+  );
+
   if (callLink == null) {
     log.error(`SmartCallLinkDetails: callLink not found for room ${roomId}`);
     return null;
@@ -69,6 +86,9 @@ export const SmartCallLinkDetails = memo(function SmartCallLinkDetails({
     <CallLinkDetails
       callHistoryGroup={callHistoryGroup}
       callLink={callLink}
+      isAnybodyInCall={hasActiveCall}
+      isInCall={isInCall}
+      isInAnotherCall={isInAnotherCall}
       i18n={i18n}
       onDeleteCallLink={handleDeleteCallLink}
       onOpenCallLinkAddNameModal={handleOpenCallLinkAddNameModal}

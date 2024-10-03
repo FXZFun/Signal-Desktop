@@ -1,0 +1,119 @@
+// Copyright 2024 Signal Messenger, LLC
+// SPDX-License-Identifier: AGPL-3.0-only
+
+.BackupMediaDownloadProgress {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  padding-inline-end: 16px;
+  margin-inline: 10px;
+  user-select: none;
+  position: relative;
+
+  &__title {
+    @include font-body-2-bold;
+  }
+
+  @include light-theme {
+    background-color: $color-white;
+    border: 1px solid $color-gray-20;
+  }
+  @include dark-theme {
+    background: $color-gray-75;
+    border: 1px solid $color-gray-60;
+  }
+}
+
+.BackupMediaDownloadProgress__icon--complete {
+  &::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 24px;
+    @include light-theme {
+      @include color-svg(
+        '../images/icons/v3/check/check-circle.svg',
+        $color-ultramarine
+      );
+    }
+    @include dark-theme {
+      @include color-svg(
+        '../images/icons/v3/check/check-circle.svg',
+        $color-ultramarine-light
+      );
+    }
+  }
+}
+button.BackupMediaDownloadProgress__button {
+  @include button-reset;
+  @include font-subtitle-bold;
+  @include light-theme {
+    color: $color-ultramarine;
+  }
+  @include dark-theme {
+    color: $color-ultramarine-light;
+  }
+}
+
+button.BackupMediaDownloadProgress__button-more {
+  position: absolute;
+  inset-inline-end: 14px;
+  inset-block-start: 10px;
+  @include button-reset;
+  &::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    @include light-theme {
+      @include color-svg('../images/icons/v3/more/more.svg', $color-gray-75);
+    }
+    @include dark-theme {
+      @include color-svg('../images/icons/v3/more/more.svg', $color-gray-20);
+    }
+  }
+}
+button.BackupMediaDownloadProgress__button-close {
+  position: absolute;
+  inset-inline-end: 14px;
+  inset-block-start: 10px;
+  @include button-reset;
+  &::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    @include light-theme {
+      @include color-svg('../images/icons/v3/x/x.svg', $color-gray-75);
+    }
+    @include dark-theme {
+      @include color-svg('../images/icons/v3/x/x.svg', $color-gray-20);
+    }
+  }
+}
+
+.BackupMediaDownloadProgress__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 36px;
+}
+
+.BackupMediaDownloadProgress__progressbar-hint {
+  @include font-subtitle;
+
+  @include light-theme {
+    color: rgba($color-gray-60, 0.8);
+  }
+
+  @include dark-theme {
+    color: $color-gray-25;
+  }
+}
+
+.BackupMediaDownloadCancelConfirmation {
+  min-width: 440px;
+}

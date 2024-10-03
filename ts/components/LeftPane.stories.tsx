@@ -137,6 +137,12 @@ const useProps = (overrideProps: OverridePropsType = {}): PropsType => {
       unreadMentionsCount: 0,
       markedUnread: false,
     },
+    backupMediaDownloadProgress: {
+      downloadBannerDismissed: false,
+      isPaused: false,
+      totalBytes: 0,
+      downloadedBytes: 0,
+    },
     clearConversationSearch: action('clearConversationSearch'),
     clearGroupCreationError: action('clearGroupCreationError'),
     clearSearch: action('clearSearch'),
@@ -146,6 +152,12 @@ const useProps = (overrideProps: OverridePropsType = {}): PropsType => {
     composeReplaceAvatar: action('composeReplaceAvatar'),
     composeSaveAvatarToDisk: action('composeSaveAvatarToDisk'),
     createGroup: action('createGroup'),
+    dismissBackupMediaDownloadBanner: action(
+      'dismissBackupMediaDownloadBanner'
+    ),
+    pauseBackupMediaDownload: action('pauseBackupMediaDownload'),
+    resumeBackupMediaDownload: action('resumeBackupMediaDownload'),
+    cancelBackupMediaDownload: action('cancelBackupMediaDownload'),
     endConversationSearch: action('endConversationSearch'),
     endSearch: action('endSearch'),
     getPreferredBadge: () => undefined,
@@ -172,6 +184,7 @@ const useProps = (overrideProps: OverridePropsType = {}): PropsType => {
       makeFakeLookupConversationWithoutServiceId(),
     showUserNotFoundModal: action('showUserNotFoundModal'),
     setIsFetchingUUID,
+    preloadConversation: action('preloadConversation'),
     showConversation: action('showConversation'),
     blockConversation: action('blockConversation'),
     onOutgoingAudioCallInConversation: action(

@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Cuir isteach loga"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Cuir isteach loga"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Níl féidir leat grianghraif agus comhaid a roghnú in éineacht le comhaid."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Balbhaigh"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Níorbh fhéidir le Signal nuashonrú. {retry} nó téigh chuig {url} lena shuiteáil de láimh. Ina dhiaidh sin, {support} faoin fhadhb sin"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Níorbh fhéidir Signal a nuashonrú. <retryUpdateButton>Atriail an nuashonrú</retryUpdateButton> nó téigh chuig {url} lena shuiteáil de láimh. Ansin <contactSupportLink>déan teagmháil leis an bhfoireann tacaíochta</contactSupportLink> faoin fhadhb sin"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Níorbh fhéidir le Signal nuashonrú. Téigh chuig {url} lena shuiteáil de láimh. Ina dhiaidh sin, {support} faoin fhadhb sin"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Níorbh fhéidir Signal nuashonrú. Téigh chuig {url} lena shuiteáil de láimh. Ansin <contactSupportLink>déan teagmháil leis an bhfoireann tacaíochta</contactSupportLink> faoin fhadhb sin"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Nóta"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Amharc ar na meáin le déanaí"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Na meáin go léir"
   },
   "icu:back": {
     "messageformat": "Ar Ais"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Ní féidir dul isteach sa ghlao"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Tá tú i mbun glao cheana féin."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Níorbh fhéidir faisnéis faoin nasc glao a fháil. Seiceáil do nasc líonra agus triail arís."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Can't receive audio and video from {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Ní féidir fuaim agus físeáin a fháil"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Seans nár fhíoraigh an duine sin athrú ar d'uimhir sábháilteachta, go bhfuil fadhb leis an ngléas aige/aici, nó gur chuir sé/sí bac ort."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Tá {window} á chomhroinnt ag Signal."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Athnascadh…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Inné {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Is féidir nach mbeidh Signal in ann an teachtaireacht isteach a phróiseas."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Tá corp na teachtaireachta rófhada."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Atriail nuashonrú"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "Déan Teagmháil le Foireann Tacaíochta Signal"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Cliceáil chun Signal a atosú"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Nasc glao"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Grúpghlao"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Ag fanacht le go ligfear isteach"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Ní féidir leat dul isteach sa ghrúpa seo trí nasc an ghrúpa toisc gur bhain riarthóir thú."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Ní mór do riarthóir an ghrúpa seo d'iarratas a fhaomhadh sular féidir leat dul isteach sa ghrúpa seo. Agus é faofa, comhroinnfear d'ainm agus grianghraf lena bhaill."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Téigh le"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "A request to join the group from {joinerName} was denied."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "Rinne {joinerName} iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí ar ceal é"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "Rinne {joinerName} an líon seo iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí ar ceal iad: {numberOfRequests,number}"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {Rinne {joinerName} iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí an t-iarratas sin ar ceal} two {Rinne {joinerName} {numberOfRequests,number} iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí na hiarratais sin ar ceal} few {Rinne {joinerName} {numberOfRequests,number} iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí na hiarratais sin ar ceal} many {Rinne {joinerName} {numberOfRequests,number} n-iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí na hiarratais sin ar ceal} other {Rinne {joinerName} {numberOfRequests,number} iarratas ar dhul isteach tríd an nasc grúpa agus chuir sé/sí na hiarratais sin ar ceal}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Chas tú air an nasc grúpa le faomhadh riarthóra díchumasaithe."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Tapáil \"Tabhair airgead do Signal\" agus glac síntiús"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Teachtaireachtaí á sioncronú"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "{currentSize} as {totalSize} ({fractionComplete,number,percent}) á n-íoslódáil…"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Íoslódáil á hullmhú..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Seans go dtógfaidh sé seo cúpla nóiméad ag brath ar mhéid do chúltaca"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Cuir an t-aistriú ar ceal"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Cuir an t-aistriú ar ceal?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Níl aischur na dteachtaireachtaí agus na meán agat críochnaithe. Má roghnaíonn tú é a chur ar ceal, is féidir leat an t-aistriú a dhéanamh arís ó Shocruithe."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Lean leis an aistriú"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Cuir an t-aistriú ar ceal"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Meáin á n-aischur"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Aischur curtha ar sos"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Cuir an t-aistriú ar sos"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Fill ar an aistriú"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Cuir an t-aistriú ar ceal"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Tuilleadh roghanna"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Tá an t-aischur críochnaithe"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} as {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Cuir an t-aistriú meán ar ceal?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Níl aischur na dteachtaireachtaí agus na meán agat críochnaithe. Má roghnaíonn tú é a chur ar ceal, is féidir leat an t-aistriú a dhéanamh arís ó Shocruithe."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Lean leis an aistriú"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Cuir an t-aistriú ar ceal"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Fairsingigh"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Bain den ghrúpa"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Tá tú i mbun glao cheana féin"
+  "icu:ContactModal--voice": {
+    "messageformat": "Guthghlao"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Dath an chomhrá"
@@ -3759,7 +3825,7 @@
     "messageformat": "Reset Link"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Ceadaigh comhaltaí nua"
+    "messageformat": "Éiligh faomhadh riarthóra"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Éiligh faomhadh riarthóra i gcás ball nua a théann isteach tríd an nasc grúpa"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Cliceáil an deilbhín {composeIcon} thuas agus cuardaigh do theagmhálaithe nó grúpaí chun teachtaireacht a sheoladh chucu."
-  },
-  "icu:composeIcon": {
-    "messageformat": "an cnaipe: Cum"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Níl aon chomhráite ann"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Taispeánfar comhráite le déanaí anseo."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Seol ar aghaidh Chuig"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Níorbh fhéidir do phróifíl a nuashonrú. Triail arís."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Carachtair neamhbhailí"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Ní féidir carachtar amháin nó níos mó a d'iontráil tú a úsáid. Triail arís."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Message an Admin"
@@ -4848,10 +4914,10 @@
     "messageformat": "Níl aon scéalta le déanaí le taispeáint díreach anois"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Níl aon scéalta ann"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Taispeánfar nuashonruithe nua anseo."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Seoladh…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Cliceáil chun amharc ar scéal"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Cliceáil <newStoryButtonIcon></newStoryButtonIcon> le nuashonrú a chur leis."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} chuig {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Freagraí"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Tugadh freagairt don scéal"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Tugadh freagairt don scéal"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Scéal"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Taispeáin scéalta"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Folaigh an scéal"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Stair na nglaonna glanta"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Cliceáil le féachaint ar ghlao nó le tosú air"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Cliceáil <newCallButtonIcon></newCallButtonIcon> le tosú ar ghuthghlao nó ar fhísghlao nua."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Cuardaigh"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Scoránaigh"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Níl glaonna le déanaí ann. Glaoigh ar chara le tosú air."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Níl aon ghlaonna ann"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Taispeánfar glaonna le déanaí anseo."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Níl glaonna caillte ann"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Taispeánfar glaonna caillte anseo."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Níl aon torthaí ar “{query}”"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Diúltaíodh dó"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Glao grúpa"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Nasc glao"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Fill ar an nglao"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Ní mór duit imeacht as an nglao reatha chun dul isteach i nglao nua"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Guthghlao amach} other {Guthghlao isteach}}} Video {{direction, select, Outgoing {Físghlao amach} other {Físghlao isteach}}} Group {{direction, select, Outgoing {Grúpghlao amach} other {Grúpghlao isteach}}} other {{direction, select, Outgoing {Glao amach} other {Glao isteach}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Guthghlao caillte} Video {Físghlao caillte} Group {Grúpghlao caillte} other {Glao caillte}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Guthghlao nár freagraíodh} Video {Físghlao nár freagraíodh} Group {Grúpghlao nár freagraíodh} other {Glao nár freagraíodh}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Guthghlao a diúltaíodh dó} Video {Físghlao a diúltaíodh dó} Group {Grúpghlao a diúltaíodh dó} other {Glao a diúltaíodh dó}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Nasc glao"
@@ -5524,7 +5569,10 @@
     "messageformat": "Cuir ainm an ghlao in eagar"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Faomh gach ball"
+    "messageformat": "Éiligh faomhadh riarthóra"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Ní féidir an socrú seo a athrú nuair a bhíonn an glao gníomhach"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Cóipeáil an nasc"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Scrios"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Ní féidir an nasc seo a scriosadh nuair a bhíonn an glao gníomhach"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Sonraí ar an nasc glao"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Cuir ainm an ghlao in eagar"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Faomh gach ball"
+    "messageformat": "Éiligh faomhadh riarthóra"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Faomh dul isteach"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Diúltaigh do dhul isteach"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "As"
@@ -5617,22 +5674,16 @@
     "messageformat": "Mionathruithe, paistí fabhtanna agus feabhsuithe ar fheidhmíocht. Go raibh maith agat as Signal a úsáid!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Luaitear an próiseas chun snáitheanna móra teachtaireachtaí a scriosadh."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Réitíonn an nuashonrú seo fabht a rinne cuardach grúpa deacair, tar éis duit imeacht as an ngrúpa sin."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Chuireamar aicearra leis chun glao a scor agus chun dul isteach i nglao nua nuair a bhíonn glao eile ar bun cheana féin."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Anois is féidir leat freagraí luaite a bhaint ó theachtaireachtaí a cuireadh in eagar."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Réitíonn an nuashonrú seo cliseadh tosaithe ar Linux d'úsáideoirí a bhfuil \"POSIX\" socraithe mar logchaighdeán acu."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Scéalta a bhfuil ceannscríbhinní fada orthu, taispeántar le codarsnacht fheabhsaithe anois iad, rud a dhéanann an téacs níos soléite."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Feabhsaíonn an eisiúint seo an fheidhmiúlacht freisin chun réamhamharc ar an nasc a ghiniúint agus réitíonn sí fabht beag taispeána ar dhúnadh fhuinneog na Socruithe."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

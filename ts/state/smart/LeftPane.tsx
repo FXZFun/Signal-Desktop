@@ -20,6 +20,7 @@ import { getCountryDataForLocale } from '../../util/getCountryData';
 import { lookupConversationWithoutServiceId } from '../../util/lookupConversationWithoutServiceId';
 import { missingCaseError } from '../../util/missingCaseError';
 import { isDone as isRegistrationDone } from '../../util/registration';
+import { drop } from '../../util/drop';
 import { useCallingActions } from '../ducks/calling';
 import { useConversationsActions } from '../ducks/conversations';
 import { ComposerStep, OneTimeModalState } from '../ducks/conversationsEnums';
@@ -57,6 +58,7 @@ import {
 import { getCrashReportCount } from '../selectors/crashReports';
 import { hasExpired } from '../selectors/expiration';
 import {
+  getBackupMediaDownloadProgress,
   getNavTabsCollapsed,
   getPreferredLeftPaneWidth,
   getUsernameCorrupted,
@@ -95,6 +97,12 @@ import { SmartToastManager } from './ToastManager';
 import type { PropsType as SmartUnsupportedOSDialogPropsType } from './UnsupportedOSDialog';
 import { SmartUnsupportedOSDialog } from './UnsupportedOSDialog';
 import { SmartUpdateDialog } from './UpdateDialog';
+import {
+  cancelBackupMediaDownload,
+  dismissBackupMediaDownloadBanner,
+  pauseBackupMediaDownload,
+  resumeBackupMediaDownload,
+} from '../../util/backupMediaDownload';
 
 function renderMessageSearchResult(id: string): JSX.Element {
   return <SmartMessageSearchResult id={id} />;
@@ -114,6 +122,7 @@ function renderUpdateDialog(
 ): JSX.Element {
   return <SmartUpdateDialog {...props} />;
 }
+
 function renderCaptchaDialog({ onSkip }: { onSkip(): void }): JSX.Element {
   return <SmartCaptchaDialog onSkip={onSkip} />;
 }
@@ -256,6 +265,12 @@ const getModeSpecificProps = (
   }
 };
 
+function preloadConversation(conversationId: string): void {
+  drop(
+    window.ConversationController.get(conversationId)?.preloadNewestMessages()
+  );
+}
+
 export const SmartLeftPane = memo(function SmartLeftPane({
   hasFailedStorySends,
   hasPendingUpdate,
@@ -282,7 +297,9 @@ export const SmartLeftPane = memo(function SmartLeftPane({
   const theme = useSelector(getTheme);
   const usernameCorrupted = useSelector(getUsernameCorrupted);
   const usernameLinkCorrupted = useSelector(getUsernameLinkCorrupted);
-
+  const backupMediaDownloadProgress = useSelector(
+    getBackupMediaDownloadProgress
+  );
   const {
     blockConversation,
     clearGroupCreationError,
@@ -353,7 +370,9 @@ export const SmartLeftPane = memo(function SmartLeftPane({
 
   return (
     <LeftPane
+      backupMediaDownloadProgress={backupMediaDownloadProgress}
       blockConversation={blockConversation}
+      cancelBackupMediaDownload={cancelBackupMediaDownload}
       challengeStatus={challengeStatus}
       clearConversationSearch={clearConversationSearch}
       clearGroupCreationError={clearGroupCreationError}
@@ -365,6 +384,7 @@ export const SmartLeftPane = memo(function SmartLeftPane({
       composeSaveAvatarToDisk={composeSaveAvatarToDisk}
       crashReportCount={crashReportCount}
       createGroup={createGroup}
+      dismissBackupMediaDownloadBanner={dismissBackupMediaDownloadBanner}
       endConversationSearch={endConversationSearch}
       endSearch={endSearch}
       getPreferredBadge={getPreferredBadge}
@@ -384,7 +404,9 @@ export const SmartLeftPane = memo(function SmartLeftPane({
       onOutgoingVideoCallInConversation={onOutgoingVideoCallInConversation}
       openUsernameReservationModal={openUsernameReservationModal}
       otherTabsUnreadStats={otherTabsUnreadStats}
+      pauseBackupMediaDownload={pauseBackupMediaDownload}
       preferredWidthFromStorage={preferredWidthFromStorage}
+      preloadConversation={preloadConversation}
       removeConversation={removeConversation}
       renderCaptchaDialog={renderCaptchaDialog}
       renderCrashReportDialog={renderCrashReportDialog}
@@ -395,6 +417,7 @@ export const SmartLeftPane = memo(function SmartLeftPane({
       renderToastManager={renderToastManager}
       renderUnsupportedOSDialog={renderUnsupportedOSDialog}
       renderUpdateDialog={renderUpdateDialog}
+      resumeBackupMediaDownload={resumeBackupMediaDownload}
       savePreferredLeftPaneWidth={savePreferredLeftPaneWidth}
       searchInConversation={searchInConversation}
       selectedConversationId={selectedConversationId}

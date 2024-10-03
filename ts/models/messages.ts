@@ -18,7 +18,7 @@ import type {
   MessageAttributesType,
   MessageReactionType,
 } from '../model-types.d';
-import { filter, find, map, repeat, zipObject } from '../util/iterables';
+import { filter, map, repeat, zipObject } from '../util/iterables';
 import * as GoogleChrome from '../util/GoogleChrome';
 import type { DeleteAttributesType } from '../messageModifiers/Deletes';
 import type { SentEventData } from '../textsecure/messageReceiverEvents';
@@ -54,8 +54,6 @@ import {
   sendStateReducer,
   someRecipientSendStatus,
 } from '../messages/MessageSendState';
-import { migrateLegacyReadStatus } from '../messages/migrateLegacyReadStatus';
-import { migrateLegacySendAttributes } from '../messages/migrateLegacySendAttributes';
 import { getOwn } from '../util/getOwn';
 import { markRead, markViewed } from '../services/MessageUpdater';
 import {
@@ -126,7 +124,6 @@ import { queueAttachmentDownloads } from '../util/queueAttachmentDownloads';
 import { findStoryMessages } from '../util/findStoryMessage';
 import type { ConversationQueueJobData } from '../jobs/conversationJobQueue';
 import { shouldDownloadStory } from '../util/shouldDownloadStory';
-import { SeenStatus } from '../MessageSeenStatus';
 import { isNewReactionReplacingPrevious } from '../reactions/util';
 import { parseBoostBadgeListFromServer } from '../badges/parseBadgesFromServer';
 
@@ -156,6 +153,9 @@ import {
   copyFromQuotedMessage,
   copyQuoteContentFromOriginal,
 } from '../messages/copyQuote';
+import { getRoomIdFromCallLink } from '../util/callLinksRingrtc';
+import { explodePromise } from '../util/explodePromise';
+import { GiftBadgeStates } from '../components/conversation/Message';
 
 /* eslint-disable more/no-then */
 
@@ -205,35 +205,6 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
           logger: log,
         })
       );
-    }
-
-    const readStatus = migrateLegacyReadStatus(this.attributes);
-    if (readStatus !== undefined) {
-      this.set(
-        {
-          readStatus,
-          seenStatus:
-            readStatus === ReadStatus.Unread
-              ? SeenStatus.Unseen
-              : SeenStatus.Seen,
-        },
-        { silent: true }
-      );
-    }
-
-    const ourConversationId =
-      window.ConversationController.getOurConversationId();
-    if (ourConversationId) {
-      const sendStateByConversationId = migrateLegacySendAttributes(
-        this.attributes,
-        window.ConversationController.get.bind(window.ConversationController),
-        ourConversationId
-      );
-      if (sendStateByConversationId) {
-        this.set('sendStateByConversationId', sendStateByConversationId, {
-          silent: true,
-        });
-      }
     }
 
     this.CURRENT_PROTOCOL_VERSION = Proto.DataMessage.ProtocolVersion.CURRENT;
@@ -452,25 +423,11 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
         quoteAttachment: quote.attachments.at(0),
       })
     ) {
-      const inMemoryMessages = window.MessageCache.__DEPRECATED$filterBySentAt(
-        Number(sentAt)
+      const matchingMessage = await window.MessageCache.findBySentAt(
+        Number(sentAt),
+        attributes =>
+          isQuoteAMatch(attributes, this.get('conversationId'), quote)
       );
-      let matchingMessage = find(inMemoryMessages, message =>
-        isQuoteAMatch(message.attributes, this.get('conversationId'), quote)
-      );
-      if (!matchingMessage) {
-        const messages = await DataReader.getMessagesBySentAt(Number(sentAt));
-        const found = messages.find(item =>
-          isQuoteAMatch(item, this.get('conversationId'), quote)
-        );
-        if (found) {
-          matchingMessage = window.MessageCache.__DEPRECATED$register(
-            found.id,
-            found,
-            'doubleCheckMissingQuoteReference'
-          );
-        }
-      }
 
       if (!matchingMessage) {
         log.info(
@@ -1342,7 +1299,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
   async queueAttachmentDownloads(
     urgency?: AttachmentDownloadUrgency
   ): Promise<boolean> {
-    const value = await queueAttachmentDownloads(this.attributes, urgency);
+    const value = await queueAttachmentDownloads(this.attributes, { urgency });
     if (!value) {
       return false;
     }
@@ -1726,6 +1683,14 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
           `${storyContext.authorAci})`;
       }
 
+      // Ensure that quote author's conversation exist
+      if (initialMessage.quote) {
+        window.ConversationController.lookupOrCreate({
+          serviceId: initialMessage.quote.authorAci,
+          reason: 'handleDataMessage.quote.author',
+        });
+      }
+
       const [quote, storyQuotes] = await Promise.all([
         initialMessage.quote
           ? copyFromQuotedMessage(initialMessage.quote, conversation.id)
@@ -1735,11 +1700,11 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
 
       const storyQuote = storyQuotes.find(candidateQuote => {
         const sendStateByConversationId =
-          candidateQuote.get('sendStateByConversationId') || {};
+          candidateQuote.sendStateByConversationId || {};
         const sendState = sendStateByConversationId[sender.id];
 
         const storyQuoteIsFromSelf =
-          candidateQuote.get('sourceServiceId') ===
+          candidateQuote.sourceServiceId ===
           window.storage.user.getCheckedAci();
 
         if (!storyQuoteIsFromSelf) {
@@ -1774,9 +1739,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
       }
 
       if (storyQuote) {
-        const storyDistributionListId = storyQuote.get(
-          'storyDistributionListId'
-        );
+        const { storyDistributionListId } = storyQuote;
 
         if (storyDistributionListId) {
           const storyDistribution =
@@ -1823,23 +1786,38 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
 
         const urls = LinkPreview.findLinks(dataMessage.body || '');
         const incomingPreview = dataMessage.preview || [];
-        const preview = incomingPreview.filter((item: LinkPreviewType) => {
-          if (!item.image && !item.title) {
-            return false;
-          }
-          // Story link previews don't have to correspond to links in the
-          // message body.
-          if (isStory(message.attributes)) {
-            return true;
-          }
-          return (
-            urls.includes(item.url) && LinkPreview.shouldPreviewHref(item.url)
-          );
-        });
+        const preview = incomingPreview
+          .map((item: LinkPreviewType) => {
+            if (LinkPreview.isCallLink(item.url)) {
+              return {
+                ...item,
+                isCallLink: true,
+                callLinkRoomId: getRoomIdFromCallLink(item.url),
+              };
+            }
+
+            if (!item.image || !item.title) {
+              return null;
+            }
+            // Story link previews don't have to correspond to links in the
+            // message body.
+            if (isStory(message.attributes)) {
+              return item;
+            }
+            if (
+              !urls.includes(item.url) ||
+              !LinkPreview.shouldPreviewHref(item.url)
+            ) {
+              return undefined;
+            }
+
+            return item;
+          })
+          .filter(isNotNil);
         if (preview.length < incomingPreview.length) {
           log.info(
             `${message.idForLogging()}: Eliminated ${
-              preview.length - incomingPreview.length
+              incomingPreview.length - preview.length
             } previews with invalid urls'`
           );
         }
@@ -1847,11 +1825,17 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
         const ourPni = window.textsecure.storage.user.getCheckedPni();
         const ourServiceIds: Set<ServiceIdString> = new Set([ourAci, ourPni]);
 
+        const [longMessageAttachments, normalAttachments] = partition(
+          dataMessage.attachments ?? [],
+          attachment => MIME.isLongMessage(attachment.contentType)
+        );
+
         window.MessageCache.toMessageAttributes(this.attributes);
         message.set({
           id: messageId,
-          attachments: dataMessage.attachments,
+          attachments: normalAttachments,
           body: dataMessage.body,
+          bodyAttachment: longMessageAttachments[0],
           bodyRanges: dataMessage.bodyRanges,
           contact: dataMessage.contact,
           conversationId: conversation.id,
@@ -1887,7 +1871,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
         });
 
         if (storyQuote) {
-          await this.hydrateStoryContext(storyQuote.attributes, {
+          await this.hydrateStoryContext(storyQuote, {
             shouldSave: true,
           });
         }
@@ -1923,10 +1907,8 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
           // expiration timer
           if (isGroupStoryReply && storyQuote) {
             message.set({
-              expireTimer: storyQuote.get('expireTimer'),
-              expirationStartTimestamp: storyQuote.get(
-                'expirationStartTimestamp'
-              ),
+              expireTimer: storyQuote.expireTimer,
+              expirationStartTimestamp: storyQuote.expirationStartTimestamp,
             });
           }
 
@@ -1975,6 +1957,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
                 receivedAtMS: message.get('received_at_ms'),
                 sentAt: message.get('sent_at'),
                 reason: idLog,
+                version: initialMessage.expireTimerVersion,
               });
             } else if (
               // We won't turn off timers for these kinds of messages:
@@ -1987,6 +1970,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
                 receivedAtMS: message.get('received_at_ms'),
                 sentAt: message.get('sent_at'),
                 reason: idLog,
+                version: initialMessage.expireTimerVersion,
               });
             }
           }
@@ -1999,14 +1983,22 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
             ) {
               conversation.set({ profileSharing: true });
             } else if (isDirectConversation(conversation.attributes)) {
-              void conversation.setProfileKey(profileKey);
+              drop(
+                conversation.setProfileKey(profileKey, {
+                  reason: 'handleDataMessage',
+                })
+              );
             } else {
               const local = window.ConversationController.lookupOrCreate({
                 e164: source,
                 serviceId: sourceServiceId,
                 reason: 'handleDataMessage:setProfileKey',
               });
-              void local?.setProfileKey(profileKey);
+              drop(
+                local?.setProfileKey(profileKey, {
+                  reason: 'handleDataMessage',
+                })
+              );
             }
           }
 
@@ -2059,7 +2051,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
         await DataWriter.updateConversation(conversation.attributes);
 
         const giftBadge = message.get('giftBadge');
-        if (giftBadge) {
+        if (giftBadge && giftBadge.state !== GiftBadgeStates.Failed) {
           const { level } = giftBadge;
           const { updatesUrl } = window.SignalContext.config;
           strictAssert(
@@ -2099,7 +2091,7 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
         }
 
         log.info(`${idLog}: Batching save`);
-        void this.saveAndNotify(conversation, confirm);
+        drop(this.saveAndNotify(conversation, confirm));
       } catch (error) {
         const errorForLog = Errors.toLogFormat(error);
         log.error(`${idLog}: error:`, errorForLog);
@@ -2112,40 +2104,51 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
     conversation: ConversationModel,
     confirm: () => void
   ): Promise<void> {
-    await saveNewMessageBatcher.add(this.attributes);
+    const { resolve, promise } = explodePromise<void>();
+    try {
+      conversation.addSavePromise(promise);
 
-    log.info('Message saved', this.get('sent_at'));
+      await saveNewMessageBatcher.add(this.attributes);
 
-    // Once the message is saved to DB, we queue attachment downloads
-    await this.handleAttachmentDownloadsForNewMessage(conversation);
+      log.info('Message saved', this.get('sent_at'));
 
-    // We'd like to check for deletions before scheduling downloads, but if an edit comes
-    //   in, we want to have kicked off attachment downloads for the original message.
-    const isFirstRun = false;
-    const result = await this.modifyTargetMessage(conversation, isFirstRun);
-    if (result === ModifyTargetMessageResult.Deleted) {
+      // Once the message is saved to DB, we queue attachment downloads
+      await this.handleAttachmentDownloadsForNewMessage(conversation);
+
+      // We'd like to check for deletions before scheduling downloads, but if an edit
+      //   comes in, we want to have kicked off attachment downloads for the original
+      //   message.
+      const isFirstRun = false;
+      const result = await this.modifyTargetMessage(conversation, isFirstRun);
+      if (result === ModifyTargetMessageResult.Deleted) {
+        confirm();
+        return;
+      }
+
+      conversation.trigger('newmessage', this.attributes);
+
+      if (await shouldReplyNotifyUser(this.attributes, conversation)) {
+        await conversation.notify(this.attributes);
+      }
+
+      // Increment the sent message count if this is an outgoing message
+      if (this.get('type') === 'outgoing') {
+        conversation.incrementSentMessageCount();
+      }
+
+      window.Whisper.events.trigger('incrementProgress');
       confirm();
-      return;
-    }
 
-    conversation.trigger('newmessage', this.attributes);
-
-    if (await shouldReplyNotifyUser(this.attributes, conversation)) {
-      await conversation.notify(this.attributes);
-    }
-
-    // Increment the sent message count if this is an outgoing message
-    if (this.get('type') === 'outgoing') {
-      conversation.incrementSentMessageCount();
-    }
-
-    window.Whisper.events.trigger('incrementProgress');
-    confirm();
-
-    if (!isStory(this.attributes)) {
-      drop(
-        conversation.queueJob('updateUnread', () => conversation.updateUnread())
-      );
+      if (!isStory(this.attributes)) {
+        drop(
+          conversation.queueJob('updateUnread', () =>
+            conversation.updateUnread()
+          )
+        );
+      }
+    } finally {
+      resolve();
+      conversation.removeSavePromise(promise);
     }
   }
 
@@ -2237,7 +2240,6 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
       fromId: reaction.fromId,
       targetTimestamp: reaction.targetTimestamp,
       timestamp: reaction.timestamp,
-      receivedAtDate: reaction.receivedAtDate,
       isSentByConversationId: isFromThisDevice
         ? zipObject(conversation.getMemberConversationIds(), repeat(false))
         : undefined,
@@ -2510,6 +2512,9 @@ export class MessageModel extends window.Backbone.Model<MessageAttributesType> {
       await DataWriter.saveMessage(this.attributes, {
         ourAci: window.textsecure.storage.user.getCheckedAci(),
       });
+      window.reduxActions.conversations.markOpenConversationRead(
+        conversation.id
+      );
     }
   }
 

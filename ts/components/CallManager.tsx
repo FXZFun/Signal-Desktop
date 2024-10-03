@@ -16,7 +16,6 @@ import type {
   CallingConversationType,
   CallViewMode,
   GroupCallVideoRequest,
-  PresentedSource,
 } from '../types/Calling';
 import {
   CallEndedReason,
@@ -38,7 +37,6 @@ import type {
   SendGroupCallReactionType,
   SetGroupCallVideoRequestType,
   SetLocalAudioType,
-  SetLocalPreviewType,
   SetLocalVideoType,
   SetRendererCanvasType,
   StartCallType,
@@ -105,11 +103,11 @@ export type PropsType = {
   batchUserAction: (payload: BatchUserActionPayloadType) => void;
   bounceAppIconStart: () => unknown;
   bounceAppIconStop: () => unknown;
+  cancelPresenting: () => void;
   declineCall: (_: DeclineCallType) => void;
   denyUser: (payload: PendingUserActionPayloadType) => void;
   hasInitialLoadCompleted: boolean;
   i18n: LocalizerType;
-  isGroupCallRaiseHandEnabled: boolean;
   me: ConversationType;
   notifyForCall: (
     conversationId: string,
@@ -120,15 +118,15 @@ export type PropsType = {
   playRingtone: () => unknown;
   removeClient: (payload: RemoveClientType) => void;
   blockClient: (payload: RemoveClientType) => void;
+  selectPresentingSource: (id: string) => void;
   sendGroupCallRaiseHand: (payload: SendGroupCallRaiseHandType) => void;
   sendGroupCallReaction: (payload: SendGroupCallReactionType) => void;
   setGroupCallVideoRequest: (_: SetGroupCallVideoRequestType) => void;
   setIsCallActive: (_: boolean) => void;
   setLocalAudio: (_: SetLocalAudioType) => void;
   setLocalVideo: (_: SetLocalVideoType) => void;
-  setLocalPreview: (_: SetLocalPreviewType) => void;
+  setLocalPreviewContainer: (container: HTMLDivElement | null) => void;
   setOutgoingRing: (_: boolean) => void;
-  setPresenting: (_?: PresentedSource) => void;
   setRendererCanvas: (_: SetRendererCanvasType) => void;
   showShareCallLinkViaSignal: (
     callLink: CallLinkType,
@@ -139,6 +137,7 @@ export type PropsType = {
   switchFromPresentationView: () => void;
   hangUpActiveCall: (reason: string) => void;
   togglePip: () => void;
+  toggleCallLinkPendingParticipantModal: (contactId: string) => void;
   toggleScreenRecordingPermissionsDialog: () => unknown;
   toggleSettings: () => void;
   isConversationTooBigToRing: boolean;
@@ -170,12 +169,12 @@ function ActiveCallManager({
   blockClient,
   callLink,
   cancelCall,
+  cancelPresenting,
   changeCallView,
   closeNeedPermissionScreen,
   denyUser,
   hangUpActiveCall,
   i18n,
-  isGroupCallRaiseHandEnabled,
   getIsSharingPhoneNumberWithEverybody,
   getGroupCallVideoFrameSource,
   getPresentingSources,
@@ -185,13 +184,13 @@ function ActiveCallManager({
   renderEmojiPicker,
   renderReactionPicker,
   removeClient,
+  selectPresentingSource,
   sendGroupCallRaiseHand,
   sendGroupCallReaction,
   setGroupCallVideoRequest,
   setLocalAudio,
-  setLocalPreview,
+  setLocalPreviewContainer,
   setLocalVideo,
-  setPresenting,
   setRendererCanvas,
   setOutgoingRing,
   showContactModal,
@@ -199,6 +198,7 @@ function ActiveCallManager({
   startCall,
   switchToPresentationView,
   switchFromPresentationView,
+  toggleCallLinkPendingParticipantModal,
   toggleParticipants,
   togglePip,
   toggleScreenRecordingPermissionsDialog,
@@ -348,7 +348,7 @@ function ActiveCallManager({
         hasLocalVideo={hasLocalVideo}
         i18n={i18n}
         setGroupCallVideoRequest={setGroupCallVideoRequestForConversation}
-        setLocalPreview={setLocalPreview}
+        setLocalPreviewContainer={setLocalPreviewContainer}
         setRendererCanvas={setRendererCanvas}
         switchToPresentationView={switchToPresentationView}
         switchFromPresentationView={switchFromPresentationView}
@@ -380,7 +380,7 @@ function ActiveCallManager({
           onJoinCall={joinActiveCall}
           outgoingRing={outgoingRing}
           peekedParticipants={peekedParticipants}
-          setLocalPreview={setLocalPreview}
+          setLocalPreviewContainer={setLocalPreviewContainer}
           setLocalAudio={setLocalAudio}
           setLocalVideo={setLocalVideo}
           setOutgoingRing={setOutgoingRing}
@@ -450,6 +450,7 @@ function ActiveCallManager({
         activeCall={activeCall}
         approveUser={approveUser}
         batchUserAction={batchUserAction}
+        cancelPresenting={cancelPresenting}
         changeCallView={changeCallView}
         denyUser={denyUser}
         getPresentingSources={getPresentingSources}
@@ -459,7 +460,6 @@ function ActiveCallManager({
         i18n={i18n}
         imageDataCache={imageDataCache}
         isCallLinkAdmin={isCallLinkAdmin}
-        isGroupCallRaiseHandEnabled={isGroupCallRaiseHandEnabled}
         me={me}
         openSystemPreferencesAction={openSystemPreferencesAction}
         renderEmojiPicker={renderEmojiPicker}
@@ -467,14 +467,16 @@ function ActiveCallManager({
         sendGroupCallRaiseHand={sendGroupCallRaiseHand}
         sendGroupCallReaction={sendGroupCallReaction}
         setGroupCallVideoRequest={setGroupCallVideoRequestForConversation}
-        setLocalPreview={setLocalPreview}
+        setLocalPreviewContainer={setLocalPreviewContainer}
         setRendererCanvas={setRendererCanvas}
         setLocalAudio={setLocalAudio}
         setLocalVideo={setLocalVideo}
-        setPresenting={setPresenting}
         stickyControls={showParticipantsList}
         switchToPresentationView={switchToPresentationView}
         switchFromPresentationView={switchFromPresentationView}
+        toggleCallLinkPendingParticipantModal={
+          toggleCallLinkPendingParticipantModal
+        }
         toggleScreenRecordingPermissionsDialog={
           toggleScreenRecordingPermissionsDialog
         }
@@ -486,7 +488,8 @@ function ActiveCallManager({
         <CallingSelectPresentingSourcesModal
           i18n={i18n}
           presentingSourcesAvailable={presentingSourcesAvailable}
-          setPresenting={setPresenting}
+          selectPresentingSource={selectPresentingSource}
+          cancelPresenting={cancelPresenting}
         />
       ) : null}
       {settingsDialogOpen && renderDeviceSelection()}
@@ -531,6 +534,7 @@ export function CallManager({
   bounceAppIconStop,
   callLink,
   cancelCall,
+  cancelPresenting,
   changeCallView,
   closeNeedPermissionScreen,
   declineCall,
@@ -542,7 +546,6 @@ export function CallManager({
   i18n,
   incomingCall,
   isConversationTooBigToRing,
-  isGroupCallRaiseHandEnabled,
   getIsSharingPhoneNumberWithEverybody,
   me,
   notifyForCall,
@@ -553,15 +556,15 @@ export function CallManager({
   renderDeviceSelection,
   renderEmojiPicker,
   renderReactionPicker,
+  selectPresentingSource,
   sendGroupCallRaiseHand,
   sendGroupCallReaction,
   setGroupCallVideoRequest,
   setIsCallActive,
   setLocalAudio,
-  setLocalPreview,
+  setLocalPreviewContainer,
   setLocalVideo,
   setOutgoingRing,
-  setPresenting,
   setRendererCanvas,
   showContactModal,
   showShareCallLinkViaSignal,
@@ -571,6 +574,7 @@ export function CallManager({
   switchToPresentationView,
   toggleParticipants,
   togglePip,
+  toggleCallLinkPendingParticipantModal,
   toggleScreenRecordingPermissionsDialog,
   toggleSettings,
 }: PropsType): JSX.Element | null {
@@ -629,6 +633,7 @@ export function CallManager({
           blockClient={blockClient}
           callLink={callLink}
           cancelCall={cancelCall}
+          cancelPresenting={cancelPresenting}
           changeCallView={changeCallView}
           closeNeedPermissionScreen={closeNeedPermissionScreen}
           denyUser={denyUser}
@@ -636,7 +641,6 @@ export function CallManager({
           getPresentingSources={getPresentingSources}
           hangUpActiveCall={hangUpActiveCall}
           i18n={i18n}
-          isGroupCallRaiseHandEnabled={isGroupCallRaiseHandEnabled}
           getIsSharingPhoneNumberWithEverybody={
             getIsSharingPhoneNumberWithEverybody
           }
@@ -647,20 +651,23 @@ export function CallManager({
           renderDeviceSelection={renderDeviceSelection}
           renderEmojiPicker={renderEmojiPicker}
           renderReactionPicker={renderReactionPicker}
+          selectPresentingSource={selectPresentingSource}
           sendGroupCallRaiseHand={sendGroupCallRaiseHand}
           sendGroupCallReaction={sendGroupCallReaction}
           setGroupCallVideoRequest={setGroupCallVideoRequest}
           setLocalAudio={setLocalAudio}
-          setLocalPreview={setLocalPreview}
+          setLocalPreviewContainer={setLocalPreviewContainer}
           setLocalVideo={setLocalVideo}
           setOutgoingRing={setOutgoingRing}
-          setPresenting={setPresenting}
           setRendererCanvas={setRendererCanvas}
           showContactModal={showContactModal}
           showShareCallLinkViaSignal={showShareCallLinkViaSignal}
           startCall={startCall}
           switchFromPresentationView={switchFromPresentationView}
           switchToPresentationView={switchToPresentationView}
+          toggleCallLinkPendingParticipantModal={
+            toggleCallLinkPendingParticipantModal
+          }
           toggleParticipants={toggleParticipants}
           togglePip={togglePip}
           toggleScreenRecordingPermissionsDialog={

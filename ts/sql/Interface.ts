@@ -31,12 +31,20 @@ import type {
   CallHistoryPagination,
   CallLogEventTarget,
 } from '../types/CallDisposition';
-import type { CallLinkStateType, CallLinkType } from '../types/CallLink';
+import type {
+  CallLinkRecord,
+  CallLinkStateType,
+  CallLinkType,
+} from '../types/CallLink';
 import type { AttachmentDownloadJobType } from '../types/AttachmentDownload';
-import type { GroupSendEndorsementsData } from '../types/GroupSendEndorsements';
+import type {
+  GroupSendEndorsementsData,
+  GroupSendMemberEndorsementRecord,
+} from '../types/GroupSendEndorsements';
 import type { SyncTaskType } from '../util/syncTasks';
 import type { AttachmentBackupJobType } from '../types/AttachmentBackup';
 import type { SingleProtoJobQueue } from '../jobs/singleProtoJobQueue';
+import type { DeleteCallLinkOptions } from './server/callLinks';
 
 export type ReadableDB = Database & { __readable_db: never };
 export type WritableDB = ReadableDB & { __writable_db: never };
@@ -50,6 +58,7 @@ export type AdjacentMessagesByConversationOptionsType = Readonly<{
   sentAt?: number;
   storyId: string | undefined;
   requireVisualMediaAttachments?: boolean;
+  requireFileAttachments?: boolean;
 }>;
 
 export type GetNearbyMessageFromDeletedSetOptionsType = Readonly<{
@@ -197,8 +206,7 @@ export type SessionType = {
   serviceId: ServiceIdString;
   conversationId: string;
   deviceId: number;
-  record: string;
-  version?: number;
+  record: Uint8Array;
 };
 export type SessionIdType = SessionType['id'];
 export type SignedPreKeyType = {
@@ -406,6 +414,7 @@ export type MessageAttachmentsCursorType = MessageCursorType &
 export type GetKnownMessageAttachmentsResultType = Readonly<{
   cursor: MessageAttachmentsCursorType;
   attachments: ReadonlyArray<string>;
+  downloads: ReadonlyArray<string>;
 }>;
 
 export type PageMessagesCursorType = MessageCursorType &
@@ -445,6 +454,11 @@ export type GetRecentStoryRepliesOptionsType = {
   sentAt?: number;
 };
 
+export enum AttachmentDownloadSource {
+  BACKUP_IMPORT = 'backup_import',
+  STANDARD = 'standard',
+}
+
 type ReadableInterface = {
   close: () => void;
 
@@ -469,6 +483,13 @@ type ReadableInterface = {
   ) => Array<ConversationType>;
 
   getGroupSendCombinedEndorsementExpiration: (groupId: string) => number | null;
+  getGroupSendEndorsementsData: (
+    groupId: string
+  ) => GroupSendEndorsementsData | null;
+  getGroupSendMemberEndorsement: (
+    groupId: string,
+    memberAci: AciString
+  ) => GroupSendMemberEndorsementRecord | null;
 
   getMessageCount: (conversationId?: string) => number;
   getStoryCount: (conversationId: string) => number;
@@ -562,7 +583,9 @@ type ReadableInterface = {
   callLinkExists(roomId: string): boolean;
   getAllCallLinks: () => ReadonlyArray<CallLinkType>;
   getCallLinkByRoomId: (roomId: string) => CallLinkType | undefined;
-  getAllMarkedDeletedCallLinks(): ReadonlyArray<CallLinkType>;
+  getCallLinkRecordByRoomId: (roomId: string) => CallLinkRecord | undefined;
+  getAllCallLinkRecordsWithAdminKey(): ReadonlyArray<CallLinkRecord>;
+  getAllMarkedDeletedCallLinkRoomIds(): ReadonlyArray<string>;
   getMessagesBetween: (
     conversationId: string,
     options: GetMessagesBetweenOptions
@@ -624,14 +647,6 @@ type ReadableInterface = {
     limit: number,
     options: { maxVersion: number }
   ) => Array<MessageType>;
-  getMessagesWithVisualMediaAttachments: (
-    conversationId: string,
-    options: { limit: number }
-  ) => Array<MessageType>;
-  getMessagesWithFileAttachments: (
-    conversationId: string,
-    options: { limit: number }
-  ) => Array<MessageType>;
   getMessageServerGuidsForSpam: (conversationId: string) => Array<string>;
 
   getJobsInQueue(queueType: string): Array<StoredJob>;
@@ -641,6 +656,7 @@ type ReadableInterface = {
   getMaxMessageCounter(): number | undefined;
 
   getStatisticsForLogging(): Record<string, string>;
+  getSizeOfPendingBackupAttachmentDownloadJobs(): number;
 };
 
 type WritableInterface = {
@@ -705,7 +721,6 @@ type WritableInterface = {
     sessions: Array<SessionType>;
     unprocessed: Array<UnprocessedType>;
   }): void;
-  bulkAddSessions: (array: Array<SessionType>) => void;
   removeSessionById: (id: SessionIdType) => number;
   removeSessionsByConversation: (conversationId: string) => void;
   removeSessionsByServiceId: (serviceId: ServiceIdString) => void;
@@ -777,25 +792,29 @@ type WritableInterface = {
   ) => void;
   _removeAllReactions: () => void;
   _removeAllMessages: () => void;
+  incrementMessagesMigrationAttempts: (
+    messageIds: ReadonlyArray<string>
+  ) => void;
 
   clearCallHistory: (target: CallLogEventTarget) => ReadonlyArray<string>;
   _removeAllCallHistory: () => void;
   markCallHistoryDeleted: (callId: string) => void;
   cleanupCallHistoryMessages: () => void;
   markCallHistoryRead(callId: string): void;
-  markAllCallHistoryRead(target: CallLogEventTarget): void;
-  markAllCallHistoryReadInConversation(target: CallLogEventTarget): void;
+  markAllCallHistoryRead(target: CallLogEventTarget): number;
+  markAllCallHistoryReadInConversation(target: CallLogEventTarget): number;
   saveCallHistory(callHistory: CallHistoryDetails): void;
   markCallHistoryMissed(callIds: ReadonlyArray<string>): void;
   getRecentStaleRingsAndMarkOlderMissed(): ReadonlyArray<MaybeStaleCallHistory>;
   insertCallLink(callLink: CallLinkType): void;
+  updateCallLink(callLink: CallLinkType): void;
   updateCallLinkAdminKeyByRoomId(roomId: string, adminKey: string): void;
   updateCallLinkState(
     roomId: string,
     callLinkState: CallLinkStateType
   ): CallLinkType;
   beginDeleteAllCallLinks(): void;
-  beginDeleteCallLink(roomId: string): void;
+  beginDeleteCallLink(roomId: string, options: DeleteCallLinkOptions): void;
   finalizeDeleteCallLink(roomId: string): void;
   _removeAllCallLinks(): void;
   deleteCallLinkFromSync(roomId: string): void;
@@ -831,11 +850,13 @@ type WritableInterface = {
   getNextAttachmentDownloadJobs: (options: {
     limit: number;
     prioritizeMessageIds?: Array<string>;
+    sources?: Array<AttachmentDownloadSource>;
     timestamp?: number;
   }) => Array<AttachmentDownloadJobType>;
   saveAttachmentDownloadJob: (job: AttachmentDownloadJobType) => void;
   resetAttachmentDownloadActive: () => void;
   removeAttachmentDownloadJob: (job: AttachmentDownloadJobType) => void;
+  removeAllBackupAttachmentDownloadJobs: () => void;
 
   getNextAttachmentBackupJobs: (options: {
     limit: number;
@@ -852,6 +873,7 @@ type WritableInterface = {
   ) => void;
 
   createOrUpdateStickerPack: (pack: StickerPackType) => void;
+  createOrUpdateStickerPacks: (packs: ReadonlyArray<StickerPackType>) => void;
   updateStickerPackStatus: (
     id: string,
     status: StickerPackStatusType,
@@ -872,6 +894,9 @@ type WritableInterface = {
   ) => ReadonlyArray<string> | undefined;
   deleteStickerPack: (packId: string) => Array<string>;
   addUninstalledStickerPack: (pack: UninstalledStickerPackType) => void;
+  addUninstalledStickerPacks: (
+    pack: ReadonlyArray<UninstalledStickerPackType>
+  ) => void;
   removeUninstalledStickerPack: (packId: string) => void;
   installStickerPack: (packId: string, timestamp: number) => void;
   uninstallStickerPack: (packId: string, timestamp: number) => void;
@@ -979,6 +1004,7 @@ export type ServerReadableDirectInterface = ReadableInterface & {
   finishGetKnownMessageAttachments: (
     cursor: MessageAttachmentsCursorType
   ) => void;
+  getKnownDownloads: () => Array<string>;
   getKnownConversationAttachments: () => Array<string>;
 
   getAllBadgeImageFileLocalPaths: () => Set<string>;

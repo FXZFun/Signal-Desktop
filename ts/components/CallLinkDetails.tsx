@@ -1,6 +1,7 @@
 // Copyright 2024 Signal Messenger, LLC
 // SPDX-License-Identifier: AGPL-3.0-only
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import type { CallHistoryGroup } from '../types/CallDisposition';
 import type { LocalizerType } from '../types/I18N';
 import { CallHistoryGroupPanelSection } from './conversation/conversation-details/CallHistoryGroupPanelSection';
@@ -20,6 +21,9 @@ import { getColorForCallLink } from '../util/getColorForCallLink';
 import { isCallLinkAdmin } from '../types/CallLink';
 import { CallLinkRestrictionsSelect } from './CallLinkRestrictionsSelect';
 import { ConfirmationDialog } from './ConfirmationDialog';
+import { InAnotherCallTooltip } from './conversation/InAnotherCallTooltip';
+import { offsetDistanceModifier } from '../util/popperUtil';
+import { Tooltip, TooltipPlacement } from './Tooltip';
 
 function toUrlWithoutProtocol(url: URL): string {
   return `${url.hostname}${url.pathname}${url.search}${url.hash}`;
@@ -28,6 +32,9 @@ function toUrlWithoutProtocol(url: URL): string {
 export type CallLinkDetailsProps = Readonly<{
   callHistoryGroup: CallHistoryGroup;
   callLink: CallLinkType;
+  isAnybodyInCall: boolean;
+  isInCall: boolean;
+  isInAnotherCall: boolean;
   i18n: LocalizerType;
   onDeleteCallLink: () => void;
   onOpenCallLinkAddNameModal: () => void;
@@ -40,6 +47,9 @@ export function CallLinkDetails({
   callHistoryGroup,
   callLink,
   i18n,
+  isAnybodyInCall,
+  isInCall,
+  isInAnotherCall,
   onDeleteCallLink,
   onOpenCallLinkAddNameModal,
   onStartCallLinkLobby,
@@ -51,6 +61,35 @@ export function CallLinkDetails({
   const webUrl = linkCallRoute.toWebUrl({
     key: callLink.rootKey,
   });
+  const joinButton = (
+    <Button
+      className={classNames({
+        CallLinkDetails__HeaderButton: true,
+        'CallLinkDetails__HeaderButton--active-call': isAnybodyInCall,
+      })}
+      variant={
+        isAnybodyInCall
+          ? ButtonVariant.Calling
+          : ButtonVariant.SecondaryAffirmative
+      }
+      discouraged={isInAnotherCall}
+      size={ButtonSize.Small}
+      onClick={onStartCallLinkLobby}
+    >
+      {isInCall
+        ? i18n('icu:CallsNewCallButton--return')
+        : i18n('icu:CallLinkDetails__Join')}
+    </Button>
+  );
+  const callLinkRestrictionsSelect = (
+    <CallLinkRestrictionsSelect
+      disabled={isAnybodyInCall}
+      i18n={i18n}
+      value={callLink.restrictions}
+      onChange={onUpdateCallLinkRestrictions}
+    />
+  );
+
   return (
     <div className="CallLinkDetails__Container">
       <header className="CallLinkDetails__Header">
@@ -77,14 +116,13 @@ export function CallLinkDetails({
           </p>
         </div>
         <div className="CallLinkDetails__HeaderActions">
-          <Button
-            className="CallLinkDetails__HeaderButton"
-            variant={ButtonVariant.SecondaryAffirmative}
-            size={ButtonSize.Small}
-            onClick={onStartCallLinkLobby}
-          >
-            {i18n('icu:CallLinkDetails__Join')}
-          </Button>
+          {isInAnotherCall ? (
+            <InAnotherCallTooltip i18n={i18n}>
+              {joinButton}
+            </InAnotherCallTooltip>
+          ) : (
+            joinButton
+          )}
         </div>
       </header>
       <CallHistoryGroupPanelSection
@@ -116,11 +154,20 @@ export function CallLinkDetails({
             }
             label={i18n('icu:CallLinkDetails__ApproveAllMembersLabel')}
             right={
-              <CallLinkRestrictionsSelect
-                i18n={i18n}
-                value={callLink.restrictions}
-                onChange={onUpdateCallLinkRestrictions}
-              />
+              isAnybodyInCall ? (
+                <Tooltip
+                  className="CallLinkDetails__ApproveAllMembersDisabledTooltip"
+                  content={i18n(
+                    'icu:CallLinkDetails__SettingTooltip--disabled-for-active-call'
+                  )}
+                  direction={TooltipPlacement.Top}
+                  popperModifiers={[offsetDistanceModifier(5)]}
+                >
+                  {callLinkRestrictionsSelect}
+                </Tooltip>
+              ) : (
+                callLinkRestrictionsSelect
+              )
             }
           />
         </PanelSection>
@@ -152,14 +199,34 @@ export function CallLinkDetails({
       {isCallLinkAdmin(callLink) && (
         <PanelSection>
           <PanelRow
-            className="CallLinkDetails__DeleteLink"
+            className={classNames({
+              CallLinkDetails__DeleteLink: true,
+              'CallLinkDetails__DeleteLink--disabled-for-active-call':
+                isAnybodyInCall,
+            })}
+            disabled={isAnybodyInCall}
             icon={
               <ConversationDetailsIcon
                 ariaLabel={i18n('icu:CallLinkDetails__DeleteLink')}
                 icon={IconType.trash}
               />
             }
-            label={i18n('icu:CallLinkDetails__DeleteLink')}
+            label={
+              isAnybodyInCall ? (
+                <Tooltip
+                  className="CallLinkDetails__DeleteLinkTooltip"
+                  content={i18n(
+                    'icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call'
+                  )}
+                  direction={TooltipPlacement.Top}
+                  popperModifiers={[offsetDistanceModifier(5)]}
+                >
+                  {i18n('icu:CallLinkDetails__DeleteLink')}
+                </Tooltip>
+              ) : (
+                i18n('icu:CallLinkDetails__DeleteLink')
+              )
+            }
             onClick={() => {
               setIsDeleteCallLinkModalOpen(true);
             }}

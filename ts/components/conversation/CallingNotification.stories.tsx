@@ -29,6 +29,7 @@ export default {
 } satisfies Meta<PropsType>;
 
 const getCommonProps = (options: {
+  activeConversationId?: string;
   mode: CallMode;
   type?: CallType;
   direction?: CallDirection;
@@ -74,14 +75,16 @@ const getCommonProps = (options: {
       callId: '123',
       peerId: conversation.id,
       ringerId: callCreator?.serviceId ?? null,
+      startedById: null,
       mode,
       type,
       direction,
       timestamp: Date.now(),
       status,
+      endedTimestamp: null,
     },
     callCreator,
-    activeConversationId: null,
+    activeConversationId: options.activeConversationId ?? null,
     groupCallEnded,
     maxDevices,
     deviceCount,
@@ -114,6 +117,42 @@ export function AcceptedIncomingAudioCall(): JSX.Element {
         deviceCount: 0,
         maxDevices: Infinity,
       })}
+    />
+  );
+}
+
+export function AcceptedIncomingAudioCallWithActiveCall(): JSX.Element {
+  return (
+    <CallingNotification
+      {...getCommonProps({
+        mode: CallMode.Direct,
+        type: CallType.Audio,
+        direction: CallDirection.Incoming,
+        status: DirectCallStatus.Accepted,
+        groupCallEnded: null,
+        deviceCount: 0,
+        maxDevices: Infinity,
+        activeConversationId: 'someOtherConversation',
+      })}
+    />
+  );
+}
+
+export function AcceptedIncomingAudioCallInCurrentCall(): JSX.Element {
+  const props = getCommonProps({
+    mode: CallMode.Direct,
+    type: CallType.Audio,
+    direction: CallDirection.Incoming,
+    status: DirectCallStatus.Accepted,
+    groupCallEnded: null,
+    deviceCount: 0,
+    maxDevices: Infinity,
+  });
+
+  return (
+    <CallingNotification
+      {...props}
+      activeConversationId={props.conversationId}
     />
   );
 }
@@ -370,6 +409,42 @@ export function GroupCallActiveCallFull(): JSX.Element {
         deviceCount: 8,
         maxDevices: 8,
       })}
+    />
+  );
+}
+
+export function GroupCallActiveInAnotherCall(): JSX.Element {
+  return (
+    <CallingNotification
+      {...getCommonProps({
+        mode: CallMode.Group,
+        type: CallType.Group,
+        direction: CallDirection.Incoming,
+        status: GroupCallStatus.GenericGroupCall,
+        groupCallEnded: false,
+        deviceCount: 8,
+        maxDevices: 10,
+        activeConversationId: 'someOtherId',
+      })}
+    />
+  );
+}
+
+export function GroupCallActiveInCurrentCall(): JSX.Element {
+  const props = getCommonProps({
+    mode: CallMode.Group,
+    type: CallType.Group,
+    direction: CallDirection.Incoming,
+    status: GroupCallStatus.GenericGroupCall,
+    groupCallEnded: false,
+    deviceCount: 8,
+    maxDevices: 10,
+  });
+
+  return (
+    <CallingNotification
+      {...props}
+      activeConversationId={props.conversationId}
     />
   );
 }

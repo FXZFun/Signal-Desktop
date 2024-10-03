@@ -33,6 +33,7 @@ export enum ToastType {
   FailedToDeleteUsername = 'FailedToDeleteUsername',
   FailedToFetchPhoneNumber = 'FailedToFetchPhoneNumber',
   FailedToFetchUsername = 'FailedToFetchUsername',
+  FailedToSendWithEndorsements = 'FailedToSendWithEndorsements',
   FileSaved = 'FileSaved',
   FileSize = 'FileSize',
   GroupLinkCopied = 'GroupLinkCopied',
@@ -42,6 +43,7 @@ export enum ToastType {
   LoadingFullLogs = 'LoadingFullLogs',
   MaxAttachments = 'MaxAttachments',
   MessageBodyTooLong = 'MessageBodyTooLong',
+  MessageLoop = 'MessageLoop',
   OriginalMessageNotFound = 'OriginalMessageNotFound',
   PinnedConversationsFull = 'PinnedConversationsFull',
   ReactionFailed = 'ReactionFailed',
@@ -89,7 +91,7 @@ export type AnyToast =
   | { toastType: ToastType.CaptchaSolved }
   | {
       toastType: ToastType.ConversationArchived;
-      parameters: { conversationId: string };
+      parameters: { conversationId: string; wasPinned: boolean };
     }
   | { toastType: ToastType.ConversationMarkedUnread }
   | { toastType: ToastType.ConversationRemoved; parameters: { title: string } }
@@ -105,6 +107,7 @@ export type AnyToast =
   | { toastType: ToastType.FailedToDeleteUsername }
   | { toastType: ToastType.FailedToFetchPhoneNumber }
   | { toastType: ToastType.FailedToFetchUsername }
+  | { toastType: ToastType.FailedToSendWithEndorsements }
   | { toastType: ToastType.FileSaved; parameters: { fullPath: string } }
   | {
       toastType: ToastType.FileSize;
@@ -124,6 +127,7 @@ export type AnyToast =
   | { toastType: ToastType.LoadingFullLogs }
   | { toastType: ToastType.MaxAttachments }
   | { toastType: ToastType.MessageBodyTooLong }
+  | { toastType: ToastType.MessageLoop }
   | { toastType: ToastType.OriginalMessageNotFound }
   | { toastType: ToastType.PinnedConversationsFull }
   | { toastType: ToastType.ReactionFailed }

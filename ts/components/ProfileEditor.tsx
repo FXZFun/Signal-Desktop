@@ -36,6 +36,7 @@ import type { ShowToastAction } from '../state/ducks/toast';
 import { getEmojiData, unifiedToEmoji } from './emoji/lib';
 import { assertDev } from '../util/assert';
 import { missingCaseError } from '../util/missingCaseError';
+import { sanitizeAboutText } from '../util/getAboutText';
 import { ConfirmationDialog } from './ConfirmationDialog';
 import { ContextMenu } from './ContextMenu';
 import { UsernameLinkModalBody } from './UsernameLinkModalBody';
@@ -47,6 +48,7 @@ import { isWhitespace, trim } from '../util/whitespaceStringUtil';
 import { UserText } from './UserText';
 import { Tooltip, TooltipPlacement } from './Tooltip';
 import { offsetDistanceModifier } from '../util/popperUtil';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 export enum EditState {
   None = 'None',
@@ -208,6 +210,7 @@ export function ProfileEditor({
   });
   const [isResettingUsername, setIsResettingUsername] = useState(false);
   const [isResettingUsernameLink, setIsResettingUsernameLink] = useState(false);
+  const [isInvalidAboutText, setIsInvalidAboutText] = useState(false);
 
   // Reset username edit state when leaving
   useEffect(() => {
@@ -494,6 +497,14 @@ export function ProfileEditor({
           <Button
             disabled={shouldDisableSave}
             onClick={() => {
+              if (
+                sanitizeAboutText(stagedProfile.aboutText) !==
+                stagedProfile.aboutText
+              ) {
+                setIsInvalidAboutText(true);
+                return;
+              }
+
               setFullBio({
                 aboutEmoji: stagedProfile.aboutEmoji,
                 aboutText: stagedProfile.aboutText,
@@ -767,6 +778,25 @@ export function ProfileEditor({
         />
       )}
 
+      {isInvalidAboutText && (
+        <ConfirmationDialog
+          dialogName="ProfileEditorModal.invalidAboutText"
+          title={i18n('icu:ProfileEditor__invalid-about__title')}
+          cancelButtonVariant={ButtonVariant.Primary}
+          cancelText={i18n('icu:Confirmation--confirm')}
+          i18n={i18n}
+          onClose={() => {
+            setStagedProfile(profileData => ({
+              ...profileData,
+              aboutText: sanitizeAboutText(profileData?.aboutText),
+            }));
+            setIsInvalidAboutText(false);
+          }}
+        >
+          {i18n('icu:ProfileEditor__invalid-about__body')}
+        </ConfirmationDialog>
+      )}
+
       {isResettingUsernameLink && (
         <ConfirmationDialog
           i18n={i18n}
@@ -824,8 +854,9 @@ function UsernameLinkTooltip({
   children: React.ReactNode;
   i18n: LocalizerType;
 }) {
+  const reducedMotion = useReducedMotion();
   const animatedStyles = useSpring({
-    from: { opacity: 0, scale: 0.25 },
+    from: { opacity: 0, scale: reducedMotion ? 1 : 0.25 },
     to: { opacity: 1, scale: 1 },
     config: { mass: 1, tension: 280, friction: 25 },
     delay: 200,

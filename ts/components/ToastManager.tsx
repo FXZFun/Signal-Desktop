@@ -23,7 +23,10 @@ export type PropsType = {
   openFileInFolder: (target: string) => unknown;
   OS: string;
   onShowDebugLog: () => unknown;
-  onUndoArchive: (conversaetionId: string) => unknown;
+  onUndoArchive: (
+    conversationId: string,
+    options?: { wasPinned?: boolean }
+  ) => unknown;
   toast?: AnyToast;
   megaphone?: AnyActionableMegaphone;
   centerToast?: boolean;
@@ -166,7 +169,9 @@ export function renderToast({
         toastAction={{
           label: i18n('icu:conversationArchivedUndo'),
           onClick: () => {
-            onUndoArchive(String(toast.parameters.conversationId));
+            onUndoArchive(String(toast.parameters.conversationId), {
+              wasPinned: toast.parameters.wasPinned,
+            });
           },
         }}
       >
@@ -280,6 +285,20 @@ export function renderToast({
     );
   }
 
+  if (toastType === ToastType.FailedToSendWithEndorsements) {
+    return (
+      <Toast
+        onClose={hideToast}
+        toastAction={{
+          label: i18n('icu:Toast__ActionLabel--SubmitLog'),
+          onClick: onShowDebugLog,
+        }}
+      >
+        {i18n('icu:Toast--FailedToSendWithEndorsements')}
+      </Toast>
+    );
+  }
+
   if (toastType === ToastType.FileSaved) {
     return (
       <Toast
@@ -330,7 +349,7 @@ export function renderToast({
         onClose={hideToast}
         style={{ maxWidth: '500px' }}
         toastAction={{
-          label: i18n('icu:decryptionErrorToastAction'),
+          label: i18n('icu:Toast__ActionLabel--SubmitLog'),
           onClick: onShowDebugLog,
         }}
       >
@@ -364,6 +383,20 @@ export function renderToast({
 
   if (toastType === ToastType.MessageBodyTooLong) {
     return <Toast onClose={hideToast}>{i18n('icu:messageBodyTooLong')}</Toast>;
+  }
+
+  if (toastType === ToastType.MessageLoop) {
+    return (
+      <Toast
+        onClose={hideToast}
+        toastAction={{
+          label: i18n('icu:Toast__ActionLabel--SubmitLog'),
+          onClick: onShowDebugLog,
+        }}
+      >
+        {i18n('icu:messageLoop')}
+      </Toast>
+    );
   }
 
   if (toastType === ToastType.OriginalMessageNotFound) {

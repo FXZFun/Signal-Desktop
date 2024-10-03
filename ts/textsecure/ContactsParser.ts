@@ -31,6 +31,7 @@ type MessageWithAvatar<Message extends OptionalFields> = Omit<
 > & {
   avatar?: ContactAvatarType;
   expireTimer?: DurationInSeconds;
+  expireTimerVersion: number | null;
   number?: string | undefined;
 };
 
@@ -145,7 +146,7 @@ export class ParseContactsTransform extends Transform {
             reader.pos,
             reader.pos + attachmentSize
           );
-          const hash = computeHash(data);
+          const hash = computeHash(avatarData);
 
           const local =
             // eslint-disable-next-line no-await-in-loop
@@ -207,6 +208,7 @@ function prepareContact(
   const result = {
     ...proto,
     expireTimer,
+    expireTimerVersion: proto.expireTimerVersion ?? null,
     aci,
     avatar,
     number: dropNull(proto.number),

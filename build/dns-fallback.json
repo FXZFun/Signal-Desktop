@@ -4,51 +4,51 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "18.172.52.10"
+        "address": "3.166.228.111"
       },
       {
         "family": "ipv4",
-        "address": "18.172.52.115"
+        "address": "3.166.228.16"
       },
       {
         "family": "ipv4",
-        "address": "18.172.52.29"
+        "address": "3.166.228.43"
       },
       {
         "family": "ipv4",
-        "address": "18.172.52.62"
+        "address": "3.166.228.88"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:1400:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:5200:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:5200:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:5a00:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:5e00:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:6800:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:6000:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:7a00:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:ac00:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:9200:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:b800:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:a000:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:f800:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:d800:1d:4f32:50c0:93a1"
       },
       {
         "family": "ipv6",
-        "address": "2600:9000:26a7:fa00:1d:4f32:50c0:93a1"
+        "address": "2600:9000:27b6:e00:1d:4f32:50c0:93a1"
       }
     ]
   },
@@ -57,19 +57,19 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "104.18.10.47"
+        "address": "104.18.37.148"
       },
       {
         "family": "ipv4",
-        "address": "104.18.11.47"
+        "address": "172.64.150.108"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:a2f"
+        "address": "2606:4700:4400::6812:2594"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:b2f"
+        "address": "2606:4700:4400::ac40:966c"
       }
     ]
   },
@@ -78,19 +78,19 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "104.18.10.47"
+        "address": "104.18.37.148"
       },
       {
         "family": "ipv4",
-        "address": "104.18.11.47"
+        "address": "172.64.150.108"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:a2f"
+        "address": "2606:4700:4400::6812:2594"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:b2f"
+        "address": "2606:4700:4400::ac40:966c"
       }
     ]
   },
@@ -133,11 +133,11 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "34.128.167.52"
+        "address": "35.244.250.191"
       },
       {
         "family": "ipv6",
-        "address": "2600:1901:0:1603::"
+        "address": "2600:1901:0:ff9f::"
       }
     ]
   },
@@ -146,11 +146,11 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "172.217.14.115"
+        "address": "142.250.207.51"
       },
       {
         "family": "ipv6",
-        "address": "2607:f8b0:4007:80e::2013"
+        "address": "2404:6800:4004:824::2013"
       }
     ]
   },
@@ -159,19 +159,19 @@
     "endpoints": [
       {
         "family": "ipv4",
-        "address": "104.18.26.44"
+        "address": "104.18.43.97"
       },
       {
         "family": "ipv4",
-        "address": "104.18.27.44"
+        "address": "172.64.144.159"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:1a2c"
+        "address": "2606:4700:4400::6812:2b61"
       },
       {
         "family": "ipv6",
-        "address": "2606:4700::6812:1b2c"
+        "address": "2606:4700:4400::ac40:909f"
       }
     ]
   }

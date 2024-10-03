@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "调试日志"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "调试日志"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "您无法在选择文件的同时选择照片和视频。"
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "静音"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal 无法更新。请{retry}或访问{url}手动安装应用，然后{support}此问题"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal 无法更新。请<retryUpdateButton>重试更新</retryUpdateButton>或访问 {url} 以进行手动安装，然后<contactSupportLink>联系支持团队</contactSupportLink>反映此问题"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal 无法更新。请访问{url}手动安装应用，然后{support}此问题"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal 无法更新。请访问 {url} 以进行手动安装，然后<contactSupportLink>联系支持团队</contactSupportLink>反映此问题"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "备注"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "查看最近媒体"
+  "icu:allMediaMenuItem": {
+    "messageformat": "全部媒体"
   },
   "icu:back": {
     "messageformat": "返回"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "无法加入通话"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "您已在通话中。"
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "无法获取通话链接信息。请检查您的互联网连接并重试。"
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "无法接收来自 {name} 的音频和视频"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "无法接收音频和视频"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "这可能是因为对方还未对您的安全码变更进行验证，或对方的设备有问题，或对方已将您屏蔽。"
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal 正在共享 {window}。"
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "重新连接…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "昨天 {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal 可能无法处理传入消息。"
   },
   "icu:messageBodyTooLong": {
     "messageformat": "消息过长。"
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "重试更新"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "联系支持团队"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "点击重启 Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "通话链接"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "群组通话"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "正在等待通过"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "您无法通过此群组链接加入群组，因为有一位管理员移除了您。"
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "该群组管理员批准您的请求之后，方可加入群组。如果已批准，您的名字与头像将与其成员分享。"
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "加入"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "{joinerName} 的入群申请未通过。"
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName}发起和取消了通过群组链接加入群组的请求。"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName}发起和取消了通过群组链接加入群组的{numberOfRequests,number}个请求"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, other {{joinerName}发起和取消了通过群组链接加入群组的 {numberOfRequests,number} 个请求}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "您已开启群组链接，并禁用管理员批准。"
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "点击“给 Signal 捐款”并设置定期捐款"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "正在同步消息"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "正在下载 {currentSize}/{totalSize} ({fractionComplete,number,percent})…"
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "正在准备下载…"
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "这可能需要几分钟时间，视您的备份大小而定"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "取消转移"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "要取消转移吗？"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "您的消息和媒体未完成恢复。如果您选择取消，您可以在设置中再次进行转移。"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "继续转移"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "取消转移"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "正在恢复媒体"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "恢复已暂停"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "暂停转移"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "继续转移"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "取消转移"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "更多选项"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "还原完成"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} / {totalSize} 匹配"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "要取消媒体转移吗？"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "您的消息和媒体未完成恢复。如果您选择取消，您可以在设置中再次进行转移。"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "继续转移"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "取消转移"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "扩展"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "从群组移除"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "您已在通话中"
+  "icu:ContactModal--voice": {
+    "messageformat": "语音"
   },
   "icu:showChatColorEditor": {
     "messageformat": "聊天颜色"
@@ -3759,7 +3825,7 @@
     "messageformat": "重置链接"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "批准新成员"
+    "messageformat": "需要管理员批准"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "新成员通过群组链接加入时，需管理员批准。"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": "0.5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "点击上方 的 {composeIcon}，搜索发送消息的联系人或群组。"
-  },
-  "icu:composeIcon": {
-    "messageformat": "撰写按钮"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "无聊天"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "最近的聊天将会在这里显示。"
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "转发给"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "无法更新您的个人资料，请重试。"
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "无效字符"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "您输入的一个或多个字符无法使用。请重试。"
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "给管理人发消息"
@@ -4848,10 +4914,10 @@
     "messageformat": "当前没有可以显示的近期动态"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "无动态"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "新的更新将会在这里显示。"
   },
   "icu:Stories__list--sending": {
     "messageformat": "正在发送……"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "点击查看动态"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "点击 <newStoryButtonIcon></newStoryButtonIcon> 来添加新动态吧。"
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name}发送给{group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "回复"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "回应了此动态"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "回应了此动态"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "动态"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "显示动态"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "隐藏动态"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "通话记录已清空"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "点击查看或发起通话"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "点击 <newCallButtonIcon></newCallButtonIcon> 来开始发起一个新的语音或视频通话吧。"
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "搜索"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "切换"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "没有最近呼叫。 呼叫朋友开始互动吧。"
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "没有通话"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "最近的通话将会在这里显示。"
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "无未接来电"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "未接通话将会在这里显示。"
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "没有找到“{query}”的相关结果"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "已拒接"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "群组通话"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "通话链接"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "返回"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "您必须退出当前通话才能加入到其他通话中"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {拨出语音通话} other {语音来电}}} Video {{direction, select, Outgoing {拨出视频通话} other {视频来电}}} Group {{direction, select, Outgoing {拨出群组通话} other {拨入群组通话}}} other {{direction, select, Outgoing {呼叫} other {来电}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {未接语音来电} Video {未接视频来电} Group {未接群组通话} other {未接来电}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {未接语音通话} Video {未接视频通话} Group {未接群组通话} other {未接通话}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {拒接的语音通话} Video {拒接的视频通话} Group {拒接的群组通话} other {拒接的通话}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "通话链接"
@@ -5524,7 +5569,10 @@
     "messageformat": "编辑通话名称"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "批准所有成员"
+    "messageformat": "需要管理员批准"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "通话期间此设置无法更改"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "复制链接"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "删除"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "通话期间此链接无法删除"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "通话链接详情"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "编辑通话名称"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "批准所有成员"
+    "messageformat": "需要管理员批准"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "同意加入"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "拒绝加入"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "关"
@@ -5617,22 +5674,16 @@
     "messageformat": "我们进行了功能微调、漏洞修复和性能强化。感谢使用 Signal！",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "此版本加快了删除大消息线程的过程。"
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "此次更新修复了一个漏洞，该漏洞会导致用户在离开群组后难以搜索该群组。"
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "我们添加了一个快捷方式，方便用户挂断当前通话并加入到新通话。"
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "现在您可以从编辑的消息中移除引用的回复。"
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "对于语言环境设置为“POSIX”的用户，此次更新还修复了 Linux 上的启动崩溃问题。"
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "长字幕动态的显示对比度得到了优化，使文字更易于阅读。"
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "此版本还改进了链接预览生成的性能，并修复了关闭设置窗口时会出现的显示小错误。"
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

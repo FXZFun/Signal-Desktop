@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "ส่งปูม"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "ส่งบันทึก"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "ไม่สามารถเลือกรูปภาพและวิดีโอพร้อมกับไฟล์อื่นได้"
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "ปิดเสียง"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "ไม่สามารถปรับรุ่น Signal ได้ กรุณา {retry} หรือไปที่ {url} เพื่อติดตั้งด้วยตัวเอง จากนั้น {support} ปัญหานี้"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "ไม่สามารถอัปเดต Signal ได้ โปรด<retryUpdateButton>ลองอัปเดตอีกครั้ง</retryUpdateButton> หรือไปที่ {url} เพื่อติดตั้งด้วยตัวเอง จากนั้น<contactSupportLink>ติดต่อฝ่ายสนับสนุน</contactSupportLink>เพื่อแจ้งเกี่ยวกับปัญหานี้"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "ไม่สามารถปรับรุ่น Signal ได้ ไปที่ {url} เพื่อติดตั้งด้วยตัวเอง จากนั้น {support} ปัญหานี้"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "ไม่สามารถอัปเดต Signal ได้ โปรดไปที่ {url} เพื่อติดตั้งด้วยตัวเอง จากนั้น<contactSupportLink>ติดต่อฝ่ายสนับสนุน</contactSupportLink>เพื่อแจ้งเกี่ยวกับปัญหานี้"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "โน้ต"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "ดูสื่อครั้งล่าสุด"
+  "icu:allMediaMenuItem": {
+    "messageformat": "สื่อทั้งหมด"
   },
   "icu:back": {
     "messageformat": "กลับ"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "ไม่สามารถเข้าร่วมการโทรได้"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "คุณอยู่ในสายแล้ว"
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "ไม่สามารถเรียกดูข้อมูลลิงก์การโทรได้ โปรดตรวจสอบการเชื่อมต่อเครือข่ายแล้วลองอีกครั้ง"
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "ไม่สามารถเสียงและวิดีโอจาก {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "ไม่สามารถรับเสียงและวิดีโอได้"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "เหตุนี้อาจเกิดขึ้นเนื่องจากผู้ใช้คนนี้ยังไม่ได้ยืนยันหมายเลขความปลอดภัยที่เปลี่ยนไปของคุณ อุปกรณ์ของผู้ใช้มีปัญหา หรือผู้ใช้บล็อกคุณไว้"
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal กำลังแบ่งปัน {window}"
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "กำลังเชื่อมต่อใหม่…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "เมื่อวาน {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal อาจประสบปัญหาในการประมวลผลข้อความขาเข้า"
   },
   "icu:messageBodyTooLong": {
     "messageformat": "ตัวข้อความยาวเกินไป"
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "ลองปรับรุ่นอีกครั้ง"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "ติดต่อฝ่ายสนับสนุน"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "คลิกเพื่อเริ่ม Signal ใหม่"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "ลิงก์การโทร"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "โทรกลุ่ม"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "กำลังรออนุมัติให้เข้าร่วม"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "คุณเข้าร่วมกลุ่มนี้ด้วยลิงก์กลุ่มไม่ได้เพราะผู้ดูแลลบคุณออกไปแล้ว"
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "ผู้ดูแลระบบของกลุ่มนี้ต้องอนุมัติคำขอเข้าร่วมของคุณก่อนจึงจะสามารถเข้าร่วมกลุ่มนี้ได้ หากได้รับการอนุมัติชื่อและรูปถ่ายของคุณจะถูกเปิดเผยกับสมาชิกในกลุ่ม"
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "เข้าร่วม"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "คำขอเข้ากลุ่ม {joinerName} ถูกปฏิเสธ"
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} ส่งคำขอและยกเลิกคำขอเพื่อเข้าร่วมผ่านลิงก์กลุ่มนี้"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} ส่งคำขอและยกเลิก {numberOfRequests,number} คำขอเพื่อเข้าร่วมผ่านลิงก์กลุ่มนี้"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, other {{joinerName} ส่งและยกเลิกคำขอ {numberOfRequests,number} รายการในการเข้าร่วมผ่านลิงก์กลุ่มนี้}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "คุณได้เปิดลิงก์กลุ่ม โดยการอนุมัติโดยผู้ดูแลปิดอยู่"
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "แตะที่ \"บริจาคให้ Signal\" แล้วสมัคร"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "กำลังซิงค์ข้อความ"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "กำลังดาวน์โหลด {currentSize} จาก {totalSize} ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "กำลังเตรียมการดาวน์โหลด..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "ขั้นตอนนี้อาจใช้เวลาสักครู่ โดยขึ้นอยู่กับขนาดข้อมูลสำรองของคุณ"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "ยกเลิกการถ่ายโอน"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "ยกเลิกการถ่ายโอนใช่หรือไม่"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "ยังกู้คืนข้อความและไฟล์สื่อของคุณไม่เสร็จสมบูรณ์ โดยหากยกเลิก คุณยังสามารถเลือกถ่ายโอนข้อมูลได้อีกจากเมนูการตั้งค่า"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "ถ่ายโอนต่อ"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "ยกเลิกการถ่ายโอน"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "กำลังกู้คืนไฟล์สื่อ"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "การกู้คืนหยุดชั่วคราว"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "หยุดการถ่ายโอนชั่วคราว"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "ถ่ายโอนต่อ"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "ยกเลิกการถ่ายโอน"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "ตัวเลือกเพิ่มเติม"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "กู้คืนเสร็จสิ้น"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} ของ {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "ยกเลิกการถ่ายโอนไฟล์สื่อใช่หรือไม่"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "ยังกู้คืนข้อความและไฟล์สื่อของคุณไม่เสร็จสมบูรณ์ โดยหากยกเลิก คุณยังสามารถเลือกถ่ายโอนข้อมูลได้อีกจากเมนูการตั้งค่า"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "ถ่ายโอนต่อ"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "ยกเลิกการถ่ายโอน"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "ขยาย"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "ลบจากกลุ่ม"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "คุณอยู่ในสายแล้ว"
+  "icu:ContactModal--voice": {
+    "messageformat": "เสียง"
   },
   "icu:showChatColorEditor": {
     "messageformat": "สีแชท"
@@ -3759,7 +3825,7 @@
     "messageformat": "ตั้งค่าลิงก์ใหม่"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "อนุมัติสมาชิกใหม่"
+    "messageformat": "ต้องได้รับการอนุมัติจากผู้ดูแล"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "กําหนดให้ผู้ดูแลอนุมัติให้สมาชิกใหม่เข้าร่วมกลุ่มผ่านลิงก์กลุ่ม"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "คลิก {composeIcon} ด้านบน และค้นหาผู้ติดต่อหรือกลุ่มของคุณเพื่อส่งข้อความ"
-  },
-  "icu:composeIcon": {
-    "messageformat": "ปุ่มเขียนข้อความ"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "ไม่มีแชท"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "แชทล่าสุดจะปรากฏที่นี่"
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "ส่งต่อไปยัง"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "โปรไฟล์ของคุณไม่สามารถปรับปรุงได้ โปรดลองอีกครั้ง"
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "อักขระไม่ถูกต้อง"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "อักขระอย่างน้อยหนึ่งตัวที่คุณกรอกไม่สามารถใช้ได้ โปรดลองอีกครั้ง"
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "ส่งข้อความถึงผู้ดูแล"
@@ -4848,10 +4914,10 @@
     "messageformat": "ไม่มีสตอรี่ใหม่ๆ ให้แสดงในตอนนี้"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "ไม่มีสตอรี่"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "สตอรี่ใหม่จะปรากฏที่นี่"
   },
   "icu:Stories__list--sending": {
     "messageformat": "กำลังส่ง…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "คลิกเพื่อดูสตอรี่"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "คลิก <newStoryButtonIcon></newStoryButtonIcon> เพื่อเพิ่มสตอรี่ใหม่"
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} ส่งไปยัง {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "ตอบกลับ"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "แสดงความรู้สึกต่อสตอรี่"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "แสดงความรู้สึกต่อสตอรี่"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "สตอรี่"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "แสดงสตอรี่"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "ซ่อนสตอรี่"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "ล้างประวัติการโทรแล้ว"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "คลิกเพื่อดูหรือเริ่มการโทร"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "คลิก <newCallButtonIcon></newCallButtonIcon> เพื่อเริ่มต้นการโทรด้วยเสียงหรือวิดีโอคอล"
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "ค้นหา"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "สลับ"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "ยังไม่มีการโทรล่าสุด เริ่มต้นด้วยการโทรหาเพื่อนของคุณ"
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "ไม่มีการโทร"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "การโทรล่าสุดจะปรากฏที่นี่"
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "ไม่มีสายที่ไม่ได้รับ"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "สายที่ไม่ได้รับจะปรากฏที่นี่"
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "ไม่พบผลลัพธ์สำหรับ “{query}”"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "ปฏิเสธ"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "โทรกลุ่ม"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "ลิงก์การโทร"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "กลับไปที่การโทรกลุ่ม"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "คุณต้องออกจากสายที่กำลังใช้งานอยู่ก่อนที่จะเข้าร่วมการโทรสายใหม่"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {การโทรด้วยเสียงขาออก} other {การโทรด้วยเสียงขาเข้า}}} Video {{direction, select, Outgoing {สายวิดีโอโทรออก} other {สายวิดีโอเรียกเข้า}}} Group {{direction, select, Outgoing {สายโทรกลุ่มขาออก} other {สายโทรกลุ่มขาเข้า}}} other {{direction, select, Outgoing {สายโทรออก} other {สายโทรเข้า}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {การโทรด้วยเสียงที่ไม่ได้รับ} Video {โทรวิดีโอที่พลาด} Group {สายโทรกลุ่มที่ไม่ได้รับ} other {สายที่พลาด}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {การโทรด้วยเสียงที่ปลายสายไม่ได้รับ} Video {โทรวิดีโอที่ไม่ได้รับ} Group {การโทรกลุ่มที่ไม่ได้รับ} other {การโทรที่ไม่ได้รับ}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {การโทรด้วยเสียงที่ถูกปฏิเสธ} Video {วิดีโอคอลที่ถูกปฏิเสธ} Group {การโทรกลุ่มที่ถูกปฏิเสธ} other {การโทรที่ถูกปฏิเสธ}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "ลิงก์การโทร"
@@ -5524,7 +5569,10 @@
     "messageformat": "แก้ไขชื่อการโทร"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "อนุมัติสำหรับสมาชิกทุกคน"
+    "messageformat": "ต้องได้รับการอนุมัติจากผู้ดูแล"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "ไม่สามารถเปลี่ยนการตั้งค่านี้ได้ขณะกำลังอยู่ในสาย"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "คัดลอกลิงก์"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "ลบ"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "ไม่สามารถลบลิงก์นี้ได้ขณะกำลังอยู่ในสาย"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "รายละเอียดลิงก์การโทร"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "แก้ไขชื่อการโทร"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "อนุมัติสำหรับสมาชิกทุกคน"
+    "messageformat": "ต้องได้รับการอนุมัติจากผู้ดูแล"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "อนุมัติให้เข้าร่วม"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "ปฏิเสธการเข้าร่วม"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "ปิด"
@@ -5617,22 +5674,16 @@
     "messageformat": "มีการปรับเปลี่ยนเล็กน้อย พร้อมแก้ไขบั๊ก และการพัฒนาประสิทธิภาพให้ดียิ่งขึ้น ขอขอบคุณที่เลือกใช้ Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "การอัปเดตครั้งนี้ปรับความเร็วให้คุณลบข้อความไซส์ใหญ่ได้ทันใจยิ่งขึ้น"
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "การอัปเดตครั้งนี้มาพร้อมการแก้ไขบั๊กที่เคยทำให้การกลับไปค้นหากลุ่มที่คุณออกมาแล้วซับซ้อนยุ่งยากกว่าที่ควรจะเป็น"
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "เราเพิ่มทางลัดที่ให้คุณวางสายที่ใช้งานอยู่ก่อนเพื่อเข้าร่วมการโทรใหม่ได้สะดวกยิ่งกว่าเดิม"
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "พัฒนาฟีเจอร์การแก้ไขเพื่อให้คุณสามารถลบการตอบกลับข้อความได้แล้ว"
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "การอัปเดตครั้งนี้ยังมาพร้อมกับการแก้ไขปัญหาในการเปิดแอปสำหรับผู้ใช้ Linux ที่ตั้ง Locale เป็น POSIX"
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "อัปเดตหน้าตาของการแสดงสตอรี่ที่มีคำบรรยายยาวๆ ด้วยการปรับคอนทราสต์ให้ตัวอักษรอ่านง่ายสบายตายิ่งขึ้น"
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "การอัปเดตครั้งนี้ยังมาพร้อมการพัฒนาประสิทธิภาพในการสร้างตัวอย่างลิงก์ รวมถึงแก้ไขบั๊กที่อาจเคยเป็นอุปสรรคในตอนปิดหน้าต่างการตั้งค่า"
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

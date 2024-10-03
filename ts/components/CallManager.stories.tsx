@@ -107,7 +107,6 @@ const createProps = (storyProps: Partial<PropsType> = {}): PropsType => ({
   i18n,
   incomingCall: null,
   callLink: storyProps.callLink ?? undefined,
-  isGroupCallRaiseHandEnabled: true,
   me: {
     ...getDefaultConversation({
       color: AvatarColors[0],
@@ -120,17 +119,18 @@ const createProps = (storyProps: Partial<PropsType> = {}): PropsType => ({
   playRingtone: action('play-ringtone'),
   removeClient: action('remove-client'),
   blockClient: action('block-client'),
+  cancelPresenting: action('cancel-presenting'),
   renderDeviceSelection: () => <div />,
   renderEmojiPicker: () => <>EmojiPicker</>,
   renderReactionPicker: () => <div />,
   sendGroupCallRaiseHand: action('send-group-call-raise-hand'),
   sendGroupCallReaction: action('send-group-call-reaction'),
+  selectPresentingSource: action('select-presenting-source'),
   setGroupCallVideoRequest: action('set-group-call-video-request'),
   setIsCallActive: action('set-is-call-active'),
   setLocalAudio: action('set-local-audio'),
-  setLocalPreview: action('set-local-preview'),
+  setLocalPreviewContainer: action('set-local-preview-container'),
   setLocalVideo: action('set-local-video'),
-  setPresenting: action('toggle-presenting'),
   setRendererCanvas: action('set-renderer-canvas'),
   setOutgoingRing: action('set-outgoing-ring'),
   showContactModal: action('show-contact-modal'),
@@ -139,6 +139,9 @@ const createProps = (storyProps: Partial<PropsType> = {}): PropsType => ({
   stopRingtone: action('stop-ringtone'),
   switchToPresentationView: action('switch-to-presentation-view'),
   switchFromPresentationView: action('switch-from-presentation-view'),
+  toggleCallLinkPendingParticipantModal: action(
+    'toggle-call-link-pending-participant-modal'
+  ),
   toggleParticipants: action('toggle-participants'),
   togglePip: action('toggle-pip'),
   toggleScreenRecordingPermissionsDialog: action(

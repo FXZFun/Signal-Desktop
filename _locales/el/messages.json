@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Υποβολή αρχείου"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Υποβολή αρχείου καταγραφής"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Δεν μπορείς να επιλέξεις φωτογραφίες και βίντεο μαζί με αρχεία."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Σίγαση"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Το Signal δεν μπόρεσε να αναβαθμιστεί. {retry} ή επισκέψου το {url} για να το εγκαταστήσεις χειροκίνητα. Μετά, {support} σχετικά με αυτό το πρόβλημα."
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Το Signal δεν μπόρεσε να ενημερωθεί. <retryUpdateButton>Επανάλαβε την ενημέρωση</retryUpdateButton> ή επισκέψου το {url} για χειροκίνητη εγκατάσταση. Έπειτα, <contactSupportLink>επικοινώνησε με την υποστήριξη</contactSupportLink> γι' αυτό το πρόβλημα"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Το Signal δεν μπόρεσε να ενημερωθεί. Πήγαινε στο {url} για να το εγκαταστήσεις χειροκίνητα. Έπειτα,{support} γι' αυτό το πρόβλημα."
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Το Signal δεν μπόρεσε να ενημερωθεί. Επισκέψου το {url} για να το εγκαταστήσεις χειροκίνητα. Έπειτα, <contactSupportLink>επικοινώνησε με την υποστήριξη</contactSupportLink> γι' αυτό το πρόβλημα"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Σημείωση"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Προβολή πρόσφατων πολυμέσων"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Όλα τα πολυμέσα"
   },
   "icu:back": {
     "messageformat": "Πίσω"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Δεν είναι δυνατή η συμμετοχή στην κλήση"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Είσαι ήδη σε κάποια κλήση."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Αποτυχία λήψης πληροφοριών συνδέσμου. Παρακαλούμε έλεγξε τη σύνδεση στο δίκτυο και προσπάθησε ξανά."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Αδυναμία λήψης ήχου και εικόνας από τον/την {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Αδυναμία λήψης ήχου και βίντεο"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Αυτό ίσως οφείλεται στο ότι δεν έχει επιβεβαιώσει την αλλαγή του αριθμού ασφαλείας σου, ότι υπάρχει πρόβλημα με τη συσκευή του/της ή ότι σε έχει αποκλείσει."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Το Signal διαμοιράζεται το {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Επανασύνδεση…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Χθες {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Το Signal ενδέχεται να αποτυγχάνει να επεξεργαστεί ένα εισερχόμενο μήνυμα."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Το περιεχόμενο του μηνύματος είναι πολύ μεγάλο."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Επανάληψη αναβάθμισης"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "επικοινώνησε με την υποστήριξη"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Κάνε κλικ για επανεκκίνηση του Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Σύνδεσμος κλήσης"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Ομαδική κλήση"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Σε αναμονή για προσθήκη"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Δεν μπορείς να μπεις στην ομάδα μέσω του συνδέσμου της ομάδας, επειδή κάποιος διαχειριστής σε αφαίρεσε."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Κάποιος διαχειριστής της ομάδας πρέπει να εγκρίνει το αίτημά σου πριν μπορέσεις να μπεις στην ομάδα. Αν εγκριθεί, το όνομα και η φωτογραφία σου θα μοιραστούν στα μέλη της."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Μπες στη κλήση"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "Το αίτημα του/της {joinerName} να μπει στην ομάδα απορρίφθηκε."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "Ο/Η {joinerName} έκανε και ακύρωσε το αίτημα να μπει μέσω του συνδέσμου της ομάδας."
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "Ο/Η {joinerName} έκανε και ακύρωσε {numberOfRequests,number} αιτήματα να μπει μέσω του συνδέσμου της ομάδας."
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {Ο/Η {joinerName} έστειλε αίτημα και το ακύρωσε, για συμμετοχή μέσω του συνδέσμου της ομάδας} other {Ο/Η {joinerName} έστειλε και ακύρωσε {numberOfRequests,number} αιτήματα για συμμετοχή μέσω του συνδέσμου της ομάδας}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Ενεργοποίησες το σύνδεσμο της ομάδας με απενεργοποιημένη την έγκριση διαχειριστή."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Πάτα την επιλογή \"Υποστήριξε το Signal\" και κάνε συνδρομή"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Συγχρονισμός μηνυμάτων"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Λήψη {currentSize} από {totalSize} ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Προετοιμασία για λήψη..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Μπορεί να διαρκέσει μερικά λεπτά, ανάλογα με το μέγεθος του αντιγράφου ασφαλείας σου"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Ακύρωση μεταφοράς"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Ακύρωση μεταφοράς;"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Η επαναφορά των μηνυμάτων και των πολυμέσων σου δεν έχει ολοκληρωθεί. Εάν επιλέξεις να την ακυρώσεις, μπορείς να τα μεταφέρεις ξανά από τις Ρυθμίσεις."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Συνέχεια μεταφοράς"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Ακύρωση μεταφοράς"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Επαναφορά πολυμέσων"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Επαναφορά σε παύση"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Παύση μεταφοράς"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Συνέχεια μεταφοράς"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Ακύρωση μεταφοράς"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Περισσότερες επιλογές"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Η ανάκτηση ολοκληρώθηκε"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} από {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Ακύρωση μεταφοράς πολυμέσων;"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Η επαναφορά των μηνυμάτων και των πολυμέσων σου δεν έχει ολοκληρωθεί. Εάν επιλέξεις να την ακυρώσεις, μπορείς να τα μεταφέρεις ξανά από τις Ρυθμίσεις."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Συνέχεια μεταφοράς"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Ακύρωση μεταφοράς"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Ανάπτυξη"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Αφαίρεση από την ομάδα"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Είσαι ήδη σε κάποια κλήση"
+  "icu:ContactModal--voice": {
+    "messageformat": "Φωνή"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Χρώμα συνομιλίας"
@@ -3759,7 +3825,7 @@
     "messageformat": "Επαναφορά συνδέσμου"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Έγκριση νέων μελών"
+    "messageformat": "Απαιτείται έγκριση διαχειριστή"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Να απαιτείται η έγκριση απο διαχειριστή/τρια για νέα μέλη που μπαίνουν από το σύνδεσμο της ομάδας."
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ",5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Κάντε κλικ στο {composeIcon} παραπάνω και αναζητήστε τις επαφές ή τις ομάδες σας για αποστολή μηνύματος."
-  },
-  "icu:composeIcon": {
-    "messageformat": "κουμπί σύνθεσης"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Καμία συνομιλία"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Οι νέες συνομιλίες θα εμφανίζονται εδώ."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Προώθηση σε"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Το προφίλ σου δεν μπόρεσε να ανανεωθεί. Παρακαλώ προσπάθησε ξανά."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Μη έγκυροι χαρακτήρες"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Ένας ή περισσότεροι χαρακτήρες που έχεις εισαγάγει δεν μπορούν να χρησιμοποιηθούν. Ξαναπροσπάθησε."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Μήνυμα σε διαχειριστή"
@@ -4848,10 +4914,10 @@
     "messageformat": "Δεν υπάρχουν πρόσφατες ιστορίες αυτή τη στιγμή"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Καμία ιστορία"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Οι νέες ιστορίες θα εμφανίζονται εδώ."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Αποστολή…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Κάνε κλικ για να δεις μια ιστορία"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Πάτα <newStoryButtonIcon></newStoryButtonIcon> για να προσθέσεις στην ιστορία σου."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} προς {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Απαντήσεις"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Αντέδρασες στην ιστορία"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Αντέδρασε στην ιστορία"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Ιστορία"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Εμφάνιση ιστοριών"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Απόκρυψη ιστορίας"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Το ιστορικό κλήσεων διαγράφηκε"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Κάνε κλικ για να δεις ή να ξεκινήσεις μια κλήση"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Πάτα <newCallButtonIcon></newCallButtonIcon> για να ξεκινήσεις μια νέα φωνητική κλήση ή μια βιντεοκλήση."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Αναζήτηση"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Ενεργοποίηση"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Δεν υπάρχουν πρόσφατες κλήσεις. Ξεκίνα καλώντας κάποιο φιλαράκι."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Καμία κλήση"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Οι νέες κλήσεις θα εμφανίζονται εδώ."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Δεν υπάρχουν αναπάντητες κλήσεις"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Οι χαμένες κλήσεις θα εμφανίζονται εδώ."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Δεν βρέθηκαν αποτελέσματα για “{query}”"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Απορρίφθηκε"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Ομαδική κλήση"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Σύνδεσμος κλήσης"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Επιστροφή"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Πρέπει να αποχωρήσεις από την τρέχουσα κλήση πριν συνδεθείς σε νέα"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Εξερχόμενη κλήση} other {Εισερχόμενη κλήση}}} Video {{direction, select, Outgoing {Εξερχόμενη βιντεοκλήση} other {Εισερχόμενη βιντεοκλήση}}} Group {{direction, select, Outgoing {Εξερχόμενη ομαδική κλήση} other {Εισερχόμενη ομαδική κλήση}}} other {{direction, select, Outgoing {Εξερχόμενη κλήση} other {Εισερχόμενη κλήση}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Αναπάντητη κλήση} Video {Αναπάντητη βιντεοκλήση} Group {Αναπάντητη ομαδική κλήση} other {Αναπάντητη κλήση}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Αναπάντητη κλήση} Video {Αναπάντητη βιντεοκλήση} Group {Αναπάντητη ομαδική κλήση} other {Αναπάντητη κλήση}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Απορρίφθηκε μια κλήση} Video {Απορρίφθηκε μια βιντεοκλήση} Group {Απορρίφθηκε μια ομαδική κλήση} other {Απορρίφθηκε μια κλήση}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Σύνδεσμος κλήσης"
@@ -5524,7 +5569,10 @@
     "messageformat": "Επεξεργασία ονόματος κλήσης"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Έγκριση όλων των μελών"
+    "messageformat": "Απαιτείται έγκριση διαχειριστή"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Αυτή η ρύθμιση δεν μπορεί να αλλάξει όσο η κλήση είναι ενεργή"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Αντιγραφή συνδέσμου"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Διαγραφή"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Αυτός ο σύνδεσμος δεν μπορεί να διαγραφεί όσο η κλήση είναι ενεργή"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Λεπτομέρειες συνδέσμου κλήσης"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Επεξεργασία ονόματος κλήσης"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Έγκριση όλων των μελών"
+    "messageformat": "Απαιτείται έγκριση διαχειριστή"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Έγκριση εισόδου"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Απαγόρευση εισόδου"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Ανενεργό"
@@ -5617,22 +5674,16 @@
     "messageformat": "Μικρές τροποποιήσεις, επιδιορθώσεις σφαλμάτων και βελτιώσεις απόδοσης. Ευχαριστούμε που χρησιμοποιείς το Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Αυτή η έκδοση επιταχύνει τη διαδικασία διαγραφής μεγάλων νημάτων μηνυμάτων."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Αυτή η ενημέρωση διορθώνει ένα σφάλμα που καθιστούσε δύσκολη την αναζήτηση μιας ομάδας μετά την αποχώρησή σου από αυτήν."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Προσθέσαμε μια συντόμευση για να κλείνεις και να συνδέεσαι σε μια νέα κλήση όταν μια άλλη κλήση είναι ήδη σε εξέλιξη."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Τώρα μπορείς να αφαιρέσεις τις αναφερόμενες απαντήσεις από τα επεξεργασμένα μηνύματα."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Αυτή η ενημέρωση διορθώνει επίσης απρόσμενους τερματισμούς λειτουργίας κατά την εκκίνηση σε Linux για χρήστες των οποίων η γλώσσα έχει οριστεί σε `POSIX`."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Οι ιστορίες με μακροσκελείς λεζάντες εμφανίζονται τώρα με βελτιωμένη αντίθεση που κάνει το κείμενο πιο ευανάγνωστο."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Αυτή η έκδοση βελτιώνει επίσης την απόδοση της δημιουργίας προεπισκόπησης συνδέσμων και διορθώνει ένα μικρό σφάλμα εμφάνισης κατά το κλείσιμο του παραθύρου Ρυθμίσεων."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

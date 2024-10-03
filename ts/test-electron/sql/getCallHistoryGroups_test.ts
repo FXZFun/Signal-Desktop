@@ -83,10 +83,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: conversationId,
         ringerId: generateAci(),
+        startedById: generateAci(),
         mode: CallMode.Direct,
         type: CallType.Video,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -118,10 +120,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: conversationId,
         ringerId: generateAci(),
+        startedById: generateAci(),
         mode: CallMode.Direct,
         type,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -153,10 +157,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: conversationId,
         ringerId: generateAci(),
+        startedById: generateAci(),
         mode: CallMode.Direct,
         type,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -198,6 +204,7 @@ describe('sql/getCallHistoryGroups', () => {
       version: 0,
       id: 'id:1',
       serviceId: conversation1Uuid,
+      expireTimerVersion: 1,
     };
 
     const conversation2: ConversationAttributesType = {
@@ -205,6 +212,7 @@ describe('sql/getCallHistoryGroups', () => {
       version: 2,
       id: 'id:2',
       groupId: conversation2GroupId,
+      expireTimerVersion: 1,
     };
 
     await saveConversation(conversation1);
@@ -220,10 +228,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId,
         ringerId: null,
+        startedById: null,
         mode,
         type: CallType.Video,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -270,6 +280,7 @@ describe('sql/getCallHistoryGroups', () => {
       type: 'private',
       version: 0,
       id: conversationId,
+      expireTimerVersion: 1,
     };
 
     await saveConversation(conversation);
@@ -278,10 +289,12 @@ describe('sql/getCallHistoryGroups', () => {
       callId: '1',
       peerId: conversationId,
       ringerId: null,
+      startedById: null,
       mode: CallMode.Direct,
       type: CallType.Video,
       direction: CallDirection.Incoming,
       timestamp: now,
+      endedTimestamp: null,
       status: DirectCallStatus.Accepted,
     };
 
@@ -313,10 +326,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: conversationId,
         ringerId: generateAci(),
+        startedById: generateAci(),
         mode: CallMode.Direct,
         type,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status,
       };
     }
@@ -353,10 +368,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: roomId,
         ringerId: null,
+        startedById: null,
         mode: CallMode.Adhoc,
         type: CallType.Adhoc,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: AdhocCallStatus.Joined,
       };
     }
@@ -396,6 +413,7 @@ describe('sql/getCallHistoryGroups', () => {
       version: 0,
       id: 'id:1',
       serviceId: conversation1Uuid,
+      expireTimerVersion: 1,
     };
 
     const conversation2: ConversationAttributesType = {
@@ -403,6 +421,7 @@ describe('sql/getCallHistoryGroups', () => {
       version: 2,
       id: 'id:2',
       groupId: conversation2GroupId,
+      expireTimerVersion: 1,
     };
 
     await saveConversation(conversation1);
@@ -413,10 +432,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId: roomId,
         ringerId: null,
+        startedById: null,
         mode: CallMode.Adhoc,
         type: CallType.Adhoc,
         direction: CallDirection.Outgoing,
         timestamp,
+        endedTimestamp: null,
         status: AdhocCallStatus.Joined,
       };
     }
@@ -431,10 +452,12 @@ describe('sql/getCallHistoryGroups', () => {
         callId,
         peerId,
         ringerId: null,
+        startedById: null,
         mode,
         type: CallType.Video,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -505,10 +528,12 @@ describe('sql/getCallHistoryGroupsCount', () => {
         callId,
         peerId: conversationId,
         ringerId: generateAci(),
+        startedById: generateAci(),
         mode: CallMode.Direct,
         type,
         direction: CallDirection.Incoming,
         timestamp,
+        endedTimestamp: null,
         status: DirectCallStatus.Accepted,
       };
     }
@@ -542,10 +567,12 @@ describe('sql/getCallHistoryGroupsCount', () => {
         callId,
         peerId: roomId,
         ringerId: null,
+        startedById: null,
         mode: CallMode.Adhoc,
         type: CallType.Adhoc,
         direction: CallDirection.Outgoing,
         timestamp,
+        endedTimestamp: null,
         status: AdhocCallStatus.Joined,
       };
     }

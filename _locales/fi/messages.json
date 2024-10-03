@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Lähetä loki"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Lähetä loki"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Valokuvia ja videoita ei voi valita yhdessä tiedostojen kanssa."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Mykistä"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Päivitys ei onnistunut. {retry} tai asenna päivitys käsin osoitteesta {url}. Sitten {support} ongelmasta."
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signalin päivitys ei onnistunut. <retryUpdateButton>Yritä päivittää uudelleen</retryUpdateButton> tai käy osoitteessa {url} ja suorita asennus manuaalisesti. <contactSupportLink>Ota sitten yhteyttä tukeen</contactSupportLink> ongelmaan liittyen"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Päivitys ei onnistunut. Asenna päivitys käsin osoitteesta {url}. Sitten {support} ongelmasta."
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signalin päivitys ei onnistunut. Asenna päivitys käsin osoitteesta {url}. <contactSupportLink>Ota sitten yhteyttä tukeen</contactSupportLink> ongelmaan liittyen"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Huomautus"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Näytä äskeinen media"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Kaikki mediatiedostot"
   },
   "icu:back": {
     "messageformat": "Takaisin"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Puheluun liittyminen ei onnistu"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Olet jo puhelussa."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Puhelulinkin tietoja ei voitu hakea. Tarkista verkkoyhteytesi ja yritä uudelleen."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Ääni- ja videoviestin vastaanottaminen käyttäjältä {name} epäonnistui"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Ääntä ja videota ei voi vastaanottaa"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Tämä saattaa johtua siitä, että he eivät ole vahvistaneet uutta turvanumeroasi, laitteiden teknisistä ongelmista, tai siitä, että sinut on estetty."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal jakaa {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Yhdistetään uudelleen…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Eilen {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal ei ehkä pysty käsittelemään saapuvaa viestiä."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Viestin teksti on liian pitkä."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Yritä päivitystä uudelleen"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "Ota yhteyttä tukeen"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Käynnistä Signal uudelleen napsauttamalla"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Puhelulinkki"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Ryhmäpuhelu"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Odotetaan sisäänpääsyä"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Et voi liittyä ryhmään ryhmälinkin avulla, koska ylläpitäjä poisti sinut ryhmästä."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Ryhmän ylläpitäjän on hyväksyttävä liittymispyyntö ennen ryhmään liittymistä. Liittymispyynnön yhteydessä nimesi ja kuvasi näkyvät ryhmän jäsenille."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Liity"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "Henkilön {joinerName} pyyntö liittyä ryhmään on hylätty."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName} pyysi ja perui jäsenyyspyyntönsä ryhmälinkin välityksellä"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} pyysi ja perui {numberOfRequests,number} jäsenyyspyyntöä ryhmälinkin välityksellä"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} pyysi ja peruutti liittymispyyntönsä ryhmälinkin kautta} other {{joinerName} pyysi ja peruutti {numberOfRequests,number} liittymispyyntöä ryhmälinkin kautta}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Otit ryhmälinkin käyttöön. Liittymispyynnöt eivät ole käytössä."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Napauta Lahjoita Signalille ja tilaa"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Synkronoidaan viestejä"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Ladataan {currentSize} / {totalSize} ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Valmistellaan latausta..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Tämä voi kestää muutamia minuutteja varmuuskopion koosta riippuen"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Peruuta siirto"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Perutaanko siirto?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Viestejä ja mediaa ei ole vielä kokonaan palautettu. Jos peruutat toiminnot nyt, voit käynnistää siirron uudelleen Asetuksista."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Jatka siirtoa"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Peruuta siirto"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Palautetaan mediaa"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Palauttaminen keskeytetty"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Keskeytä siirto"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Jatka siirtoa"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Peruuta siirto"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Lisää valintoja"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Palautus suoritettu"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} / {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Perutaanko median siirto?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Viestejä ja mediaa ei ole vielä kokonaan palautettu. Jos peruutat toiminnot nyt, voit käynnistää siirron uudelleen Asetuksista."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Jatka siirtoa"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Peruuta siirto"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Laajenna"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Poista ryhmästä"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Olet jo puhelussa"
+  "icu:ContactModal--voice": {
+    "messageformat": "Ääni"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Keskustelun väri"
@@ -3759,7 +3825,7 @@
     "messageformat": "Uudelleenaseta linkki"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Hyväksy uusia jäseniä"
+    "messageformat": "Vaadi järjestelmänvalvojan hyväksyntä"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Ylläpitäjän on hyväksyttävä ryhmälinkin kautta liittyvät uudet jäsenet."
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": "0,5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Napauta {composeIcon} yllä ja etsi yhteystietojasi tai ryhmiäsi."
-  },
-  "icu:composeIcon": {
-    "messageformat": "kirjoituspainike"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Ei keskusteluja"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Viimeisimmät keskustelut näytetään tässä."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Välitä vastaanottajalle"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Profiiliasi ei voitu päivittää. Ole hyvä ja yritä uudelleen."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Virheellisiä merkkejä"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Yhtä tai useampaa syöttämääsi merkkiä ei voi käyttää. Yritä uudelleen."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Lähetä viesti ylläpitäjälle"
@@ -4848,10 +4914,10 @@
     "messageformat": "Ei viimeaikaisia tarinoita näytettäväksi juuri nyt"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Ei tarinoita"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Uudet päivitykset näytetään tässä."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Lähetetään…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Näytä tarina napsauttamalla"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Napsauta <newStoryButtonIcon></newStoryButtonIcon> lisätäksesi päivityksen."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} ryhmälle {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Vastaukset"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Reagoit tarinaan"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Reagoi tarinaan"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Tarina"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Näytä tarinat"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Piilota tarina"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Puheluhistoria tyhjennetty"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Näytä tai aloita puhelu napsauttamalla"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Napsauta <newCallButtonIcon></newCallButtonIcon> aloittaaksesi uuden ääni- tai videopuhelun."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Hae"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Ota käyttöön"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Ei uusia soittoja. Aloita soittamalla kaverillesi."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Ei puheluita"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Viimeisimmät puhelut näytetään tässä."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Ei vastaamattomia puheluita"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Vastaamattomat puhelut näytetään tässä."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Ei tuloksia haulle \"{query}\""
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Hylätty"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Ryhmäpuhelu"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Puhelulinkki"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Palaa"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Sinun on poistuttava nykyisestä puhelusta ennen kuin voit liittyä uuteen puheluun"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Lähtevä äänipuhelu} other {Saapuva äänipuhelu}}} Video {{direction, select, Outgoing {Soitettu videopuhelu} other {Vastattu videopuhelu}}} Group {{direction, select, Outgoing {Lähtevä ryhmäpuhelu} other {Saapuva ryhmäpuhelu}}} other {{direction, select, Outgoing {Lähtevä puhelu} other {Saapuva puhelu}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Vastaamaton äänipuhelu} Video {Vastaamaton videopuhelu} Group {Vastaamaton ryhmäpuhelu} other {Vastaamatta jäänyt puhelu}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Vastaamaton äänipuhelu} Video {Vastaamaton videopuhelu} Group {Vastaamaton ryhmäpuhelu} other {Vastaamaton puhelu}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Hylätty äänipuhelu} Video {Hylätty videopuhelu} Group {Hylätty ryhmäpuhelu} other {Hylätty puhelu}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Puhelulinkki"
@@ -5524,7 +5569,10 @@
     "messageformat": "Muokkaa puhelun nimeä"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Kaikkien jäsenten hyväksyntä"
+    "messageformat": "Vaadi järjestelmänvalvojan hyväksyntä"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Tätä asetusta ei voi muuttaa, kun puhelu on käynnissä"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopioi linkki"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Poista"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Tätä linkkiä ei voi poistaa, kun puhelu on käynnissä"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Puhelulinkin tiedot"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Muokkaa puhelun nimeä"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Kaikkien jäsenten hyväksyntä"
+    "messageformat": "Vaadi järjestelmänvalvojan hyväksyntä"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Hyväksy pääsy"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Estä pääsy"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Ei käytössä"
@@ -5617,22 +5674,16 @@
     "messageformat": "Pieniä säätöjä, virheenkorjauksia ja suorituskykyparannuksia. Kiitos, että käytät Signalia!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Tämä päivitys nopeuttaa suurten viestiketjujen poistamista."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Päivitys korjaa virheen, joka vaikeutti ryhmän hakemista ryhmästä eroamisen jälkeen."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Lisäsimme pikakuvakkeen, jolla voi poistua nykyisestä puhelusta ja liittyä uuteen puheluun."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Nyt voit poistaa lainatut vastaukset muokatuista viesteistä."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Tämä päivitys korjaa myös sovelluksen kaatumisen käynnistyksessä Linux-käyttäjillä, joiden maa-asetuksena on POSIX."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Tarinat, joissa on pitkät kuvatekstit, näytetään parannetulla kontrastilla, mikä helpottaa tekstin lukemista."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Tämä julkaisu parantaa myös linkkien esikatselun luomisen suorituskykyä ja korjaa pienen näyttövirheen Asetukset-ikkunan sulkeutumisessa."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

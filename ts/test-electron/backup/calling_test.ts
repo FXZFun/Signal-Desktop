@@ -14,7 +14,6 @@ import * as Bytes from '../../Bytes';
 import { getRandomBytes } from '../../Crypto';
 import { DataReader, DataWriter } from '../../sql/Client';
 import { generateAci } from '../../types/ServiceId';
-import { loadCallsHistory } from '../../services/callHistoryLoader';
 import { setupBasics, symmetricRoundtripHarness } from './helpers';
 import {
   AdhocCallStatus,
@@ -30,6 +29,7 @@ import { fromAdminKeyBytes } from '../../util/callLinks';
 import { ReadStatus } from '../../messages/MessageReadStatus';
 import { SeenStatus } from '../../MessageSeenStatus';
 import { deriveGroupID, deriveGroupSecretParams } from '../../util/zkgroup';
+import { loadAll } from '../../services/allLoaders';
 
 const CONTACT_A = generateAci();
 const GROUP_MASTER_KEY = getRandomBytes(32);
@@ -51,7 +51,7 @@ describe('backup/calling', () => {
     contactA = await window.ConversationController.getOrCreateAndWait(
       CONTACT_A,
       'private',
-      { systemGivenName: 'CONTACT_A' }
+      { systemGivenName: 'CONTACT_A', active_at: 1 }
     );
     groupA = await window.ConversationController.getOrCreateAndWait(
       GROUP_ID_STRING,
@@ -60,6 +60,7 @@ describe('backup/calling', () => {
         groupVersion: 2,
         masterKey: Bytes.toBase64(GROUP_MASTER_KEY),
         name: 'Rock Enthusiasts',
+        active_at: 1,
       }
     );
 
@@ -68,17 +69,20 @@ describe('backup/calling', () => {
     callLink = {
       rootKey: rootKey.toString(),
       roomId: getRoomIdFromRootKey(rootKey),
-      // TODO: DESKTOP-7511
-      adminKey: fromAdminKeyBytes(Buffer.concat([adminKey, adminKey])),
+      adminKey: fromAdminKeyBytes(adminKey),
       name: "Let's Talk Rocks",
       restrictions: CallLinkRestrictions.AdminApproval,
       revoked: false,
       expiration: null,
+      storageID: undefined,
+      storageVersion: undefined,
+      storageUnknownFields: undefined,
+      storageNeedsSync: false,
     };
 
     await DataWriter.insertCallLink(callLink);
 
-    await loadCallsHistory();
+    await loadAll();
   });
   after(async () => {
     await DataWriter.removeAll();
@@ -92,14 +96,16 @@ describe('backup/calling', () => {
         callId,
         peerId: CONTACT_A,
         ringerId: CONTACT_A,
+        startedById: null,
         mode: CallMode.Direct,
         type: CallType.Audio,
         status: DirectCallStatus.Missed,
         direction: CallDirection.Incoming,
         timestamp: now,
+        endedTimestamp: null,
       };
       await DataWriter.saveCallHistory(callHistory);
-      await loadCallsHistory();
+      await loadAll();
 
       const messageUnseen: MessageAttributesType = {
         id: generateGuid(),
@@ -139,14 +145,16 @@ describe('backup/calling', () => {
         callId,
         peerId: GROUP_ID_STRING,
         ringerId: CONTACT_A,
+        startedById: CONTACT_A,
         mode: CallMode.Group,
         type: CallType.Group,
         status: GroupCallStatus.Declined,
         direction: CallDirection.Incoming,
         timestamp: now,
+        endedTimestamp: null,
       };
       await DataWriter.saveCallHistory(callHistory);
-      await loadCallsHistory();
+      await loadAll();
 
       const messageUnseen: MessageAttributesType = {
         id: generateGuid(),
@@ -202,6 +210,10 @@ describe('backup/calling', () => {
         restrictions: CallLinkRestrictions.AdminApproval,
         revoked: false,
         expiration: null,
+        storageID: undefined,
+        storageVersion: undefined,
+        storageUnknownFields: undefined,
+        storageNeedsSync: false,
       };
       await DataWriter.insertCallLink(callLinkNoAdmin);
 
@@ -224,14 +236,16 @@ describe('backup/calling', () => {
         callId,
         peerId: callLink.roomId,
         ringerId: null,
+        startedById: null,
         mode: CallMode.Adhoc,
         type: CallType.Adhoc,
         status: AdhocCallStatus.Generic,
         direction: CallDirection.Unknown,
         timestamp: now,
+        endedTimestamp: null,
       };
       await DataWriter.saveCallHistory(callHistory);
-      await loadCallsHistory();
+      await loadAll();
 
       await symmetricRoundtripHarness([]);
 
@@ -248,14 +262,16 @@ describe('backup/calling', () => {
         callId,
         peerId: 'nonexistent',
         ringerId: null,
+        startedById: null,
         mode: CallMode.Adhoc,
         type: CallType.Adhoc,
         status: AdhocCallStatus.Generic,
         direction: CallDirection.Unknown,
         timestamp: now,
+        endedTimestamp: null,
       };
       await DataWriter.saveCallHistory(callHistory);
-      await loadCallsHistory();
+      await loadAll();
 
       await symmetricRoundtripHarness([]);
 

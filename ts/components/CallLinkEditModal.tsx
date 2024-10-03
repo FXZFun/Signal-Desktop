@@ -13,6 +13,7 @@ import { Button, ButtonSize, ButtonVariant } from './Button';
 import { Avatar, AvatarSize } from './Avatar';
 import { getColorForCallLink } from '../util/getColorForCallLink';
 import { CallLinkRestrictionsSelect } from './CallLinkRestrictionsSelect';
+import { InAnotherCallTooltip } from './conversation/InAnotherCallTooltip';
 
 const CallLinkEditModalRowIconClasses = {
   Edit: 'CallLinkEditModal__RowIcon--Edit',
@@ -67,6 +68,7 @@ function Hr() {
 export type CallLinkEditModalProps = {
   i18n: LocalizerType;
   callLink: CallLinkType;
+  hasActiveCall: boolean;
   onClose: () => void;
   onCopyCallLink: () => void;
   onOpenCallLinkAddNameModal: () => void;
@@ -78,6 +80,7 @@ export type CallLinkEditModalProps = {
 export function CallLinkEditModal({
   i18n,
   callLink,
+  hasActiveCall,
   onClose,
   onCopyCallLink,
   onOpenCallLinkAddNameModal,
@@ -91,13 +94,24 @@ export function CallLinkEditModal({
     return linkCallRoute.toWebUrl({ key: callLink.rootKey }).toString();
   }, [callLink.rootKey]);
 
+  const joinButton = (
+    <Button
+      onClick={onStartCallLinkLobby}
+      size={ButtonSize.Small}
+      variant={ButtonVariant.SecondaryAffirmative}
+      discouraged={hasActiveCall}
+      className="CallLinkEditModal__JoinButton"
+    >
+      {i18n('icu:CallLinkEditModal__JoinButtonLabel')}
+    </Button>
+  );
+
   return (
     <Modal
       i18n={i18n}
       modalName="CallLinkEditModal"
       moduleClassName="CallLinkEditModal"
       title={i18n('icu:CallLinkEditModal__Title')}
-      noEscapeClose
       noMouseClose
       padded={false}
       modalFooter={
@@ -141,14 +155,13 @@ export function CallLinkEditModal({
           </button>
         </div>
         <div className="CallLinkEditModal__Header__Actions">
-          <Button
-            onClick={onStartCallLinkLobby}
-            size={ButtonSize.Small}
-            variant={ButtonVariant.SecondaryAffirmative}
-            className="CallLinkEditModal__JoinButton"
-          >
-            {i18n('icu:CallLinkEditModal__JoinButtonLabel')}
-          </Button>
+          {hasActiveCall ? (
+            <InAnotherCallTooltip i18n={i18n}>
+              {joinButton}
+            </InAnotherCallTooltip>
+          ) : (
+            joinButton
+          )}
         </div>
       </div>
 

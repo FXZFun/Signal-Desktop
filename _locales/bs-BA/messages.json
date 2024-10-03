@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Pošalji zapisnik"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Pošalji zapisnik"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Ne možete odabrati fgotografije i videozapise zajedno s datotekama."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Isključi zvuk"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal se nije mogao ažurirati. {retry} ili posjetite {url} da ga ručno instalirate. Zatim {support} u vezi s ovim problemom"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal se nije mogao ažurirati. <retryUpdateButton>Ponovo pokušajte ažurirati</retryUpdateButton> ili posjetite {url} da ga instalirate ručno. Zatim, <contactSupportLink>kontaktirajte podršku</contactSupportLink> u vezi s ovim problemom"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal se nije mogao ažurirati. Posjetite {url} da ga ručno instalirate. Zatim,{support} u vezi s ovim problemom"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal se nije mogao ažurirati. Posjetite {url} da ga instalirate ručno. Zatim, <contactSupportLink>kontaktirajte podršku</contactSupportLink> u vezi s ovim problemom"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Napomena"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Prikaž nedavni medijski sadržaj"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Svi medijski sadržaji"
   },
   "icu:back": {
     "messageformat": "Natrag"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Nije se moguće pridružiti pozivu"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Već učestvujete u pozivu."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Nije moguće preuzeti informacije o poveznici za poziv. Molimo provjerite svoju internet konekciju i pokušajte ponovo."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "Nije moguće primiti zvuk i sliku od {name}"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Nije moguće primati audio ni video"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Mogući razlog jeste taj što nisu potvrdili promjenu vašeg sigurnosnog broja, ili postoji problem s njihovim uređajem, ili su vas blokirali."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal dijeli {window}."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Ponovno povezivanje…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Jučer {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal možda ne uspijeva obraditi dolaznu poruku."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "Tijelo poruke je preveliko."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Ponovo pokušajte ažurirati"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "kontaktirajte podršku"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Kliknite da ponovo pokrenete Signal"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Link za poziv"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Grupni poziv"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "Čeka se pristup"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Ovoj grupi ne možete se pridružiti putem linka za grupu jer Vas je administrator odstranio."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Administrator ove grupe mora odobriti vaš zahtjev prije pridruživanja. Ako ga odobri, vaše ime i fotografija će se podijeliti s članovima grupe."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Pristupi"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "A request to join the group from {joinerName} was denied."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName}je poslao/la zahtjev za pridruživanje putem linka grupe i otkazao/la zahtjev."
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName} je zatražio i otkazao zahtjeve (njih {numberOfRequests,number}) da se pridruži putem linka grupe."
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} podnio/la i otkazao/la zahtjev za pridruživanje grupi putem linka} few {{joinerName} podnio/la i otkazao/la {numberOfRequests,number} zahtjeva za pridruživanje grupi putem linka} many {{joinerName} je zatražio i otkazao {numberOfRequests,number}) zahtjeva za pridruživanje grupi putem linka} other {{joinerName} podnio/la i otkazao/la {numberOfRequests,number} zahtjeva za pridruživanje grupi putem linka}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Uključili ste link grupe s onemogućenim odobrenjem administratora."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "Dodirnite \"Doniraj Signalu\" i pretplatite se"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Sinhroniziranje poruka"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "Preuzimanje {currentSize} od {totalSize} ({fractionComplete,number,percent})..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "Priprema za preuzimanje..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Ovo može potrajati nekoliko minuta ovisno o veličini vaše sigurnosne kopije"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Otkaži transfer"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Otkazati transfer?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Vraćanje vaših poruka i medija nije završeno. Ako odaberete da otkažete, možete ponovo prenijeti iz postavki."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Nastavi transfer"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Otkaži transfer"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Obnova medijskih sadržaja"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Vraćanje je pauzirano"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Pauzirajte prijenos"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Nastavi prijenos"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Otkaži transfer"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Više opcija"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Vraćanje podataka je završeno"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} od {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Otkazati prijenos medija?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Vraćanje vaših poruka i medija nije završeno. Ako odaberete da otkažete, možete ponovo prenijeti iz postavki."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Nastavi transfer"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Otkaži transfer"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Proširi"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Udalji iz grupe"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Već učestvujete u pozivu"
+  "icu:ContactModal--voice": {
+    "messageformat": "Glas"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Boja chata"
@@ -3759,7 +3825,7 @@
     "messageformat": "Ponovo kreiraj link"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Prihvati nove članove"
+    "messageformat": "Zatraži odobrenje administratora"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Administrator je potreban za odobravanje pridruživanja novih članova putem linka grupe"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ".5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Kliknite {composeIcon} iznad i pretražite kontakte ili grupe za slanje poruka."
-  },
-  "icu:composeIcon": {
-    "messageformat": "dugme za pisanje"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Nema chatova"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Ovdje će se pojaviti nedavni chatovi."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "Proslijedi"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Ažuriranje vašeg profila nije uspjelo. Pokušajte ponovo."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Nevažeći znakovi"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Jedan ili više znakova koje ste unijeli se ne mogu koristiti. Pokušajte ponovo."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Pošalji poruku administratoru"
@@ -4848,10 +4914,10 @@
     "messageformat": "Trenutno nema nedavnih priča za prikaz"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Nema priča"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Ovdje će se pojaviti nova ažuriranja."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Slanje…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Kliknite da prikažete priču"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Kliknite <newStoryButtonIcon></newStoryButtonIcon> da dodate ažuriranje."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{name} šalje u grupu {group}"
@@ -5111,7 +5177,10 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Odgovori"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Reagirao/la na priču"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
     "messageformat": "Reagirao/la na priču"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
@@ -5130,7 +5199,7 @@
     "messageformat": "Priča"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Prikaži priče"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Sakrij priču"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Historija poziva je obrisana"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Kliknite da vidite ili započnete poziv"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Kliknite na <newCallButtonIcon></newCallButtonIcon> da pokrenete novi glasovni ili video poziv."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Traži"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Zamijeni"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Nema nedavnih poziva. Započnite pozivom prijatelja."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Nema poziva"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Ovdje će se pojaviti nedavni pozivi."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Nema propuštenih poziva"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Propušteni pozivi će se pojaviti ovdje."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Nema rezultata za “{query}”"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Odbijeno"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Grupni poziv"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Link za poziv"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Return"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Morate napustiti trenutni poziv prije nego što se pridružite novom pozivu"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Odlazni glasovni poziv} other {Dolazni glasovni poziv}}} Video {{direction, select, Outgoing {Odlazni video poziv} other {Dolazni video poziv}}} Group {{direction, select, Outgoing {Odlazni grupni poziv} other {Dolazni grupni poziv}}} other {{direction, select, Outgoing {Odlazni poziv} other {Dolazni poziv}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Propušteni glasovni poziv} Video {Propušten videopoziv} Group {Propušten grupni poziv} other {Propušten poziv}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Propušteni glasovni poziv} Video {Neodgovoreni video poziv} Group {Propušten grupni poziv} other {Neodgovoren poziv}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Odbijen poziv} Video {Odbijen video poziv} Group {Odbijen grupni poziv} other {Odbijen poziv}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Link za poziv"
@@ -5524,7 +5569,10 @@
     "messageformat": "Uređivanje naziva poziva"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Odobri sve članove"
+    "messageformat": "Zatraži odobrenje administratora"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Ova postavka se ne može promijeniti dok je poziv aktivan"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Kopiraj link"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Izbriši"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Ovaj link se ne može izbrisati dok je poziv aktivan"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Detalji linka za poziv"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Uređivanje naziva poziva"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Odobri sve članove"
+    "messageformat": "Zatraži odobrenje administratora"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Odobri ulazak"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Odbij ulazak"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Isključeno"
@@ -5617,22 +5674,16 @@
     "messageformat": "Mala podešavanja, otklanjanje grešaka i poboljšanja performansi. Hvala vam što koristite Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Brzi rastanak je ponekad lakši od sporog pa smo ubrzali proces brisanja velikih niti poruka."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Ovo ažuriranje ispravlja grešku koja je otežavala traženje grupe nakon napuštanja te grupe."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Dodali smo prečac za prekidanje veze i pridruživanje novom pozivu kada je drugi poziv već u tijeku."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Sada možete ukloniti citirane odgovore iz uređenih poruka."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Ovo ažuriranje također popravlja rušenje pri pokretanju Linuxa za korisnike čija je lokalizacija postavljena na `POSIX`."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Priče s dugim naslovima sada se prikazuju s poboljšanim kontrastom koji čini tekst lakšim za čitanje."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Ovo izdanje također poboljšava izvedbu generiranja pregleda linka i ispravlja manju pogrešku prikaza prilikom zatvaranja prozora postavki."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

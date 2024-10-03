@@ -87,7 +87,7 @@ const createProps = (
   showContactModal: action('showContactModal'),
   pushPanelForConversation: action('pushPanelForConversation'),
   showConversation: action('showConversation'),
-  showLightboxWithMedia: action('showLightboxWithMedia'),
+  showLightbox: action('showLightbox'),
   updateGroupAttributes: async () => {
     action('updateGroupAttributes')();
   },
@@ -231,4 +231,16 @@ export function WithCallHistoryGroup(): JSX.Element {
       selectedNavTab={NavTab.Calls}
     />
   );
+}
+
+export function InAnotherCallGroup(): JSX.Element {
+  const props = createProps();
+
+  return <ConversationDetails {...props} hasActiveCall />;
+}
+
+export function InAnotherCallIndividual(): JSX.Element {
+  const props = createProps();
+
+  return <ConversationDetails {...props} hasActiveCall isGroup={false} />;
 }

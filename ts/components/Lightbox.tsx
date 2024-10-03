@@ -30,6 +30,7 @@ import { drop } from '../util/drop';
 import { isCmdOrCtrl } from '../hooks/useKeyboardShortcuts';
 import type { ForwardMessagesPayload } from '../state/ducks/globalModals';
 import { ForwardMessagesModalType } from './ForwardMessagesModal';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 export type PropsType = {
   children?: ReactNode;
@@ -180,7 +181,7 @@ export function Lightbox({
       const mediaItem = media[selectedIndex];
       const { attachment, message, index } = mediaItem;
 
-      saveAttachment(attachment, message.sent_at, index + 1);
+      saveAttachment(attachment, message.sentAt, index + 1);
     },
     [isViewOnce, media, saveAttachment, selectedIndex]
   );
@@ -322,9 +323,12 @@ export function Lightbox({
   const thumbnailsMarginInlineStart =
     0 - (selectedIndex * THUMBNAIL_FULL_WIDTH + THUMBNAIL_WIDTH / 2);
 
+  const reducedMotion = useReducedMotion();
+
   // eslint-disable-next-line react-hooks/exhaustive-deps -- FIXME
   const [thumbnailsStyle, thumbnailsAnimation] = useSpring(
     {
+      immediate: reducedMotion,
       config: THUMBNAIL_SPRING_CONFIG,
       to: {
         marginInlineStart: thumbnailsMarginInlineStart,
@@ -554,6 +558,7 @@ export function Lightbox({
               <img
                 alt={i18n('icu:lightboxImageAlt')}
                 className="Lightbox__object"
+                data-testid={attachment.fileName}
                 onContextMenu={(ev: React.MouseEvent<HTMLImageElement>) => {
                   // These are the only image types supported by Electron's NativeImage
                   if (
@@ -824,7 +829,7 @@ function LightboxHeader({
       <div className="Lightbox__header--content">
         <div className="Lightbox__header--name">{conversation.title}</div>
         <div className="Lightbox__header--timestamp">
-          {formatDateTimeForAttachment(i18n, message.sent_at ?? now)}
+          {formatDateTimeForAttachment(i18n, message.sentAt ?? now)}
         </div>
       </div>
     </div>

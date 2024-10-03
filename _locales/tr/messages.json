@@ -578,6 +578,12 @@
   "icu:decryptionErrorToastAction": {
     "messageformat": "Günlüğü gönder"
   },
+  "icu:Toast__ActionLabel--SubmitLog": {
+    "messageformat": "Günlüğü gönder"
+  },
+  "icu:Toast--FailedToSendWithEndorsements": {
+    "messageformat": "Failed to send message with endorsements"
+  },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Dosyalarla birlikte fotoğrafları ve videoları seçemezsin."
   },
@@ -821,14 +827,8 @@
   "icu:mute": {
     "messageformat": "Sessiz"
   },
-  "icu:cannotUpdateDetail": {
-    "messageformat": "Signal güncellenemedi. {retry} veya el ile kurmak için {url}. Sonra, bu sorun hakkında {support}"
-  },
   "icu:cannotUpdateDetail-v2": {
     "messageformat": "Signal güncellenemedi. <retryUpdateButton>Güncellemeyi yeniden dene</retryUpdateButton> ya da el ile kurmak için {url} adresini ziyaret et. Ardından bu sorun hakkında <contactSupportLink>destek ile iletişime geç</contactSupportLink>"
-  },
-  "icu:cannotUpdateRequireManualDetail": {
-    "messageformat": "Signal güncellenemedi. El ile kurmak için {url} adresini ziyaret edin. Sonra, bu sorun hakkında {support}"
   },
   "icu:cannotUpdateRequireManualDetail-v2": {
     "messageformat": "Signal güncellenemedi. El ile kurmak için {url} adresini ziyaret et. Ardından bu sorun hakkında <contactSupportLink>destek ile iletişime geç</contactSupportLink>"
@@ -944,8 +944,8 @@
   "icu:NotePreviewModal__Title": {
     "messageformat": "Not"
   },
-  "icu:viewRecentMedia": {
-    "messageformat": "Son içerikleri görüntüle"
+  "icu:allMediaMenuItem": {
+    "messageformat": "Tüm medya"
   },
   "icu:back": {
     "messageformat": "Geri"
@@ -1217,9 +1217,6 @@
   "icu:calling__cant-join": {
     "messageformat": "Aramaya katılamıyor"
   },
-  "icu:calling__dialog-already-in-call": {
-    "messageformat": "Zaten bir aramadasın."
-  },
   "icu:calling__call-link-connection-issues": {
     "messageformat": "Arama bağlantısı bilgileri alınamadı. Lütfen ağ bağlantını kontrol edip tekrar dene."
   },
@@ -1415,6 +1412,9 @@
   "icu:calling__missing-media-keys": {
     "messageformat": "{name} kişisinden ses ve görüntü alınamıyor"
   },
+  "icu:calling__missing-media-keys--unknown-contact": {
+    "messageformat": "Ses ve görüntü alınamıyor"
+  },
   "icu:calling__missing-media-keys-info": {
     "messageformat": "Bunun sebebi güvenlik numaranın değişimini doğrulamaması, cihazıyla ilgili bir sorun olması veya seni engellemesi olabilir."
   },
@@ -1438,6 +1438,9 @@
   },
   "icu:calling__presenting--info": {
     "messageformat": "Signal {window} penceresini paylaşıyor."
+  },
+  "icu:calling__presenting--info--unknown": {
+    "messageformat": "Signal screen sharing is active"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Yeniden bağlanıyor…"
@@ -1621,6 +1624,9 @@
   },
   "icu:timestampFormat__long--yesterday": {
     "messageformat": "Dün {time}"
+  },
+  "icu:messageLoop": {
+    "messageformat": "Signal gelen bir mesajı işleyemiyor olabilir."
   },
   "icu:messageBodyTooLong": {
     "messageformat": "İleti metni çok uzun."
@@ -1834,9 +1840,6 @@
   },
   "icu:autoUpdateRetry": {
     "messageformat": "Güncellemeyi yeniden dene"
-  },
-  "icu:autoUpdateContactSupport": {
-    "messageformat": "destek ile iletişime geç"
   },
   "icu:autoUpdateNewVersionMessage": {
     "messageformat": "Signal'i yeniden başlatmak için tıklayın"
@@ -2714,6 +2717,9 @@
   "icu:CallControls__InfoDisplay--adhoc-call": {
     "messageformat": "Arama bağlantısı"
   },
+  "icu:CallControls__InfoDisplay--group-call": {
+    "messageformat": "Grup görüşmesi"
+  },
   "icu:CallControls__InfoDisplay--adhoc-join-request-pending": {
     "messageformat": "İçeri alınmayı bekliyor"
   },
@@ -2970,7 +2976,7 @@
     "messageformat": "Gruptan yönetici tarafından çıkarıldığın için gruba bağlantıyla katılamazsın."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "Gruba katılmadan önce bu grubun bir yöneticisinin isteğinizi onaylaması gerekiyor. Onay verildiğinde, adınız ve fotoğrafınız üyeleriyle paylaşılacaktır."
+    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Katıl"
@@ -3347,11 +3353,8 @@
   "icu:GroupV2--admin-approval-remove-one--other--unknown": {
     "messageformat": "{joinerName} kişisinin gruba katılma isteği reddedildi."
   },
-  "icu:GroupV2--admin-approval-bounce--one": {
-    "messageformat": "{joinerName}, grup bağlantısı aracılığıyla katılma isteğini talep etti ve iptal etti"
-  },
-  "icu:GroupV2--admin-approval-bounce": {
-    "messageformat": "{joinerName}, grup bağlantısı aracılığıyla {numberOfRequests,number} katılma isteği talep etti ve iptal etti"
+  "icu:GroupV2--admin-approval-bounce--pluralized": {
+    "messageformat": "{numberOfRequests, plural, one {{joinerName} grup bağlantısı üzerinden katılma talebinde bulundu, ancak talebini iptal etti} other {{joinerName}, grup bağlantısı aracılığıyla {numberOfRequests,number} katılma isteğini talep etti ve iptal etti}}"
   },
   "icu:GroupV2--group-link-add--disabled--you": {
     "messageformat": "Grup bağlantısını, yönetici onayı olmadan etkinleştirdiniz."
@@ -3527,6 +3530,69 @@
   "icu:BadgeSustainerInstructions__instructions__3": {
     "messageformat": "\"Signal'a Bağış Yap\"a dokun ve abone ol"
   },
+  "icu:BackupImportScreen__title": {
+    "messageformat": "Mesajlar senkronize ediliyor"
+  },
+  "icu:BackupImportScreen__progressbar-hint": {
+    "messageformat": "{currentSize} / {totalSize} ({fractionComplete,number,percent}) indiriliyor..."
+  },
+  "icu:BackupImportScreen__progressbar-hint--preparing": {
+    "messageformat": "İndirmeye hazırlanıyor..."
+  },
+  "icu:BackupImportScreen__description": {
+    "messageformat": "Yedeklemenin boyutuna bağlı olarak birkaç dakika sürebilir"
+  },
+  "icu:BackupImportScreen__cancel": {
+    "messageformat": "Transferi iptal et"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__title": {
+    "messageformat": "Transfer iptal edilsin mi?"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__body": {
+    "messageformat": "Mesajlarının ve medyanın geri yüklenmesi tamamlanmadı. İptal etmeyi seçersen, Ayarlar'dan tekrar transfer yapabilirsin."
+  },
+  "icu:BackupImportScreen__cancel-confirmation__cancel": {
+    "messageformat": "Transfere devam et"
+  },
+  "icu:BackupImportScreen__cancel-confirmation__confirm": {
+    "messageformat": "Transferi iptal et"
+  },
+  "icu:BackupMediaDownloadProgress__title-in-progress": {
+    "messageformat": "Medya geri yükleniyor"
+  },
+  "icu:BackupMediaDownloadProgress__title-paused": {
+    "messageformat": "Geri yükleme duraklatıldı"
+  },
+  "icu:BackupMediaDownloadProgress__button-pause": {
+    "messageformat": "Aktarımı duraklat"
+  },
+  "icu:BackupMediaDownloadProgress__button-resume": {
+    "messageformat": "Aktarıma devam et"
+  },
+  "icu:BackupMediaDownloadProgress__button-cancel": {
+    "messageformat": "Aktarımı iptal et"
+  },
+  "icu:BackupMediaDownloadProgress__button-more": {
+    "messageformat": "Daha fazla seçenek"
+  },
+  "icu:BackupMediaDownloadProgress__title-complete": {
+    "messageformat": "Geri yükleme tamamlandı"
+  },
+  "icu:BackupMediaDownloadProgress__progressbar-hint": {
+    "messageformat": "{currentSize} / {totalSize}"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__title": {
+    "messageformat": "Medya aktarımı iptal edilsin mi?"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__description": {
+    "messageformat": "Mesajlarının ve medyanın geri yüklenmesi tamamlanmadı. İptal etmeyi seçersen Ayarlar bölümünden tekrar aktarım yapabilirsin."
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-continue": {
+    "messageformat": "Aktarıma devam et"
+  },
+  "icu:BackupMediaDownloadCancelConfirmation__button-confirm-cancel": {
+    "messageformat": "Aktarımı iptal et"
+  },
   "icu:CompositionArea--expand": {
     "messageformat": "Genişlet"
   },
@@ -3575,8 +3641,8 @@
   "icu:ContactModal--remove-from-group": {
     "messageformat": "Gruptan çıkar"
   },
-  "icu:ContactModal--already-in-call": {
-    "messageformat": "Zaten bir aramadasınız"
+  "icu:ContactModal--voice": {
+    "messageformat": "Sesli"
   },
   "icu:showChatColorEditor": {
     "messageformat": "Sohbet rengi"
@@ -3759,7 +3825,7 @@
     "messageformat": "Bağlantıyı sıfırla"
   },
   "icu:GroupLinkManagement--approve-label": {
-    "messageformat": "Yeni üyeleri onayla"
+    "messageformat": "Yönetici onayı iste"
   },
   "icu:GroupLinkManagement--approve-info": {
     "messageformat": "Grup bağlantısı üzerinden katılan yeni üyelerin yönetici tarafından onaylanması gereksin"
@@ -3947,17 +4013,11 @@
   "icu:MessageAudio--playbackRatep5": {
     "messageformat": ",5"
   },
-  "icu:emptyInboxMessage": {
-    "messageformat": "Yukarıdaki {composeIcon} simgesine tıklayın ve ileti göndermek için kişilerinizi veya gruplarınızı arayın."
-  },
-  "icu:composeIcon": {
-    "messageformat": "oluştur butonu"
-  },
   "icu:emptyInbox__title": {
-    "messageformat": "No chats"
+    "messageformat": "Sohbet yok"
   },
   "icu:emptyInbox__subtitle": {
-    "messageformat": "Recent chats will appear here."
+    "messageformat": "Son sohbetler burada görünecektir."
   },
   "icu:ForwardMessageModal__title": {
     "messageformat": "İlet:"
@@ -4384,6 +4444,12 @@
   },
   "icu:ProfileEditorModal--error": {
     "messageformat": "Profiliniz güncellenemedi. Lütfen tekrar deneyin."
+  },
+  "icu:ProfileEditor__invalid-about__title": {
+    "messageformat": "Geçersiz karakterler"
+  },
+  "icu:ProfileEditor__invalid-about__body": {
+    "messageformat": "Girmiş olduğun bir veya daha fazla karakter kullanılamıyor. Tekrar dene."
   },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Bir yöneticiye yazın"
@@ -4848,10 +4914,10 @@
     "messageformat": "Şu anda gösterilecek yeni hikaye yok"
   },
   "icu:Stories__list__empty--title": {
-    "messageformat": "No stories"
+    "messageformat": "Kısa hikaye yok"
   },
   "icu:Stories__list__empty--subtitle": {
-    "messageformat": "New updates will appear here."
+    "messageformat": "Yeni güncellemeler burada görünecektir."
   },
   "icu:Stories__list--sending": {
     "messageformat": "Gönderiliyor…"
@@ -4868,8 +4934,8 @@
   "icu:Stories__placeholder--text": {
     "messageformat": "Bir hikayeyi görüntülemek için tıkla"
   },
-  "icu:Stories__placeholder-with-icon--text": {
-    "messageformat": "Click <newStoryIcon>Add a story</newStoryIcon> to add an update."
+  "icu:Stories__placeholder-with-icon--text-2": {
+    "messageformat": "Güncelleme eklemek için <newStoryButtonIcon></newStoryButtonIcon> ögesine tıkla."
   },
   "icu:Stories__from-to-group": {
     "messageformat": "{group} grubunda {name}"
@@ -5111,8 +5177,11 @@
   "icu:StoryViewsNRepliesModal__tab--replies": {
     "messageformat": "Yanıtlar"
   },
-  "icu:StoryViewsNRepliesModal__reacted": {
-    "messageformat": "Hikayeye tepki verildi"
+  "icu:StoryViewsNRepliesModal__reacted--you": {
+    "messageformat": "Kısa hikayeye tepki verdin"
+  },
+  "icu:StoryViewsNRepliesModal__reacted--someone-else": {
+    "messageformat": "Kısa hikayeye tepki verdi"
   },
   "icu:StoryViewsNRepliesModal__not-a-member": {
     "messageformat": "Artık bu grubun bir üyesi olmadığın için bu hikayeye yanıt veremezsin."
@@ -5130,7 +5199,7 @@
     "messageformat": "Hikaye"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Hikayeleri göster"
+    "messageformat": "Unhide story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Hikayeyi gizle"
@@ -5409,11 +5478,8 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Arama geçmişi temizlendi"
   },
-  "icu:CallsTab__EmptyStateText": {
-    "messageformat": "Bir aramayı görüntülemek veya başlatmak için tıkla"
-  },
-  "icu:CallsTab__EmptyStateText--with-icon": {
-    "messageformat": "Click <newCallIcon>New Call</newCallIcon> to start a new voice or video call."
+  "icu:CallsTab__EmptyStateText--with-icon-2": {
+    "messageformat": "Yeni bir sesli veya görüntülü arama başlatmak için <newCallButtonIcon></newCallButtonIcon> ögesine tıkla."
   },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Ara"
@@ -5424,20 +5490,17 @@
   "icu:CallsList__ToggleFilterByMissed__RoleDescription": {
     "messageformat": "Değiştir"
   },
-  "icu:CallsList__EmptyState--noQuery": {
-    "messageformat": "Güncel arama yok. Bir arkadaşını arayarak başla."
-  },
   "icu:CallsList__EmptyState--noQuery__title": {
-    "messageformat": "No calls"
+    "messageformat": "Arama yok"
   },
   "icu:CallsList__EmptyState--noQuery__subtitle": {
-    "messageformat": "Recent calls will appear here."
+    "messageformat": "Son aramalar burada görünecektir."
   },
   "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls"
+    "messageformat": "Cevapsız arama yok"
   },
   "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here."
+    "messageformat": "Cevapsız aramalar burada görünecektir."
   },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "\"{query}\" için sonuç yok"
@@ -5456,9 +5519,6 @@
   },
   "icu:CallsList__ItemCallInfo--Declined": {
     "messageformat": "Reddedildi"
-  },
-  "icu:CallsList__ItemCallInfo--GroupCall": {
-    "messageformat": "Grup görüşmesi"
   },
   "icu:CallsList__ItemCallInfo--CallLink": {
     "messageformat": "Arama bağlantısı"
@@ -5483,21 +5543,6 @@
   },
   "icu:CallsNewCallButton--return": {
     "messageformat": "Geri Dön"
-  },
-  "icu:CallsNewCallButtonTooltip--in-another-call": {
-    "messageformat": "Yeni bir aramaya katılmadan önce mevcut aramadan ayrılmalısın"
-  },
-  "icu:CallHistory__Description--Default": {
-    "messageformat": "{type, select, Audio {{direction, select, Outgoing {Giden sesli arama} other {Gelen sesli arama}}} Video {{direction, select, Outgoing {Giden görüntülü arama} other {Gelen görüntülü arama}}} Group {{direction, select, Outgoing {Giden grup araması} other {Gelen grup araması}}} other {{direction, select, Outgoing {Giden arama} other {Gelen arama}}}}"
-  },
-  "icu:CallHistory__Description--Missed": {
-    "messageformat": "{type, select, Audio {Cevapsız sesli arama} Video {Cevapsız görüntülü arama} Group {Cevapsız grup araması} other {Cevapsız arama}}"
-  },
-  "icu:CallHistory__Description--Unanswered": {
-    "messageformat": "{type, select, Audio {Cevapsız sesli arama} Video {Cevaplanmamış görüntülü arama} Group {Grup araması cevaplanmadı} other {Arama cevaplanmadı}}"
-  },
-  "icu:CallHistory__Description--Declined": {
-    "messageformat": "{type, select, Audio {Sesli arama reddedildi} Video {Görüntülü arama reddedildi} Group {Grup araması reddedildi} other {Arama reddedildi}}"
   },
   "icu:CallHistory__Description--Adhoc": {
     "messageformat": "Arama bağlantısı"
@@ -5524,7 +5569,10 @@
     "messageformat": "Arama adını düzenle"
   },
   "icu:CallLinkDetails__ApproveAllMembersLabel": {
-    "messageformat": "Tüm üyeleri onayla"
+    "messageformat": "Yönetici onayı iste"
+  },
+  "icu:CallLinkDetails__SettingTooltip--disabled-for-active-call": {
+    "messageformat": "Arama etkinken bu ayar değiştirilemez"
   },
   "icu:CallLinkDetails__CopyLink": {
     "messageformat": "Bağlantıyı kopyala"
@@ -5547,6 +5595,9 @@
   "icu:CallLinkDetails__DeleteLinkModal__Delete": {
     "messageformat": "Sil"
   },
+  "icu:CallLinkDetails__DeleteLinkTooltip--disabled-for-active-call": {
+    "messageformat": "Arama etkinken bu bağlantı silinemez"
+  },
   "icu:CallLinkEditModal__Title": {
     "messageformat": "Arama bağlantısı detayları"
   },
@@ -5560,7 +5611,13 @@
     "messageformat": "Arama adını düzenle"
   },
   "icu:CallLinkEditModal__InputLabel--ApproveAllMembers": {
-    "messageformat": "Tüm üyeleri onayla"
+    "messageformat": "Yönetici onayı iste"
+  },
+  "icu:CallLinkPendingParticipantModal__ApproveButtonLabel": {
+    "messageformat": "Girişi onayla"
+  },
+  "icu:CallLinkPendingParticipantModal__DenyButtonLabel": {
+    "messageformat": "Girişi reddet"
   },
   "icu:CallLinkRestrictionsSelect__Option--Off": {
     "messageformat": "Kapalı"
@@ -5617,22 +5674,16 @@
     "messageformat": "Küçük ince ayarlar, hata düzeltmeleri ve performans geliştirmeleri yaptık. Signal'i kullandığın için teşekkürler!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.18--0": {
-    "messageformat": "Bu sürüm büyük mesaj dizilerini silme sürecini hızlandırmaktadır."
+  "icu:WhatsNew__v7.26--0": {
+    "messageformat": "Bu güncellemede, bir gruptan ayrıldıktan sonra o grubu aramayı zorlaştıran bir hatayı düzelttik."
   },
-  "icu:WhatsNew__v7.19--0": {
-    "messageformat": "Halen başka bir arama sürüyorsa mevcut aramadan ayrılıp yeni bir aramaya katılmak için bir kısayol ekledik. Bu işlem için senden ayrılmanı onaylaman istenecektir."
+  "icu:WhatsNew__v7.27--0": {
+    "messageformat": "Artık alıntılanan yanıtları düzenlenmiş mesajlardan kaldırabilirsin. Birine kazara yanlış bir mesaj gönderdiğinde paçayı sıyırmak için harika bir yoldur. Böylelikle yanlış anlamaların önüne geçer ve sorunsuzca yoluna devam edersin."
   },
-  "icu:WhatsNew__v7.19--1": {
-    "messageformat": "Bu güncelleme, yerel ayarı 'POSIX' olarak ayarlanmış kullanıcılar için Linux'teki bir başlangıç çökmesini de düzeltmektedir."
+  "icu:WhatsNew__v7.28--0": {
+    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
   },
-  "icu:WhatsNew__v7.20--0": {
-    "messageformat": "Uzun başlıklar içeren kısa hikayeler artık metnin okunmasını kolaylaştıran kontrastı arttırılmış bir arka plan üzerinde görüntülenir. Bundan sonra insanlar ne söylediğini görebildiğine göre, sadece \"lol\" demek yerine bir şeyin seni neden güldürdüğüne dair birkaç paragraf yazabilirsin."
-  },
-  "icu:WhatsNew__v7.20--1": {
-    "messageformat": "Bu sürüm, bağlantı ön izleme oluşturma performansını iyileştirmekte ve Ayarlar penceresi kapatıldığında meydana gelen ufak bir görüntü hatasını da düzeltmektedir."
-  },
-  "icu:WhatsNew__v7.21--0": {
-    "messageformat": "Everyone loves a good story, and we could tell you the tale of a bug that sometimes caused the progress bar to freeze right in the middle of watching a good story — but that bug's adventure already has a happy ending because we fixed it in this release."
+  "icu:WhatsNew__v7.28--1": {
+    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
   }
 }

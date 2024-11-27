@@ -24,6 +24,7 @@ import type {
   InteractionModeType,
   PushPanelForConversationActionType,
   SaveAttachmentActionCreatorType,
+  SaveAttachmentsActionCreatorType,
   ShowConversationType,
 } from '../../state/ducks/conversations';
 import type { ViewStoryActionCreatorType } from '../../state/ducks/stories';
@@ -352,6 +353,7 @@ export type PropsActions = {
     messageId: string;
   }) => void;
   saveAttachment: SaveAttachmentActionCreatorType;
+  saveAttachments: SaveAttachmentsActionCreatorType;
   showLightbox: (options: {
     attachment: AttachmentType;
     messageId: string;
@@ -366,6 +368,7 @@ export type PropsActions = {
   targetMessage?: (messageId: string, conversationId: string) => unknown;
 
   showEditHistoryModal?: (id: string) => unknown;
+  showAttachmentDownloadStillInProgressToast: (count: number) => unknown;
   showExpiredIncomingTapToViewToast: () => unknown;
   showExpiredOutgoingTapToViewToast: () => unknown;
   viewStory: ViewStoryActionCreatorType;
@@ -1097,9 +1100,6 @@ export class Message extends React.PureComponent<Props, State> {
             : null,
           withContentAbove
             ? 'module-message__generic-attachment--with-content-above'
-            : null,
-          !firstAttachment.url
-            ? 'module-message__generic-attachment--not-active'
             : null
         )}
         // There's only ever one of these, so we don't want users to tab into it

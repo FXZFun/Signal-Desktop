@@ -85,7 +85,19 @@
   },
   "icu:appleSilicon": {
     "messageformat": "Apple silicon",
-    "description": "Shown in the about box for Apple silicon product name"
+    "description": "(Deleted 2024/11/07) Shown in the about box for Apple silicon product name"
+  },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}",
+    "description": "AboutWindow > App Environment Info > On non-apple devices"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)",
+    "description": "AboutWindow > App Environment Info > On Apple Silicon Devices"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)",
+    "description": "AboutWindow > App Environment Info > On Apple Intel Devices"
   },
   "icu:copyErrorAndQuit": {
     "messageformat": "Copy error and quit",
@@ -780,10 +792,6 @@
     "messageformat": "Desktop ran into a decryption error from {name}, device {deviceId}",
     "description": "An error popup when we haven't added an in-timeline error for decryption error, only for beta/internal users."
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "Submit log",
-    "description": "(Deleted 2024/09/19) Label for the decryption error toast button"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "Submit log",
     "description": "Label for the submit log button in decryption errors or other important error types"
@@ -791,6 +799,10 @@
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements",
     "description": "An error popup when we attempted and failed to send a message using endorsements, only for internal users."
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs.",
+    "description": "[Only shown to internal users] An error popup when we failed to process some parts of a backup import."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "You can't select photos and videos along with files.",
@@ -919,6 +931,10 @@
     "messageformat": "Search",
     "description": "Placeholder text in the search input"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "Search unread chats",
+    "description": "Placeholder text in the search input when unread filter is enabled"
+  },
   "icu:clearSearch": {
     "messageformat": "Clear Search",
     "description": "Aria label for clear search button"
@@ -931,6 +947,14 @@
     "messageformat": "No results for \"{searchTerm}\"",
     "description": "Shown in the search left pane when no results were found"
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "No results for \"{searchTerm}\" in unread chats",
+    "description": "Shown in the search left pane when no results were found with a search query and filter by unread enabled"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "No unread chats",
+    "description": "Shown in the search left pane when no results were found with only filter by unread enabled"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "SMS/MMS contacts are not available on Desktop.",
     "description": "Shown in the search left pane when no results were found and primary device has SMS/MMS handling enabled"
@@ -938,6 +962,18 @@
   "icu:noSearchResultsInConversation": {
     "messageformat": "No results for \"{searchTerm}\" in {conversationName}",
     "description": "Shown in the search left pane when no results were found"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "Filtered by unread",
+    "description": "Shown to inform the user that the results are based off of filter by unread"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "Filter by unread",
+    "description": "Shown when you hover over the filter by unread button"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "Clear filter",
+    "description": "Action button for clearing a filter"
   },
   "icu:conversationsHeader": {
     "messageformat": "Chats",
@@ -1064,11 +1100,19 @@
   },
   "icu:attachmentSaved": {
     "messageformat": "Attachment saved.",
+    "description": "(Deleted 2024/10/23) Shown after user selects to save to downloads"
+  },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, one {Attachment} other {# attachments}} saved",
     "description": "Shown after user selects to save to downloads"
   },
   "icu:attachmentSavedShow": {
     "messageformat": "Show in folder",
     "description": "Button label for showing the attachment in your file system"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "Can't save {count, plural, one {attachment, since it hasn't} other {attachments, since # haven't}} finished downloading yet",
+    "description": "Shown when the user tries to save an attachment to the filesystem, but it's impossible since the download from servers hasn't finished yet"
   },
   "icu:you": {
     "messageformat": "You",
@@ -1324,19 +1368,35 @@
   },
   "icu:deleteMessagesInConversation": {
     "messageformat": "Delete messages",
-    "description": "Menu item for deleting all messages in a conversation from your device"
+    "description": "(Deleted 2024/10/23) Menu item for deleting all messages in a conversation from your device"
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
     "messageformat": "Delete messages?",
-    "description": "Title for confirmation modal to delete all messages in a conversation"
+    "description": "(Deleted 2024/10/23) Title for confirmation modal to delete all messages in a conversation"
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
     "messageformat": "All messages in this chat will be deleted from this device. You can still search for this chat after you delete messages.",
-    "description": "Description for confirmation modal to delete all messages in a conversation"
+    "description": "(Deleted 2024/10/23) Description for confirmation modal to delete all messages in a conversation"
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "All messages in this chat will be deleted from all your devices. You can still search for this chat after you delete messages.",
-    "description": "Description for confirmation modal to delete all messages in a conversation"
+    "description": "(Deleted 2024/10/23) Description for confirmation modal to delete all messages in a conversation"
+  },
+  "icu:deleteConversation": {
+    "messageformat": "Delete",
+    "description": "Menu item for deleting a conversation (including messages), title case."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "Delete chat?",
+    "description": "Conversation Header > Delete Action > Delete Messages Confirmation Modal > Title. Previously known as icu:ConversationHeader__DeleteMessagesConfirmation__title"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "All messages in this chat will be deleted from this device.",
+    "description": "Description for confirmation modal to delete a conversation"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "All messages in this chat will be deleted from all your devices.",
+    "description": "Description for confirmation modal to delete a conversation"
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Leave group",
@@ -1633,6 +1693,10 @@
     "messageformat": "Signal Call",
     "description": "Default title for Signal call links."
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "Can't delete link. Check your connection and try again.",
+    "description": "Default title for Signal call links."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "Your request to join this call has been denied.",
     "description": "Error message when a request to join a call link call was rejected by a call admin."
@@ -1820,6 +1884,10 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{first}, {second}, and {others, plural, one {#} other {#}} others are in this call",
     "description": "Shown in the calling lobby to describe who is in the call"
+  },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, one {# person is in this call} other {# people are in this call}}",
+    "description": "Shown in the calling lobby to describe people in the call when all are unknown contacts"
   },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Signal will ring {person}",
@@ -4695,6 +4763,10 @@
     "messageformat": "Downloading {currentSize} of {totalSize} ({fractionComplete, number, percent})...",
     "description": "Hint under the progressbar in the backup import screen"
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "Finalizing message transfer...",
+    "description": "Hint under the progressbar in the backup import screen shown after the backup file is downloaded and while backup data is being processed"
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "Preparing to download...",
     "description": "Hint under the progressbar in the backup import screen when download size is not yet known"
@@ -4706,6 +4778,10 @@
   "icu:BackupImportScreen__cancel": {
     "messageformat": "Cancel transfer",
     "description": "Text of the cancel button at the bottom of backup import screen"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "Messages and chat info are protected by end-to-end encryption, including the sync process. <learnMoreLink>Learn more</learnMoreLink>",
+    "description": "Text shown while importing messages & chats from the user's primary device."
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "Cancel transfer?",
@@ -4723,6 +4799,34 @@
     "messageformat": "Cancel transfer",
     "description": "Text of the confirmation button of the cancel confirmation modal in the backup import screen"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "Error transferring your messages",
+    "description": "Title of the error modal in the backup import screen"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "Your messages could not be transferred. Check your internet connection and try again.",
+    "description": "Body of the error modal in the backup import screen"
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "Retry",
+    "description": "Text of the retry button of the error modal in the backup import screen"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "Skip",
+    "description": "Text of the Skip button in the error and skip confirmation modals in the backup import screen"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "Skip message transfer?",
+    "description": "Title of the cancel confirmation modal in the backup import screen"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "If you choose to skip, you won’t have access to any of your messages or media on this device. You can start a new transfer after skipping from Settings > Chats > Transfer.",
+    "description": "Body of the cancel confirmation modal in the backup import screen"
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "Cancel",
+    "description": "Text of the cancel button of the skip confirmation modal in the backup import screen"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Restoring media",
     "description": "Label next to a progress bar showing active media (attachment) download progress after restoring from backup"
@@ -4730,6 +4834,14 @@
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "Restore paused",
     "description": "Label indicating media (attachment) download progress has been paused (due to user interaction)"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "{currentSize} of {totalSize} restored",
+    "description": "Label indicating media (attachment) download progress"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "Media will continue to download in the background",
+    "description": "Description text when attachment download is idle, and will continue in the background"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "Pause transfer",
@@ -5907,14 +6019,6 @@
     "messageformat": "Your profile could not be updated. Please try again.",
     "description": "Error message when something goes wrong updating your profile."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "Invalid characters",
-    "description": "Title of the confirmation model for profile editor when about text contains invalid characters"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "One or more characters you’ve entered can’t be used. Try again.",
-    "description": "Body of the confirmation model for profile editor when about text contains invalid characters"
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Message an admin",
     "description": "Modal title for the list of admins in a group"
@@ -6182,6 +6286,18 @@
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal is experiencing technical difficulties. We are working hard to restore service as quickly as possible.",
     "description": "The title of outage dialog during service outage."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "Update Required",
+    "description": "The title of update dialog on install screen when app update is required before proceeding with backup import"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "To complete syncing your messages, update Signal desktop now.",
+    "description": "The body of update dialog on install screen when app update is required before proceeding with backup import"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "Update",
+    "description": "The update action of update dialog on install screen when app update is required before proceeding with backup import"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "Update Required",
@@ -7270,7 +7386,11 @@
     "description": "Calls Tab > Confirm Clear Call History Dialog > Title"
   },
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
-    "messageformat": "This will permanently delete all call history",
+    "messageformat": "This will permanently delete all call history.",
+    "description": "Calls Tab > Confirm Clear Call History Dialog > Body Text"
+  },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "This will permanently delete all call history. Call links you’ve created will no longer work for people who have them. ",
     "description": "Calls Tab > Confirm Clear Call History Dialog > Body Text"
   },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
@@ -7281,13 +7401,29 @@
     "messageformat": "Call history cleared",
     "description": "Calls Tab > Clear Call History > Toast"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "Not all call links could be deleted. Check your connection and try again.",
+    "description": "Calls Tab > Clear Call History > Error modal when we failed to delete call links."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "Not all call history could be cleared. Check your connection and try again.",
+    "description": "Calls Tab > Clear Call History > Generic error modal"
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "Click <newCallButtonIcon></newCallButtonIcon> to start a new voice or video call.",
     "description": "Calls Tab > When no call is selected > Empty state > Call to action text"
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "Search missed calls",
+    "description": "Calls Tab > Calls List > Search Input > Enable missed calls filter > Placeholder"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Search",
     "description": "Calls Tab > Calls List > Search Input > Placeholder"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "Filtered by missed",
+    "description": "Calls Tab > Calls List > Toggle search filter by missed > Header"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Filter by missed",
@@ -7305,17 +7441,17 @@
     "messageformat": "Recent calls will appear here.",
     "description": "Calls Tab > Calls List > When no results found > With no search query. Message subtitle"
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "No missed calls",
-    "description": "Calls Tab > Calls List > When no missed calls found > With no search query. Message title"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Missed calls will appear here.",
-    "description": "Calls Tab > Calls List > When no missed calls found > With no search query. Message subtitle"
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "No results for “{query}”",
-    "description": "Calls Tab > Calls List > When no results found > With a search query"
+    "description": "Calls Tab > Calls List > When no results found > With just a search query"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "No results for “{query}” in missed calls",
+    "description": "Calls Tab > Calls List > When no results found > With a search query and missed call filter enabled"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "No missed calls",
+    "description": "Calls Tab > Calls List > When no results found > With only missed call filter enabled"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "Create a Call Link",
@@ -7544,20 +7680,20 @@
     "description": "Release notes for releases that only include bug fixes",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "Sometimes leaving something behind is the best way to discover that you want to find it again, so we fixed a bug that made it difficult to search for groups that you're no longer a part of anymore but that still remain in your conversation list (and quite possibly in your heart).",
-    "description": "(Deleted 2024/09/25) Release notes for version 7.26"
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say.",
+    "description": "(Deleted 2024/11/20) Release notes for version 7.34"
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "Now you can remove quoted replies from edited messages. It's perfect for those moments when you realize that your response was so good that it doesn't actually need to stand on another message's shoulders, or when you accidentally reply to the wrong message with \"I love you too.\"",
-    "description": "(Deleted 2024/10/03) Release notes for version 7.27"
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "This update introduces support for new processors on Windows like the Snapdragon X Elite, so you don't need to twist your ARM into emulating x86 anymore.",
+    "description": "(Deleted 2024/11/20) Release notes for version 7.34"
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture.",
-    "description": "Release notes for version 7.28"
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "We also fixed a bug that broke the dark theme in Signal when your operating system settings were configured to use a light theme. Signal Desktop can now properly handle your thematically split personality.",
+    "description": "(Deleted 2024/11/20) Release notes for version 7.34"
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia.",
-    "description": "Release notes for version 7.28"
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say.",
+    "description": "Release notes for version 7.35"
   }
 }

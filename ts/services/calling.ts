@@ -7,6 +7,7 @@ import type {
   CallId,
   DeviceId,
   GroupCallObserver,
+  SpeechEvent,
   PeekInfo,
   UserId,
   VideoFrameSource,
@@ -156,6 +157,7 @@ import { sendCallLinkUpdateSync } from '../util/sendCallLinkUpdateSync';
 import { createIdenticon } from '../util/createIdenticon';
 import { getColorForCallLink } from '../util/getColorForCallLink';
 import { getUseRingrtcAdm } from '../util/ringrtc/ringrtcAdm';
+import OS from '../util/os/osMain';
 
 const { wasGroupCallRingPreviouslyCanceled } = DataReader;
 const {
@@ -922,7 +924,7 @@ export class CallingClass {
     log.info(`${logId}: Sending profile key`);
     await conversationJobQueue.add({
       conversationId: conversation.id,
-      type: 'ProfileKey',
+      type: 'ProfileKeyForCall',
     });
 
     RingRTC.setOutgoingAudio(call.callId, hasLocalAudio);
@@ -1477,6 +1479,9 @@ export class CallingClass {
           endedReason,
         });
       },
+      onSpeechEvent: (_groupCall: GroupCall, _event: SpeechEvent) => {
+        // Implementation to come later
+      },
     };
   }
 
@@ -1540,7 +1545,7 @@ export class CallingClass {
       log.info(`${logId}: Sending profile key`);
       drop(
         conversationJobQueue.add({
-          type: conversationQueueJobEnum.enum.ProfileKey,
+          type: conversationQueueJobEnum.enum.ProfileKeyForCall,
           conversationId: conversation.id,
           isOneTimeSend: true,
         })
@@ -2070,6 +2075,9 @@ export class CallingClass {
           maxHeight: REQUESTED_SCREEN_SHARE_HEIGHT,
           maxWidth: REQUESTED_SCREEN_SHARE_WIDTH,
           mediaStream,
+          onEnded: () => {
+            this.reduxInterface?.cancelPresenting();
+          },
         })
       );
       this.setOutgoingVideo(conversationId, true);
@@ -2330,20 +2338,26 @@ export class CallingClass {
       await this.getAvailableIODevices();
 
     const preferredMicrophone = window.Events.getPreferredAudioInputDevice();
-    const selectedMicIndex = findBestMatchingAudioDeviceIndex({
-      available: availableMicrophones,
-      preferred: preferredMicrophone,
-    });
+    const selectedMicIndex = findBestMatchingAudioDeviceIndex(
+      {
+        available: availableMicrophones,
+        preferred: preferredMicrophone,
+      },
+      OS.isWindows()
+    );
     const selectedMicrophone =
       selectedMicIndex !== undefined
         ? availableMicrophones[selectedMicIndex]
         : undefined;
 
     const preferredSpeaker = window.Events.getPreferredAudioOutputDevice();
-    const selectedSpeakerIndex = findBestMatchingAudioDeviceIndex({
-      available: availableSpeakers,
-      preferred: preferredSpeaker,
-    });
+    const selectedSpeakerIndex = findBestMatchingAudioDeviceIndex(
+      {
+        available: availableSpeakers,
+        preferred: preferredSpeaker,
+      },
+      OS.isWindows()
+    );
     const selectedSpeaker =
       selectedSpeakerIndex !== undefined
         ? availableSpeakers[selectedSpeakerIndex]
@@ -2669,6 +2683,7 @@ export class CallingClass {
         urgent,
         isPartialSend,
         recipients,
+        groupId,
       });
 
       log.info('handleSendCallMessageToGroup() completed successfully');
@@ -2939,6 +2954,19 @@ export class CallingClass {
       localCallEvent,
       'CallingClass.handleAutoEndedIncomingCallRequest'
     );
+
+    if (!this.reduxInterface) {
+      log.error(
+        'handleAutoEndedIncomingCallRequest: Unable to update redux for call'
+      );
+    }
+    this.reduxInterface?.callStateChange({
+      acceptedTime: null,
+      callEndedReason,
+      callState: CallState.Ended,
+      conversationId: conversation.id,
+    });
+
     await updateCallHistoryFromLocalEvent(
       callEvent,
       receivedAtCounter ?? null,
@@ -3134,20 +3162,24 @@ export class CallingClass {
     function iceServerConfigToList(
       iceServerConfig: GetIceServersResultType
     ): Array<IceServer> {
-      return [
+      if (!iceServerConfig.relays) {
+        return [];
+      }
+
+      return iceServerConfig.relays.flatMap(iceServerGroup => [
         {
-          hostname: iceServerConfig.hostname ?? '',
-          username: iceServerConfig.username,
-          password: iceServerConfig.password,
-          urls: (iceServerConfig.urlsWithIps ?? []).slice(),
+          hostname: iceServerGroup.hostname ?? '',
+          username: iceServerGroup.username,
+          password: iceServerGroup.password,
+          urls: (iceServerGroup.urlsWithIps ?? []).slice(),
         },
         {
           hostname: '',
-          username: iceServerConfig.username,
-          password: iceServerConfig.password,
-          urls: (iceServerConfig.urls ?? []).slice(),
+          username: iceServerGroup.username,
+          password: iceServerGroup.password,
+          urls: (iceServerGroup.urls ?? []).slice(),
         },
-      ];
+      ]);
     }
 
     if (!window.textsecure.messaging) {

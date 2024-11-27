@@ -53,6 +53,15 @@
   "icu:appleSilicon": {
     "messageformat": "Apple silicon"
   },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)"
+  },
   "icu:copyErrorAndQuit": {
     "messageformat": "העתק שגיאה וצא"
   },
@@ -575,14 +584,14 @@
   "icu:decryptionErrorToast": {
     "messageformat": "שולחן העבודה נתקל בשגיאת פיענוח מאת {name}, מכשיר {deviceId}"
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "הגש יומן"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "הגש יומן"
   },
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements"
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "אי אפשר לבחור תמונות וסרטונים יחד עם קבצים."
@@ -680,6 +689,9 @@
   "icu:search": {
     "messageformat": "חיפוש"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "חיפוש בצ'אטים שלא נקראו"
+  },
   "icu:clearSearch": {
     "messageformat": "נקה חיפוש"
   },
@@ -689,11 +701,26 @@
   "icu:noSearchResults": {
     "messageformat": "אין תוצאות עבור \"{searchTerm}\""
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "אין תוצאות עבור ״{searchTerm}״ בצ׳אטים שלא נקראו"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "אין צ׳אטים שלא נקראו"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "אנשי קשר של מסרונים/מסרוני MMS אינם זמינים בשולחן עבודה."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "אין תוצאות עבור \"{searchTerm}\" בשיחה {conversationName}"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "מסונן לפי צ׳אטים שלא נקראו"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "סינון לפי צ׳אטים שלא נקראו"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "ניקוי מסנן"
   },
   "icu:conversationsHeader": {
     "messageformat": "צ'אטים"
@@ -791,8 +818,14 @@
   "icu:attachmentSaved": {
     "messageformat": "צרופה נשמרה."
   },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, one {קובץ מצורף נשמר} two {{count,number} קבצים מצורפים נשמרו} many {{count,number} קבצים מצורפים נשמרו} other {{count,number} קבצים מצורפים נשמרו}}"
+  },
   "icu:attachmentSavedShow": {
     "messageformat": "הראה בתיקייה"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "{count, plural, one {לא ניתן לשמור את הקובץ המצורף, מכיוון שההורדה שלו עדיין לא הסתיימה} two {לא ניתן לשמור את הקבצים המצורפים, מכיוון שההורדה של {count,number} עדיין לא הסתיימה} many {לא ניתן לשמור את הקבצים המצורפים, מכיוון שההורדה של {count,number} עדיין לא הסתיימה} other {לא ניתן לשמור את הקבצים המצורפים, מכיוון שההורדה של {count,number} עדיין לא הסתיימה}}"
   },
   "icu:you": {
     "messageformat": "את/ה"
@@ -1003,6 +1036,18 @@
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "כל ההודעות בצ׳אט הזה יימחקו מכל המכשירים שלך. עדיין תהיה לך אפשרות לחפש את הצ׳אט הזה אחרי מחיקת ההודעות."
+  },
+  "icu:deleteConversation": {
+    "messageformat": "מחיקה"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "למחוק צ'אט?"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "כל ההודעות בצ׳אט הזה יימחקו ממכשיר זה."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "כל ההודעות בצ׳אט הזה יימחקו מכל המכשירים שלך."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "עזיבת קבוצה"
@@ -1229,6 +1274,9 @@
   "icu:calling__call-link-default-title": {
     "messageformat": "שיחת Signal"
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "לא ניתן למחוק לינק. כדאי לבדוק את החיבור שלך ולנסות שוב."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "הבקשה שלך להצטרף לשיחה הזו נדחתה."
   },
@@ -1370,6 +1418,9 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{others, plural, one {{first}, {second}, ועוד {others,number} נמצאים בשיחה זו} two {{first}, {second}, ועוד {others,number} נמצאים בשיחה זו} many {{first}, {second}, ועוד {others,number} נמצאים בשיחה זו} other {{first}, {second}, ועוד {others,number} נמצאים בשיחה זו}}"
   },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, one {אדם {count,number} נמצא בשיחה זו} two {{count,number} אנשים נמצאים בשיחה זו} many {{count,number} אנשים נמצאים בשיחה זו} other {{count,number} אנשים נמצאים בשיחה זו}}"
+  },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Signal יצלצל אל {person}"
   },
@@ -1440,7 +1491,7 @@
     "messageformat": "Signal משתף את {window}."
   },
   "icu:calling__presenting--info--unknown": {
-    "messageformat": "Signal screen sharing is active"
+    "messageformat": "שיתוף המסך של Signal פעיל"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "מתחבר מחדש…"
@@ -2976,7 +3027,7 @@
     "messageformat": "אי אפשר להצטרף אל הקבוצה הזאת באמצעות קישור קבוצה מאחר שמנהל/ת הסיר/ה אותך."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
+    "messageformat": "מנהלן של קבוצה זו חייב לאשר את בקשתך לפני שתוכל להצטרף אל קבוצה זו. כאשר אתה מבקש להצטרף, השם והתמונה שלך ישותפו עם חברי הקבוצה."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "הצטרף"
@@ -3536,6 +3587,9 @@
   "icu:BackupImportScreen__progressbar-hint": {
     "messageformat": "מורידים {currentSize} מתוך {totalSize} ({fractionComplete,number,percent})…"
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "משלימים את העברת ההודעות…"
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "מתכוננים להורדה…"
   },
@@ -3544,6 +3598,9 @@
   },
   "icu:BackupImportScreen__cancel": {
     "messageformat": "ביטול העברה"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "הודעות ופרטי צ׳אט מוגנים באמצעות הצפנה מקצה לקצה, כולל תהליך הסנכרון. <learnMoreLink>למידע נוסף</learnMoreLink>"
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "לבטל העברה?"
@@ -3557,11 +3614,38 @@
   "icu:BackupImportScreen__cancel-confirmation__confirm": {
     "messageformat": "ביטול העברה"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "שגיאה בהעברת ההודעות שלך"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "לא היה ניתן להעביר את ההודעות שלך. יש לבדוק את חיבור האינטרנט שלך ולנסות שוב."
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "נסה שוב"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "דלג"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "לדלג על העברת הודעות?"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "אם תבחר/י לדלג, לא תהיה לך גישה לאף אחת מההודעות או המדיה שלך במכשיר זה. אפשר להתחיל העברה חדשה לאחר הדילוג מתוך הגדרות > צ׳אטים > העברה."
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "ביטול"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "מדיה בשחזור"
   },
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "שחזור הושהה"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "{currentSize} מתוך {totalSize} שוחזרו"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "הורדת המדיה תמשיך ברקע"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "השהיית העברה"
@@ -4445,12 +4529,6 @@
   "icu:ProfileEditorModal--error": {
     "messageformat": "הפרופיל שלך לא היה יכול להתעדכן. אנא נסה שוב."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "תווים לא חוקיים"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "לא ניתן להשתמש בתו אחד או יותר שהזנת. יש לנסות שוב."
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "שלח הודעה אל מנהלן"
   },
@@ -4651,6 +4729,15 @@
   },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal חווה קשיים טכניים. אנו עובדים קשות כדי לשחזר את השירות מהר ככל האפשר."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "נדרש עדכון"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "כדי להשלים את סנכרון ההודעות שלך, יש לעדכן את Signal לשולחן העבודה כעת."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "עדכן"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "נדרש עדכון"
@@ -5199,7 +5286,7 @@
     "messageformat": "סטורי"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Unhide story"
+    "messageformat": "ביטול הסתרת סטורי"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "הסתרת סטורי"
@@ -5472,17 +5559,32 @@
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
     "messageformat": "זה ימחק לצמיתות את כל היסטוריית השיחות"
   },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "זה ימחק לצמיתות את כל היסטוריית השיחות. לינקים שיצרת לשיחות לא יעבדו יותר לאנשים שקיבלו אותם. "
+  },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
     "messageformat": "נקה"
   },
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "שיחות אחרונות נמחקו"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "לא כל הלינקים לשיחות נמחקו. כדאי לבדוק את החיבור שלך ולנסות שוב."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "לא כל היסטוריית השיחות נמחקה. כדאי לבדוק את החיבור שלך ולנסות שוב."
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "יש ללחוץ על <newCallButtonIcon></newCallButtonIcon> כדי להתחיל שיחה קולית או שיחת וידאו חדשה."
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "חיפוש שיחות שלא נענו"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "חיפוש"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "סינון לפי שיחות שלא נענו"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "סינון לפי שיחות שלא נענו"
@@ -5496,14 +5598,14 @@
   "icu:CallsList__EmptyState--noQuery__subtitle": {
     "messageformat": "שיחות אחרונות יופיעו כאן."
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "אין שיחות שלא נענו"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "שיחות שלא נענו יופיעו כאן."
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "אין תוצאות עבור ״{query}״"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "אין תוצאות עבור ״{query}״ בשיחות שלא נענו"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "אין שיחות שלא נענו"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "יצירת לינק לשיחה"
@@ -5674,16 +5776,16 @@
     "messageformat": "התאמות קטנות, תיקוני באגים ושיפורי ביצועים. תודה על השימוש ב-Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "העדכון הזה מתקן באג שהקשה על חיפוש קבוצה מסוימת אחרי שעזבת אותה."
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "סמל הסינון החדש ליד תיבת החיפוש מקל ומזרז איתור צ׳אטים שלא נקראו."
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "עכשיו אפשר להסיר תגובות מצוטטות מהודעות ערוכות."
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "העדכון הזה מוסיף תמיכה עבור מעבדים חדשים של Windows כמו Snapdragon X Elite."
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "תיקנו גם באג ששיבש את ערכת הנושא הכהה ב–Signal כשמערכת ההפעלה הוגדרה לשימוש בערכת נושא בהירה."
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
   }
 }

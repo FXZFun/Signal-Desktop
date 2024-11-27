@@ -53,6 +53,15 @@
   "icu:appleSilicon": {
     "messageformat": "Apple silicon"
   },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)"
+  },
   "icu:copyErrorAndQuit": {
     "messageformat": "Salin galat dan keluar"
   },
@@ -575,14 +584,14 @@
   "icu:decryptionErrorToast": {
     "messageformat": "Desktop mengalami kegagalan dekripsi dari {name}, perangkat {deviceId}"
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "Kirim catatan"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "Kirim log"
   },
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements"
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Anda tidak dapat memilih foto dan video disertai file."
@@ -680,6 +689,9 @@
   "icu:search": {
     "messageformat": "Cari"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "Cari obrolan yang belum dibaca"
+  },
   "icu:clearSearch": {
     "messageformat": "Bersihkan Pencarian"
   },
@@ -689,11 +701,26 @@
   "icu:noSearchResults": {
     "messageformat": "Tidak ada hasil untuk \"{searchTerm}\""
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "Tidak ada hasil untuk \"{searchTerm}\" di obrolan belum dibaca"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "Tidak ada obrolan yang belum dibaca"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "Kontak SMS/MMS tidak tersedia di Desktop."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Tidak ada hasil untuk \"{searchTerm}\" dalam {conversationName}"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "Difilter berdasarkan yang belum dibaca"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "Filter berdasarkan yang belum dibaca"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "Hapus filter"
   },
   "icu:conversationsHeader": {
     "messageformat": "Obrolan"
@@ -791,8 +818,14 @@
   "icu:attachmentSaved": {
     "messageformat": "Lampiran disimpan."
   },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, other {{count,number} lampiran disimpan}}"
+  },
   "icu:attachmentSavedShow": {
     "messageformat": "Tampilkan di folder"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "{count, plural, other {Tidak bisa menyimpan lampiran karena {count,number} belum selesai diunduh}}"
   },
   "icu:you": {
     "messageformat": "Anda"
@@ -1003,6 +1036,18 @@
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "Semua pesan di obrolan ini akan dihapus dari semua perangkat Anda. Anda masih bisa mencari obrolan ini setelah pesan dihapus."
+  },
+  "icu:deleteConversation": {
+    "messageformat": "Hapus"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "Hapus obrolan?"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "Semua pesan di obrolan ini akan dihapus dari perangkat ini."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "Semua pesan di obrolan ini akan dihapus dari semua perangkat Anda."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Keluar grup"
@@ -1229,6 +1274,9 @@
   "icu:calling__call-link-default-title": {
     "messageformat": "Panggilan Signal"
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "Tidak dapat menghapus tautan. Periksa koneksi Anda dan coba lagi."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "Permintaan gabung ke panggilan ini ditolak."
   },
@@ -1370,6 +1418,9 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{others, plural, other {{first}, {second}, dan {others,number} yang lainnya sedang dalam panggilan ini}}"
   },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, other {{count,number} orang di panggilan ini}}"
+  },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Signal akan memanggil {person}"
   },
@@ -1440,7 +1491,7 @@
     "messageformat": "Signal sedang menunjukkan layar {window}"
   },
   "icu:calling__presenting--info--unknown": {
-    "messageformat": "Signal screen sharing is active"
+    "messageformat": "Berbagi layar Signal saat ini aktif"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Menghubungkan ulang…"
@@ -2976,7 +3027,7 @@
     "messageformat": "Anda tidak dapat bergabung dengan grup ini melalui tautan grup karena seorang admin mengeluarkan Anda."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
+    "messageformat": "Admin dari grup ini harus menerima permintaan Anda agar Anda bisa gabung ke grup ini. Saat Anda meminta untuk bergabung, nama dan foto Anda akan dibagikan dengan anggota grup."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Bergabung"
@@ -3536,6 +3587,9 @@
   "icu:BackupImportScreen__progressbar-hint": {
     "messageformat": "Mengunduh {currentSize} dari {totalSize} ({fractionComplete,number,percent}) …"
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "Menyelesaikan transfer pesan …"
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "Bersiap mengunduh …"
   },
@@ -3544,6 +3598,9 @@
   },
   "icu:BackupImportScreen__cancel": {
     "messageformat": "Batalkan transfer"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "Pesan dan info obrolan dilindungi enkripsi menyeluruh, termasuk proses sinkronisasi. <learnMoreLink>Pelajari selengkapnya</learnMoreLink>"
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "Batalkan transfer?"
@@ -3557,11 +3614,38 @@
   "icu:BackupImportScreen__cancel-confirmation__confirm": {
     "messageformat": "Batalkan transfer"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "Terjadi kesalahan saat mentransfer pesan"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "Pesan Anda tidak dapat ditransfer. Periksa koneksi internet Anda dan coba lagi."
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "Coba lagi"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "Lewati"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "Lewati transfer pesan?"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "Jika pilih untuk melewati, Anda tidak akan bisa mengakses pesan atau media apa pun di perangkat ini. Anda dapat memulai transfer baru setelah melewati, dengan membuka Pengaturan > Obrolan > Transfer."
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "Batal"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Memulihkan media"
   },
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "Pemulihan dijeda"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "{currentSize} dari {totalSize} dipulihkan"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "Pengunduhan media akan terus berlangsung di latar belakang"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "Jeda transfer"
@@ -4445,12 +4529,6 @@
   "icu:ProfileEditorModal--error": {
     "messageformat": "Profil Anda tidak dapat diperbarui. Mohon coba lagi."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "Karakter tidak valid"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "Satu atau beberapa karakter yang Anda masukkan tidak dapat digunakan. Coba lagi."
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Kirimkan pesan ke admin"
   },
@@ -4651,6 +4729,15 @@
   },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal sedang mengalami kesulitan teknis. Kami bekerja keras untuk memulihkan layanan secepat mungkin."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "Diperlukan Pembaruan"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "Untuk menyelesaikan sinkronisasi pesan, perbarui Signal Desktop sekarang."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "Perbarui"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "Diperlukan Pembaruan"
@@ -5199,7 +5286,7 @@
     "messageformat": "Cerita"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Unhide story"
+    "messageformat": "Tampilkan cerita"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Sembunyikan cerita"
@@ -5470,7 +5557,10 @@
     "messageformat": "Hapus riwayat panggilan?"
   },
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
-    "messageformat": "Tindakan ini akan menghapus semua riwayat panggilan secara permanen"
+    "messageformat": "Tindakan ini akan menghapus permanen semua riwayat panggilan."
+  },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "Tindakan ini akan menghapus permanen semua riwayat panggilan. Tautan panggilan yang Anda buat sudah tidak berlaku bagi siapa pun yang memilikinya. "
   },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
     "messageformat": "Bersihkan"
@@ -5478,11 +5568,23 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Catatan Panggilan Dibersihkan"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "Tidak semua tautan panggilan dapat dihapus. Periksa koneksi Anda dan coba lagi."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "Tidak semua riwayat panggilan dapat dihapus. Periksa koneksi Anda dan coba lagi."
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "Klik <newCallButtonIcon></newCallButtonIcon> untuk memulai panggilan suara atau panggilan video baru."
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "Cari panggilan tak terjawab"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Cari"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "Difilter berdasarkan yang tidak terjawab"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Filter berdasarkan tidak terjawab"
@@ -5496,14 +5598,14 @@
   "icu:CallsList__EmptyState--noQuery__subtitle": {
     "messageformat": "Panggilan terbaru akan ditampilkan di sini."
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "Tidak ada panggilan tak terjawab"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Panggilan tak terjawab akan ditampilkan di sini."
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Tidak ada hasil untuk “{query}”"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "Tidak ada hasil untuk “{query}” di panggilan tak terjawab"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "Tidak ada panggilan tak terjawab"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "Buat Tautan Panggilan"
@@ -5674,16 +5776,16 @@
     "messageformat": "Tambahan penyesuaian kecil, perbaikan bug, dan peningkatan performa. Terima kasih telah menggunakan Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "Pembaruan ini memperbaiki bug yang membuat Anda kesulitan mencari suatu grup setelah Anda keluar dari grup tersebut."
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "Ikon filter baru di samping kotak pencarian membantu agar Anda bisa dengan menemukan obrolan yang belum dibaca."
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "Kini Anda bisa menghapus balasan yang dikutip saat mengedit pesan."
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "Pembaruan ini memperkenalkan dukungan untuk prosesor baru di Windows seperti Snapdragon X Elite."
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "Kami juga memperbaiki bug yang mengacaukan tema gelap di Signal ketika pengaturan sistem operasi Anda menggunakan konfigurasi tema terang."
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
   }
 }

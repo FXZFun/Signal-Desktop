@@ -53,6 +53,15 @@
   "icu:appleSilicon": {
     "messageformat": "Apple silicon"
   },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)"
+  },
   "icu:copyErrorAndQuit": {
     "messageformat": "Kopieer fout en sluit af"
   },
@@ -575,14 +584,14 @@
   "icu:decryptionErrorToast": {
     "messageformat": "Desktop het 'n dekripteringsfout ondervind vanaf {name}, toestel {deviceId}"
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "Dien log in"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "Dien log in"
   },
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements"
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Jy kan nie foto's en video's saam met lêers selekteer nie."
@@ -680,6 +689,9 @@
   "icu:search": {
     "messageformat": "Soek"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "Soek vir ongeleesde kletsboodskappe"
+  },
   "icu:clearSearch": {
     "messageformat": "Vee Soek uit"
   },
@@ -689,11 +701,26 @@
   "icu:noSearchResults": {
     "messageformat": "Geen soekresultate vir \"{searchTerm}\""
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "Geen resultate vir \"{searchTerm}\" in ongeleesde kletse nie"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "Geen ongeleesde kletse nie"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "SMS/MMS-kontakte is nie op Desktop beskikbaar nie."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Geen resultate vir \"{searchTerm}\" in {conversationName} nie"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "Gefiltreer volgens ongelees"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "Gefiltreer volgens ongelees"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "Maak filter skoon"
   },
   "icu:conversationsHeader": {
     "messageformat": "Kletse"
@@ -791,8 +818,14 @@
   "icu:attachmentSaved": {
     "messageformat": "Aanhegsel gestoor."
   },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, one {Aanhegsel gestoor} other {{count,number} aanhegsels gestoor}}"
+  },
   "icu:attachmentSavedShow": {
     "messageformat": "Wys in vouer"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "{count, plural, one {Kan nie aanhegsel stoor nie, aangesien dit nog nie klaar afgelaai is nie} other {Kan nie aanhegsel stoor nie, aangesien {count,number} nog nie klaar afgelaai is nie}}"
   },
   "icu:you": {
     "messageformat": "Jy"
@@ -1003,6 +1036,18 @@
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "Al die boodskappe in hierdie klets sal van al jou toestelle af geskrap word. Jy kan steeds vir hierdie klets soek nadat jy boodskappe geskrap het."
+  },
+  "icu:deleteConversation": {
+    "messageformat": "Skrap"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "Skrap klets?"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "Al die boodskappe in hierdie klets sal van hierdie toestel af geskrap word."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "Al die boodskappe in hierdie klets sal van al jou toestelle af geskrap word."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Verlaat groep"
@@ -1229,6 +1274,9 @@
   "icu:calling__call-link-default-title": {
     "messageformat": "Signal-oproep"
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "Kan nie skakel skrap nie. Gaan jou verbinding na en probeer weer."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "Jou versoek om by hierdie oproep aan te sluit is geweier."
   },
@@ -1370,6 +1418,9 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{others, plural, one {{first}, {second} en {others,number} ander is in hierdie oproep} other {{first}, {second} en {others,number} ander is in hierdie oproep}}"
   },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, one {{count,number} persoon is in hierdie oproep} other {{count,number} persone is in hierdie oproep}}"
+  },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Signal sal {person} bel"
   },
@@ -1440,7 +1491,7 @@
     "messageformat": "Signal is besig om {window} te deel."
   },
   "icu:calling__presenting--info--unknown": {
-    "messageformat": "Signal screen sharing is active"
+    "messageformat": "Signal-skermdeling is aktief"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Besig om te herkonnekteer…"
@@ -2976,7 +3027,7 @@
     "messageformat": "Jy kan nie d.m.v. die groepskakel by hierdie groep aansluit nie, want 'n admin het jou verwyder."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
+    "messageformat": "'n Admin van hierdie groep moet jou versoek goedkeur voordat jy by die groep kan aansluit. Wanneer jy versoek om aan te sluit, sal jou naam en foto met die groeplede gedeel word."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Sluit aan"
@@ -3536,6 +3587,9 @@
   "icu:BackupImportScreen__progressbar-hint": {
     "messageformat": "Besig om {currentSize} van {totalSize} ({fractionComplete,number,percent}) af te laai…"
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "Finaliseer tans boodskapoordrag…"
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "Berei tans voor om af te laai…"
   },
@@ -3544,6 +3598,9 @@
   },
   "icu:BackupImportScreen__cancel": {
     "messageformat": "Kanselleer oordrag"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "Boodskappe en kletsinligting word deur end-tot-end-enkriptering beskerm, wat insluit die sinchroniseringsprosesse. <learnMoreLink>Vind meer uit</learnMoreLink>"
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "Kanselleer oordrag?"
@@ -3557,11 +3614,38 @@
   "icu:BackupImportScreen__cancel-confirmation__confirm": {
     "messageformat": "Kanselleer oordrag"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "Kon nie jou boodskappe oordra nie"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "Jou boodskappe kon nie oorgedra word nie. Gaan jou internetverbinding na en probeer weer."
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "Probeer weer"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "Slaan oor"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "Slaan boodskapoordrag oor?"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "As jy kies om oor te slaan, sal jy nie toegang tot enige van jou boodskappe of media op hierdie toestel hê nie. Jy kan 'n nuwe oordrag begin nadat jy Instellings > Kletse > Oordrag oorgeslaan het."
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "Kanselleer"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Besig om media te herstel"
   },
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "Herstel is onderbreek"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "{currentSize} van {totalSize} is herstel"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "Media sal voortgaan om in die agtergrond afgelaai te word"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "Onderbreek oordrag"
@@ -4445,12 +4529,6 @@
   "icu:ProfileEditorModal--error": {
     "messageformat": "U profiel kan nie bygewerk word nie. Probeer asb. weer."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "Ongeldige karakters"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "Een of meer karakters wat jy ingevoer het, kan nie gebruik word nie. Probeer weer."
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Stuur ’n boodskap aan admin"
   },
@@ -4651,6 +4729,15 @@
   },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal ervaar tans tegniese probleme. Ons werk hard daaraan om diens so spoedig moontlik te herstel."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "Opdatering benodig"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "Om die sinchronisering van jou boodskappe te voltooi, doen nou opdatering van Signal Desktop."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "Werk by"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "Opdatering benodig"
@@ -5199,7 +5286,7 @@
     "messageformat": "Storie"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Unhide story"
+    "messageformat": "Maak storie sigbaar"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Versteek storie"
@@ -5470,7 +5557,10 @@
     "messageformat": "Vee oproepgeskiedenis uit?"
   },
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
-    "messageformat": "Dit sal die hele oproepgeskiedenis permanent uitvee"
+    "messageformat": "Dit sal die hele oproepgeskiedenis permanent skrap."
+  },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "Dit sal die hele oproepgeskiedenis permanent skrap. Oproepskakels wat jy geskep het, sal nie meer werk vir mense wat dit het nie. "
   },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
     "messageformat": "Vee uit"
@@ -5478,11 +5568,23 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Oproepgeskiedenis uitgevee"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "Kon nie alle oproepskakels skrap nie. Gaan jou verbinding na en probeer weer."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "Kon nie die hele oproepgeskiedenis skrap nie. Gaan jou verbinding na en probeer weer."
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "Klik <newCallButtonIcon></newCallButtonIcon> om 'n nuwe stem- of video-oproep te begin."
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "Soek vir gemiste oproepe"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Soek"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "Gefiltreer volgens gemis"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Filtreer volgens gemis"
@@ -5496,14 +5598,14 @@
   "icu:CallsList__EmptyState--noQuery__subtitle": {
     "messageformat": "Onlangse oproepe sal hier verskyn."
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "Geen gemiste oproepe nie"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Gemiste oproepe sal hier verskyn."
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Geen resultate vir \"{query}\" nie"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "Geen resultate vir \"{query} \" in gemiste oproepe nie"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "Geen gemiste oproepe nie"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "Skep 'n Oproepskakel"
@@ -5674,16 +5776,16 @@
     "messageformat": "Klein veranderings, foutregstellings en prestasieverbeterings. Dankie dat jy Signal gebruik!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "Hierdie opdatering stel 'n fout reg wat dit moeilik gemaak het om vir 'n groep te soek nadat jy daardie groep verlaat het."
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "Die nuwe filtreer-ikoon langs die soekblokkie maak dit maklik om ongeleesde kletse vinnig op te spoor, maar neem gerus jou tyd om te besluit of jy dit as gelees moet laat al dan nie nadat jy gesien het wat hulle te sê het."
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "Nou kan jy aangehaalde antwoorde uit geredigeerde boodskappe verwyder."
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "Hierdie opdatering stel ondersteuning bekend vir nuwe verwerkers op Windows soos die Snapdragon X Elite."
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "Ons het ook 'n fout reggestel wat die donker tema in Signal laat faal het wanneer jou bedryfstelselinstellings opgestel was om 'n ligte tema te gebruik."
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
   }
 }

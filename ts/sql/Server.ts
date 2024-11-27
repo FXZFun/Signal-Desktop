@@ -3,15 +3,13 @@
 
 /* eslint-disable camelcase */
 
-import { mkdirSync } from 'fs';
-import { join } from 'path';
-import rimraf from 'rimraf';
-import { randomBytes } from 'crypto';
 import type { Database, Statement } from '@signalapp/better-sqlite3';
 import SQL from '@signalapp/better-sqlite3';
-import { v4 as generateUuid } from 'uuid';
-import { z } from 'zod';
+import { randomBytes } from 'crypto';
+import { mkdirSync, rmSync } from 'node:fs';
+import { join } from 'path';
 import type { ReadonlyDeep } from 'type-fest';
+import { z } from 'zod';
 
 import type { Dictionary } from 'lodash';
 import {
@@ -31,63 +29,101 @@ import {
   pick,
 } from 'lodash';
 
-import * as Errors from '../types/errors';
+import { parseBadgeCategory } from '../badges/BadgeCategory';
+import { parseBadgeImageTheme } from '../badges/BadgeImageTheme';
+import type { BadgeImageType, BadgeType } from '../badges/types';
+import type { StoredJob } from '../jobs/types';
+import { formatCountForLogging } from '../logging/formatCountForLogging';
 import { ReadStatus } from '../messages/MessageReadStatus';
 import type { GroupV2MemberType } from '../model-types.d';
+import type { ConversationColorType, CustomColorType } from '../types/Colors';
+import type { LoggerType } from '../types/Logging';
 import type { ReactionType } from '../types/Reactions';
 import { ReactionReadStatus } from '../types/Reactions';
+import type { AciString, ServiceIdString } from '../types/ServiceId';
+import { isServiceIdString } from '../types/ServiceId';
 import { STORAGE_UI_KEYS } from '../types/StorageUIKeys';
 import type { StoryDistributionIdString } from '../types/StoryDistributionId';
-import type { ServiceIdString, AciString } from '../types/ServiceId';
-import { isServiceIdString } from '../types/ServiceId';
-import type { StoredJob } from '../jobs/types';
+import * as Errors from '../types/errors';
 import { assertDev, strictAssert } from '../util/assert';
 import { combineNames } from '../util/combineNames';
 import { consoleLogger } from '../util/consoleLogger';
 import { dropNull } from '../util/dropNull';
+import * as durations from '../util/durations';
+import { generateMessageId } from '../util/generateMessageId';
 import { isNormalNumber } from '../util/isNormalNumber';
 import { isNotNil } from '../util/isNotNil';
 import { parseIntOrThrow } from '../util/parseIntOrThrow';
-import * as durations from '../util/durations';
-import { formatCountForLogging } from '../logging/formatCountForLogging';
-import type { ConversationColorType, CustomColorType } from '../types/Colors';
-import type { BadgeType, BadgeImageType } from '../badges/types';
-import { parseBadgeCategory } from '../badges/BadgeCategory';
-import { parseBadgeImageTheme } from '../badges/BadgeImageTheme';
-import type { LoggerType } from '../types/Logging';
+import { updateSchema } from './migrations';
 import type {
-  EmptyQuery,
   ArrayQuery,
-  Query,
+  EmptyQuery,
   JSONRows,
+  Query,
   QueryFragment,
 } from './util';
 import {
-  sqlConstant,
-  sqlJoin,
-  sqlFragment,
-  sql,
-  jsonToObject,
-  objectToJSON,
   batchMultiVarQuery,
-  getCountFromTable,
-  removeById,
-  removeAllFromTable,
-  getAllFromTable,
-  getById,
   bulkAdd,
   createOrUpdate,
-  setUserVersion,
-  getUserVersion,
+  getAllFromTable,
+  getById,
+  getCountFromTable,
   getSchemaVersion,
+  getUserVersion,
+  jsonToObject,
+  objectToJSON,
+  removeAllFromTable,
+  removeById,
+  setUserVersion,
+  sql,
+  sqlConstant,
+  sqlFragment,
+  sqlJoin,
 } from './util';
-import { updateSchema } from './migrations';
 
+import { getAttachmentCiphertextLength } from '../AttachmentCrypto';
+import { SeenStatus } from '../MessageSeenStatus';
+import {
+  attachmentBackupJobSchema,
+  type AttachmentBackupJobType,
+} from '../types/AttachmentBackup';
+import {
+  attachmentDownloadJobSchema,
+  type AttachmentDownloadJobType,
+} from '../types/AttachmentDownload';
 import type {
-  ReadableDB,
-  WritableDB,
+  CallHistoryDetails,
+  CallHistoryFilter,
+  CallHistoryGroup,
+  CallHistoryPagination,
+  CallLogEventTarget,
+} from '../types/CallDisposition';
+import {
+  CallDirection,
+  CallHistoryFilterStatus,
+  CallMode,
+  CallStatusValue,
+  CallType,
+  DirectCallStatus,
+  GroupCallStatus,
+  callHistoryDetailsSchema,
+  callHistoryGroupSchema,
+} from '../types/CallDisposition';
+import { redactGenericText } from '../util/privacy';
+import { parseStrict, parseUnknown, safeParseUnknown } from '../util/schemas';
+import {
+  SNIPPET_LEFT_PLACEHOLDER,
+  SNIPPET_RIGHT_PLACEHOLDER,
+  SNIPPET_TRUNCATION_PLACEHOLDER,
+} from '../util/search';
+import type { SyncTaskType } from '../util/syncTasks';
+import { MAX_SYNC_TASK_ATTEMPTS } from '../util/syncTasks.types';
+import { isMoreRecentThan } from '../util/timestamp';
+import type {
   AdjacentMessagesByConversationOptionsType,
-  StoredAllItemsType,
+  BackupCdnMediaObjectType,
+  ConversationMessageStatsType,
   ConversationMetricsType,
   ConversationType,
   DeleteSentProtoRecipientOptionsType,
@@ -97,14 +133,12 @@ import type {
   GetAllStoriesResultType,
   GetConversationRangeCenteredOnMessageResultType,
   GetKnownMessageAttachmentsResultType,
+  GetNearbyMessageFromDeletedSetOptionsType,
   GetRecentStoryRepliesOptionsType,
   GetUnreadByConversationAndMarkReadResultType,
   IdentityKeyIdType,
-  StoredIdentityKeyType,
   InstalledStickerPackType,
   ItemKeyType,
-  StoredItemType,
-  ConversationMessageStatsType,
   MessageAttachmentsCursorType,
   MessageCursorType,
   MessageMetricsType,
@@ -114,8 +148,7 @@ import type {
   PageMessagesResultType,
   PreKeyIdType,
   ReactionResultType,
-  StoredPreKeyType,
-  ServerSearchResultMessageType,
+  ReadableDB,
   SenderKeyIdType,
   SenderKeyType,
   SentMessageDBType,
@@ -125,15 +158,21 @@ import type {
   SentRecipientsDBType,
   SentRecipientsType,
   ServerReadableInterface,
+  ServerSearchResultMessageType,
   ServerWritableInterface,
   SessionIdType,
   SessionType,
   SignedPreKeyIdType,
-  StoredSignedPreKeyType,
   StickerPackInfoType,
   StickerPackStatusType,
   StickerPackType,
   StickerType,
+  StoredAllItemsType,
+  StoredIdentityKeyType,
+  StoredItemType,
+  StoredKyberPreKeyType,
+  StoredPreKeyType,
+  StoredSignedPreKeyType,
   StoryDistributionMemberType,
   StoryDistributionType,
   StoryDistributionWithMembersType,
@@ -141,73 +180,40 @@ import type {
   UninstalledStickerPackType,
   UnprocessedType,
   UnprocessedUpdateType,
-  GetNearbyMessageFromDeletedSetOptionsType,
-  StoredKyberPreKeyType,
-  BackupCdnMediaObjectType,
+  WritableDB,
 } from './Interface';
 import { AttachmentDownloadSource } from './Interface';
-import { SeenStatus } from '../MessageSeenStatus';
 import {
-  SNIPPET_LEFT_PLACEHOLDER,
-  SNIPPET_RIGHT_PLACEHOLDER,
-  SNIPPET_TRUNCATION_PLACEHOLDER,
-} from '../util/search';
-import type {
-  CallHistoryDetails,
-  CallHistoryFilter,
-  CallHistoryGroup,
-  CallHistoryPagination,
-  CallLogEventTarget,
-} from '../types/CallDisposition';
-import {
-  DirectCallStatus,
-  callHistoryGroupSchema,
-  CallHistoryFilterStatus,
-  callHistoryDetailsSchema,
-  CallDirection,
-  GroupCallStatus,
-  CallType,
-  CallStatusValue,
-  CallMode,
-} from '../types/CallDisposition';
-import {
+  _removeAllCallLinks,
+  beginDeleteAllCallLinks,
+  beginDeleteCallLink,
   callLinkExists,
+  defunctCallLinkExists,
+  deleteCallHistoryByRoomId,
+  deleteCallLinkAndHistory,
+  deleteCallLinkFromSync,
+  finalizeDeleteCallLink,
+  getAllAdminCallLinks,
+  getAllCallLinkRecordsWithAdminKey,
   getAllCallLinks,
+  getAllDefunctCallLinksWithAdminKey,
+  getAllMarkedDeletedCallLinkRoomIds,
   getCallLinkByRoomId,
   getCallLinkRecordByRoomId,
   insertCallLink,
+  insertDefunctCallLink,
   updateCallLink,
   updateCallLinkAdminKeyByRoomId,
   updateCallLinkState,
-  beginDeleteAllCallLinks,
-  getAllCallLinkRecordsWithAdminKey,
-  getAllMarkedDeletedCallLinkRoomIds,
-  finalizeDeleteCallLink,
-  beginDeleteCallLink,
-  deleteCallLinkFromSync,
-  _removeAllCallLinks,
+  updateDefunctCallLink,
 } from './server/callLinks';
 import {
-  replaceAllEndorsementsForGroup,
   deleteAllEndorsementsForGroup,
   getGroupSendCombinedEndorsementExpiration,
   getGroupSendEndorsementsData,
   getGroupSendMemberEndorsement,
+  replaceAllEndorsementsForGroup,
 } from './server/groupSendEndorsements';
-import {
-  attachmentDownloadJobSchema,
-  type AttachmentDownloadJobType,
-} from '../types/AttachmentDownload';
-import { MAX_SYNC_TASK_ATTEMPTS } from '../util/syncTasks.types';
-import type { SyncTaskType } from '../util/syncTasks';
-import { isMoreRecentThan } from '../util/timestamp';
-import {
-  type AttachmentBackupJobType,
-  attachmentBackupJobSchema,
-} from '../types/AttachmentBackup';
-import { redactGenericText } from '../util/privacy';
-import { getAttachmentCiphertextLength } from '../AttachmentCrypto';
-import { parseStrict, parseUnknown, safeParseUnknown } from '../util/schemas';
 
 type ConversationRow = Readonly<{
   json: string;
@@ -310,10 +316,13 @@ export const DataReader: ServerReadableInterface = {
   hasGroupCallHistoryMessage,
 
   callLinkExists,
+  defunctCallLinkExists,
   getAllCallLinks,
   getCallLinkByRoomId,
   getCallLinkRecordByRoomId,
+  getAllAdminCallLinks,
   getAllCallLinkRecordsWithAdminKey,
+  getAllDefunctCallLinksWithAdminKey,
   getAllMarkedDeletedCallLinkRoomIds,
   getMessagesBetween,
   getNearbyMessageFromDeletedSet,
@@ -428,6 +437,7 @@ export const DataWriter: ServerWritableInterface = {
 
   saveMessage,
   saveMessages,
+  saveMessagesIndividually,
   removeMessage,
   removeMessages,
   markReactionAsRead,
@@ -451,9 +461,13 @@ export const DataWriter: ServerWritableInterface = {
   updateCallLinkState,
   beginDeleteAllCallLinks,
   beginDeleteCallLink,
+  deleteCallHistoryByRoomId,
+  deleteCallLinkAndHistory,
   finalizeDeleteCallLink,
   _removeAllCallLinks,
   deleteCallLinkFromSync,
+  insertDefunctCallLink,
+  updateDefunctCallLink,
   migrateConversationMessages,
   saveEditedMessage,
   saveEditedMessages,
@@ -472,6 +486,7 @@ export const DataWriter: ServerWritableInterface = {
 
   getNextAttachmentDownloadJobs,
   saveAttachmentDownloadJob,
+  saveAttachmentDownloadJobs,
   resetAttachmentDownloadActive,
   removeAttachmentDownloadJob,
   removeAllBackupAttachmentDownloadJobs,
@@ -809,9 +824,9 @@ export function removeDB(): void {
   }
 
   logger.warn('removeDB: Removing all database files');
-  rimraf.sync(databaseFilePath);
-  rimraf.sync(`${databaseFilePath}-shm`);
-  rimraf.sync(`${databaseFilePath}-wal`);
+  rmSync(databaseFilePath, { recursive: true, force: true });
+  rmSync(`${databaseFilePath}-shm`, { recursive: true, force: true });
+  rmSync(`${databaseFilePath}-wal`, { recursive: true, force: true });
 }
 
 function removeIndexedDBFiles(_db: WritableDB): void {
@@ -822,7 +837,7 @@ function removeIndexedDBFiles(_db: WritableDB): void {
   }
 
   const pattern = join(indexedDBPath, '*.leveldb');
-  rimraf.sync(pattern);
+  rmSync(pattern, { recursive: true, force: true });
   indexedDBPath = undefined;
 }
 
@@ -1585,11 +1600,13 @@ function saveConversation(db: WritableDB, data: ConversationType): void {
     profileLastFetchedAt,
     type,
     serviceId,
+    expireTimerVersion,
   } = data;
 
   const membersList = getConversationMembersList(data);
 
-  db.prepare<Query>(
+  prepare(
+    db,
     `
     INSERT INTO conversations (
       id,
@@ -1606,7 +1623,8 @@ function saveConversation(db: WritableDB, data: ConversationType): void {
       profileName,
       profileFamilyName,
       profileFullName,
-      profileLastFetchedAt
+      profileLastFetchedAt,
+      expireTimerVersion
     ) values (
       $id,
       $json,
@@ -1622,7 +1640,8 @@ function saveConversation(db: WritableDB, data: ConversationType): void {
       $profileName,
       $profileFamilyName,
       $profileFullName,
-      $profileLastFetchedAt
+      $profileLastFetchedAt,
+      $expireTimerVersion
     );
     `
   ).run({
@@ -1643,6 +1662,7 @@ function saveConversation(db: WritableDB, data: ConversationType): void {
     profileFamilyName: profileFamilyName || null,
     profileFullName: combineNames(profileName, profileFamilyName) || null,
     profileLastFetchedAt: profileLastFetchedAt || null,
+    expireTimerVersion,
   });
 }
 
@@ -1673,7 +1693,8 @@ function updateConversation(db: WritableDB, data: ConversationType): void {
 
   const membersList = getConversationMembersList(data);
 
-  db.prepare(
+  prepare(
+    db,
     `
     UPDATE conversations SET
       json = $json,
@@ -2187,6 +2208,7 @@ export function saveMessage(
     ourAci: AciString;
   }
 ): string {
+  // NB: `saveMessagesIndividually` relies on `saveMessage` being atomic
   const { alreadyInTransaction, forceSave, jobToInsert, ourAci } = options;
 
   if (!alreadyInTransaction) {
@@ -2251,9 +2273,8 @@ export function saveMessage(
     seenStatus = SeenStatus.Unseen;
   }
 
-  const payload = {
+  const payloadWithoutJson = {
     id,
-    json: objectToJSON(data),
 
     body: body || null,
     conversationId,
@@ -2311,7 +2332,7 @@ export function saveMessage(
         seenStatus = $seenStatus
       WHERE id = $id;
       `
-    ).run(payload);
+    ).run({ ...payloadWithoutJson, json: objectToJSON(data) });
 
     if (jobToInsert) {
       insertJob(db, jobToInsert);
@@ -2322,7 +2343,7 @@ export function saveMessage(
 
   const toCreate = {
     ...data,
-    id: id || generateUuid(),
+    id: id || generateMessageId(data.received_at).id,
   };
 
   prepare(
@@ -2383,7 +2404,7 @@ export function saveMessage(
     );
     `
   ).run({
-    ...payload,
+    ...payloadWithoutJson,
     id: toCreate.id,
     json: objectToJSON(toCreate),
   });
@@ -2411,6 +2432,31 @@ function saveMessages(
       );
     }
     return result;
+  })();
+}
+
+function saveMessagesIndividually(
+  db: WritableDB,
+  arrayOfMessages: ReadonlyArray<ReadonlyDeep<MessageType>>,
+  options: { forceSave?: boolean; ourAci: AciString }
+): { failedIndices: Array<number> } {
+  return db.transaction(() => {
+    const failedIndices: Array<number> = [];
+    arrayOfMessages.forEach((message, index) => {
+      try {
+        saveMessage(db, message, {
+          ...options,
+          alreadyInTransaction: true,
+        });
+      } catch (e) {
+        logger.error(
+          'saveMessagesIndividually: failed to save message',
+          Errors.toLogFormat(e)
+        );
+        failedIndices.push(index);
+      }
+    });
+    return { failedIndices };
   })();
 }
 
@@ -3537,6 +3583,14 @@ function _removeAllCallHistory(db: WritableDB): void {
   db.prepare(query).run(params);
 }
 
+/**
+ * Deletes call history by marking it deleted. Tombstoning is needed in case sync messages
+ * come in around the same time, to prevent reappearance of deleted call history.
+ * Limitation: History for admin call links is skipped. Admin call links need to be
+ * deleted on the calling server first, before we can clear local history.
+ *
+ *  @returns ReadonlyArray<string>: message ids of call history messages
+ */
 function clearCallHistory(
   db: WritableDB,
   target: CallLogEventTarget
@@ -3544,22 +3598,38 @@ function clearCallHistory(
   return db.transaction(() => {
     const callHistory = getCallHistoryForCallLogEventTarget(db, target);
     if (callHistory == null) {
-      logger.error('clearCallHistory: Target call not found');
+      logger.warn('clearCallHistory: Target call not found');
       return [];
     }
     const { timestamp } = callHistory;
+
+    // Admin call links are deleted separately after server confirmation
+    const [selectAdminCallLinksQuery, selectAdminCallLinksParams] = sql`
+      SELECT roomId
+      FROM callLinks
+      WHERE callLinks.adminKey IS NOT NULL;
+    `;
+
+    const adminCallLinkIds: ReadonlyArray<string> = db
+      .prepare(selectAdminCallLinksQuery)
+      .pluck()
+      .all(selectAdminCallLinksParams);
+    const adminCallLinkIdsFragment = sqlJoin(adminCallLinkIds);
 
     const [selectCallsQuery, selectCallsParams] = sql`
       SELECT callsHistory.callId
       FROM callsHistory
       WHERE
-        -- Prior calls
-        (callsHistory.timestamp <= ${timestamp})
-        -- Unused call links
-        OR (
-          callsHistory.mode IS ${CALL_MODE_ADHOC} AND
-          callsHistory.status IS ${CALL_STATUS_PENDING}
-        );
+        (
+          -- Prior calls
+          (callsHistory.timestamp <= ${timestamp})
+          -- Unused call links
+          OR (
+            callsHistory.mode IS ${CALL_MODE_ADHOC} AND
+            callsHistory.status IS ${CALL_STATUS_PENDING}
+          )
+        ) AND
+        callsHistory.peerId NOT IN (${adminCallLinkIdsFragment});
     `;
 
     const deletedCallIds: ReadonlyArray<string> = db
@@ -3668,6 +3738,7 @@ function getCallHistory(
   return parseUnknown(callHistoryDetailsSchema, row as unknown);
 }
 
+const READ_STATUS_READ = sqlConstant(ReadStatus.Read);
 const SEEN_STATUS_UNSEEN = sqlConstant(SeenStatus.Unseen);
 const SEEN_STATUS_SEEN = sqlConstant(SeenStatus.Seen);
 const CALL_STATUS_MISSED = sqlConstant(CallStatusValue.Missed);
@@ -3710,44 +3781,76 @@ function getCallHistoryForCallLogEventTarget(
   db: ReadableDB,
   target: CallLogEventTarget
 ): CallHistoryDetails | null {
-  const { callId, peerId, timestamp } = target;
+  const { callId, timestamp } = target;
 
-  let row: unknown;
+  if ('peerId' in target) {
+    const { peerId } = target;
 
-  if (callId == null || peerId == null) {
-    const predicate =
-      peerId != null
-        ? sqlFragment`callsHistory.peerId IS ${target.peerId}`
-        : sqlFragment`TRUE`;
+    let row: unknown;
 
-    // Get the most recent call history timestamp for the target.timestamp
-    const [selectQuery, selectParams] = sql`
-      SELECT *
-      FROM callsHistory
-      WHERE ${predicate}
-        AND callsHistory.timestamp <= ${timestamp}
-      ORDER BY callsHistory.timestamp DESC
-      LIMIT 1
-    `;
+    if (callId == null || peerId == null) {
+      const predicate =
+        peerId != null
+          ? sqlFragment`callsHistory.peerId IS ${target.peerId}`
+          : sqlFragment`TRUE`;
 
-    row = db.prepare(selectQuery).get(selectParams);
-  } else {
-    const [selectQuery, selectParams] = sql`
-      SELECT *
-      FROM callsHistory
-      WHERE callsHistory.peerId IS ${target.peerId}
-        AND callsHistory.callId IS ${target.callId}
-      LIMIT 1
-    `;
+      // Get the most recent call history timestamp for the target.timestamp
+      const [selectQuery, selectParams] = sql`
+        SELECT *
+        FROM callsHistory
+        WHERE ${predicate}
+          AND callsHistory.timestamp <= ${timestamp}
+        ORDER BY callsHistory.timestamp DESC
+        LIMIT 1
+      `;
 
-    row = db.prepare(selectQuery).get(selectParams);
+      row = db.prepare(selectQuery).get(selectParams);
+    } else {
+      const [selectQuery, selectParams] = sql`
+        SELECT *
+        FROM callsHistory
+        WHERE callsHistory.peerId IS ${target.peerId}
+          AND callsHistory.callId IS ${target.callId}
+        LIMIT 1
+      `;
+
+      row = db.prepare(selectQuery).get(selectParams);
+    }
+
+    if (row == null) {
+      return null;
+    }
+
+    return parseUnknown(callHistoryDetailsSchema, row as unknown);
   }
 
-  if (row == null) {
+  // For incoming CallLogEvent sync messages, peerId is ambiguous whether it
+  // refers to conversation or call link.
+  if ('peerIdAsConversationId' in target && 'peerIdAsRoomId' in target) {
+    const resultForConversation = getCallHistoryForCallLogEventTarget(db, {
+      callId,
+      timestamp,
+      peerId: target.peerIdAsConversationId,
+    });
+    if (resultForConversation) {
+      return resultForConversation;
+    }
+
+    const resultForCallLink = getCallHistoryForCallLogEventTarget(db, {
+      callId,
+      timestamp,
+      peerId: target.peerIdAsRoomId,
+    });
+    if (resultForCallLink) {
+      return resultForCallLink;
+    }
+
     return null;
   }
 
-  return parseUnknown(callHistoryDetailsSchema, row as unknown);
+  throw new Error(
+    'Either peerId, or peerIdAsConversationId and peerIdAsRoomId must be present'
+  );
 }
 
 function getConversationIdForCallHistory(
@@ -3812,10 +3915,6 @@ export function markAllCallHistoryRead(
   target: CallLogEventTarget,
   inConversation = false
 ): number {
-  if (inConversation) {
-    strictAssert(target.peerId, 'peerId is required');
-  }
-
   return db.transaction(() => {
     const callHistory = getCallHistoryForCallLogEventTarget(db, target);
     if (callHistory == null) {
@@ -3830,34 +3929,53 @@ export function markAllCallHistoryRead(
       'Call ID must be the same as target if supplied'
     );
 
-    const conversationId = getConversationIdForCallHistory(db, callHistory);
-    if (conversationId == null) {
-      logger.warn('markAllCallHistoryRead: Conversation not found for call');
-      return 0;
+    let predicate: QueryFragment;
+    let receivedAt: number | null;
+    if (callHistory.mode === CallMode.Adhoc) {
+      // If the target is a call link, there's no associated conversation and messages,
+      // and we can only mark call history read based on timestamp.
+      strictAssert(
+        !inConversation,
+        'markAllCallHistoryRead: Not possible to mark read in conversation for Adhoc calls'
+      );
+
+      receivedAt = callHistory.timestamp;
+      predicate = sqlFragment`TRUE`;
+    } else {
+      const conversationId = getConversationIdForCallHistory(db, callHistory);
+      if (conversationId == null) {
+        logger.warn('markAllCallHistoryRead: Conversation not found for call');
+        return 0;
+      }
+
+      logger.info(
+        `markAllCallHistoryRead: Found conversation ${conversationId}`
+      );
+      receivedAt = getMessageReceivedAtForCall(db, callId, conversationId);
+
+      predicate = inConversation
+        ? sqlFragment`messages.conversationId IS ${conversationId}`
+        : sqlFragment`TRUE`;
     }
-    logger.info(`markAllCallHistoryRead: Found conversation ${conversationId}`);
-    const receivedAt = getMessageReceivedAtForCall(db, callId, conversationId);
 
     if (receivedAt == null) {
       logger.warn('markAllCallHistoryRead: Message not found for call');
       return 0;
     }
 
-    const predicate = inConversation
-      ? sqlFragment`messages.conversationId IS ${conversationId}`
-      : sqlFragment`TRUE`;
-
     const jsonPatch = JSON.stringify({
+      readStatus: ReadStatus.Read,
       seenStatus: SeenStatus.Seen,
     });
 
-    logger.warn(
+    logger.info(
       `markAllCallHistoryRead: Marking calls before ${receivedAt} read`
     );
 
     const [updateQuery, updateParams] = sql`
       UPDATE messages
       SET
+        readStatus = ${READ_STATUS_READ},
         seenStatus = ${SEEN_STATUS_SEEN},
         json = json_patch(json, ${jsonPatch})
       WHERE messages.type IS 'call-history'
@@ -3875,7 +3993,6 @@ function markAllCallHistoryReadInConversation(
   db: WritableDB,
   target: CallLogEventTarget
 ): number {
-  strictAssert(target.peerId, 'peerId is required');
   return markAllCallHistoryRead(db, target, true);
 }
 
@@ -4484,9 +4601,10 @@ function getNextTapToViewMessageTimestampToAgeOut(
   return isNormalNumber(result) ? result : undefined;
 }
 
-function getTapToViewMessagesNeedingErase(db: ReadableDB): Array<MessageType> {
-  const THIRTY_DAYS_AGO = Date.now() - 30 * 24 * 60 * 60 * 1000;
-
+function getTapToViewMessagesNeedingErase(
+  db: ReadableDB,
+  maxTimestamp: number
+): Array<MessageType> {
   const rows: JSONRows = db
     .prepare<Query>(
       `
@@ -4495,12 +4613,12 @@ function getTapToViewMessagesNeedingErase(db: ReadableDB): Array<MessageType> {
       WHERE
         isViewOnce = 1
         AND (isErased IS NULL OR isErased != 1)
-        AND received_at <= $THIRTY_DAYS_AGO
+        AND received_at <= $maxTimestamp
       ORDER BY received_at ASC, sent_at ASC;
       `
     )
     .all({
-      THIRTY_DAYS_AGO,
+      maxTimestamp,
     });
 
   return rows.map(row => jsonToObject(row.json));
@@ -4654,7 +4772,6 @@ function getUnprocessedCount(db: ReadableDB): number {
 }
 
 function getAllUnprocessedIds(db: WritableDB): Array<string> {
-  logger.info('getAllUnprocessedIds');
   return db.transaction(() => {
     // cleanup first
     const { changes: deletedStaleCount } = db
@@ -4907,6 +5024,17 @@ function getNextAttachmentDownloadJobs(
     }
     throw error;
   }
+}
+
+function saveAttachmentDownloadJobs(
+  db: WritableDB,
+  jobs: Array<AttachmentDownloadJobType>
+): void {
+  db.transaction(() => {
+    for (const job of jobs) {
+      saveAttachmentDownloadJob(db, job);
+    }
+  })();
 }
 
 function saveAttachmentDownloadJob(
@@ -6401,6 +6529,7 @@ function removeAll(db: WritableDB): void {
       DELETE FROM callLinks;
       DELETE FROM callsHistory;
       DELETE FROM conversations;
+      DELETE FROM defunctCallLinks;
       DELETE FROM emojis;
       DELETE FROM groupCallRingCancellations;
       DELETE FROM groupSendCombinedEndorsement;
@@ -6808,23 +6937,30 @@ function pageMessages(
       writable.exec(
         `
         CREATE TEMP TABLE tmp_${runId}_updated_messages
-          (rowid INTEGER PRIMARY KEY ASC);
+          (rowid INTEGER PRIMARY KEY, received_at INTEGER, sent_at INTEGER);
 
-        INSERT INTO tmp_${runId}_updated_messages (rowid)
-        SELECT rowid FROM messages;
+        CREATE INDEX tmp_${runId}_updated_messages_received_at
+          ON tmp_${runId}_updated_messages (received_at ASC, sent_at ASC);
+
+        INSERT INTO tmp_${runId}_updated_messages
+          (rowid, received_at, sent_at)
+          SELECT rowid, received_at, sent_at FROM messages
+          ORDER BY received_at ASC, sent_at ASC;
 
         CREATE TEMP TRIGGER tmp_${runId}_message_updates
         UPDATE OF json ON messages
         BEGIN
-          INSERT OR IGNORE INTO tmp_${runId}_updated_messages (rowid)
-          VALUES (NEW.rowid);
+          INSERT OR IGNORE INTO tmp_${runId}_updated_messages
+          (rowid, received_at, sent_at)
+          VALUES (NEW.rowid, NEW.received_at, NEW.sent_at);
         END;
 
         CREATE TEMP TRIGGER tmp_${runId}_message_inserts
         AFTER INSERT ON messages
         BEGIN
-          INSERT OR IGNORE INTO tmp_${runId}_updated_messages (rowid)
-          VALUES (NEW.rowid);
+          INSERT OR IGNORE INTO tmp_${runId}_updated_messages
+          (rowid, received_at, sent_at)
+          VALUES (NEW.rowid, NEW.received_at, NEW.sent_at);
         END;
         `
       );
@@ -6835,10 +6971,11 @@ function pageMessages(
     const rowids: Array<number> = writable
       .prepare<Query>(
         `
-      DELETE FROM tmp_${runId}_updated_messages
-      RETURNING rowid
-      LIMIT $chunkSize;
-      `
+          DELETE FROM tmp_${runId}_updated_messages
+          RETURNING rowid
+          ORDER BY received_at ASC, sent_at ASC
+          LIMIT $chunkSize;
+        `
       )
       .pluck()
       .all({ chunkSize });

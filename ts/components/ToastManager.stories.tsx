@@ -27,6 +27,13 @@ function getToast(toastType: ToastType): AnyToast {
       return { toastType: ToastType.AlreadyGroupMember };
     case ToastType.AlreadyRequestedToJoin:
       return { toastType: ToastType.AlreadyRequestedToJoin };
+    case ToastType.AttachmentDownloadStillInProgress:
+      return {
+        toastType: ToastType.AttachmentDownloadStillInProgress,
+        parameters: {
+          count: 1,
+        },
+      };
     case ToastType.Blocked:
       return { toastType: ToastType.Blocked };
     case ToastType.BlockedGroup:
@@ -98,6 +105,8 @@ function getToast(toastType: ToastType): AnyToast {
       return { toastType: ToastType.FailedToFetchUsername };
     case ToastType.FailedToSendWithEndorsements:
       return { toastType: ToastType.FailedToSendWithEndorsements };
+    case ToastType.FailedToImportBackup:
+      return { toastType: ToastType.FailedToImportBackup };
     case ToastType.FileSaved:
       return {
         toastType: ToastType.FileSaved,

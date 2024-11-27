@@ -22,6 +22,7 @@ import {
   AttachmentSizeError,
   type AttachmentType,
   AttachmentVariant,
+  mightBeOnBackupTier,
 } from '../types/Attachment';
 import { __DEPRECATED$getMessageById } from '../messages/getMessageById';
 import {
@@ -46,6 +47,7 @@ import { AttachmentDownloadSource } from '../sql/Interface';
 import { drop } from '../util/drop';
 import { getAttachmentCiphertextLength } from '../AttachmentCrypto';
 import { safeParsePartial } from '../util/schemas';
+import { createBatcher } from '../util/batcher';
 
 export enum AttachmentDownloadUrgency {
   IMMEDIATE = 'immediate',
@@ -92,7 +94,7 @@ type AttachmentDownloadManagerParamsType = Omit<
     job: AttachmentDownloadJobType;
     isLastAttempt: boolean;
     options?: { isForCurrentlyVisibleMessage: boolean };
-    dependencies: { downloadAttachment: typeof downloadAttachmentUtil };
+    dependencies?: DependenciesType;
   }) => Promise<JobManagerJobResultType<CoreAttachmentDownloadJobType>>;
 };
 
@@ -109,12 +111,27 @@ function getJobIdForLogging(job: CoreAttachmentDownloadJobType): string {
 
 export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownloadJobType> {
   private visibleTimelineMessages: Set<string> = new Set();
+  private saveJobsBatcher = createBatcher<AttachmentDownloadJobType>({
+    name: 'saveAttachmentDownloadJobs',
+    wait: 150,
+    maxSize: 1000,
+    processBatch: async jobs => {
+      await DataWriter.saveAttachmentDownloadJobs(jobs);
+      drop(this.maybeStartJobs());
+    },
+  });
   private static _instance: AttachmentDownloadManager | undefined;
   override logPrefix = 'AttachmentDownloadManager';
 
   static defaultParams: AttachmentDownloadManagerParamsType = {
     markAllJobsInactive: DataWriter.resetAttachmentDownloadActive,
-    saveJob: DataWriter.saveAttachmentDownloadJob,
+    saveJob: async (job, options) => {
+      if (options?.allowBatching) {
+        AttachmentDownloadManager._instance?.saveJobsBatcher.add(job);
+      } else {
+        await DataWriter.saveAttachmentDownloadJob(job);
+      }
+    },
     removeJob: DataWriter.removeAttachmentDownloadJob,
     getNextJobs: DataWriter.getNextAttachmentDownloadJobs,
     runDownloadAttachmentJob,
@@ -157,7 +174,6 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
           options: {
             isForCurrentlyVisibleMessage,
           },
-          dependencies: { downloadAttachment: downloadAttachmentUtil },
         });
       },
     });
@@ -176,6 +192,16 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
       source,
       urgency = AttachmentDownloadUrgency.STANDARD,
     } = newJobData;
+
+    const logId = `AttachmentDownloadManager/addJob(${sentAt}.${attachmentType})`;
+
+    if (attachment.error && source === AttachmentDownloadSource.BACKUP_IMPORT) {
+      log.info(
+        `${logId}: skipping InvalidAttachmentLocator from backup import`
+      );
+      return attachment;
+    }
+
     const parseResult = safeParsePartial(coreAttachmentDownloadJobSchema, {
       messageId,
       receivedAt,
@@ -186,14 +212,18 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
       size: attachment.size,
       ciphertextSize: getAttachmentCiphertextLength(attachment.size),
       attachment,
-      source,
+      // If the attachment does not have a backupLocator, we don't want to store it as a
+      // "backup import" attachment, since it's really just a normal attachment that we'll
+      // try to download from the transit tier (or it's an invalid attachment, etc.). We
+      // may need to extend the attachment_downloads table in the future to better
+      // differentiate source vs. location.
+      source: mightBeOnBackupTier(attachment)
+        ? source
+        : AttachmentDownloadSource.STANDARD,
     });
 
     if (!parseResult.success) {
-      log.error(
-        `AttachmentDownloadManager/addJob(${sentAt}.${attachmentType}): invalid data`,
-        parseResult.error
-      );
+      log.error(`${logId}: invalid data`, parseResult.error);
       return attachment;
     }
 
@@ -220,7 +250,12 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
   }
 
   static async start(): Promise<void> {
+    await AttachmentDownloadManager.saveBatchedJobs();
     await AttachmentDownloadManager.instance.start();
+  }
+
+  static async saveBatchedJobs(): Promise<void> {
+    await AttachmentDownloadManager.instance.saveJobsBatcher.flushAndWait();
   }
 
   static async stop(): Promise<void> {
@@ -238,17 +273,32 @@ export class AttachmentDownloadManager extends JobManager<CoreAttachmentDownload
       messageIds
     );
   }
+
+  static async waitForIdle(callback?: VoidFunction): Promise<void> {
+    await AttachmentDownloadManager.instance.waitForIdle();
+    if (callback) {
+      callback();
+    }
+  }
 }
+
+type DependenciesType = {
+  downloadAttachment: typeof downloadAttachmentUtil;
+  processNewAttachment: typeof window.Signal.Migrations.processNewAttachment;
+};
 async function runDownloadAttachmentJob({
   job,
   isLastAttempt,
   options,
-  dependencies,
+  dependencies = {
+    downloadAttachment: downloadAttachmentUtil,
+    processNewAttachment: window.Signal.Migrations.processNewAttachment,
+  },
 }: {
   job: AttachmentDownloadJobType;
   isLastAttempt: boolean;
   options?: { isForCurrentlyVisibleMessage: boolean };
-  dependencies: { downloadAttachment: typeof downloadAttachmentUtil };
+  dependencies?: DependenciesType;
 }): Promise<JobManagerJobResultType<CoreAttachmentDownloadJobType>> {
   const jobIdForLogging = getJobIdForLogging(job);
   const logId = `AttachmentDownloadManager/runDownloadAttachmentJob/${jobIdForLogging}`;
@@ -277,7 +327,7 @@ async function runDownloadAttachmentJob({
       };
     }
 
-    if (job.attachment.backupLocator?.mediaName) {
+    if (mightBeOnBackupTier(job.attachment)) {
       const currentDownloadedSize =
         window.storage.get('backupMediaDownloadCompletedBytes') ?? 0;
       drop(
@@ -362,7 +412,7 @@ export async function runDownloadAttachmentJobInner({
 }: {
   job: AttachmentDownloadJobType;
   isForCurrentlyVisibleMessage: boolean;
-  dependencies: { downloadAttachment: typeof downloadAttachmentUtil };
+  dependencies: DependenciesType;
 }): Promise<DownloadAttachmentResultType> {
   const { messageId, attachment, attachmentType } = job;
 
@@ -437,11 +487,10 @@ export async function runDownloadAttachmentJobInner({
       variant: AttachmentVariant.Default,
     });
 
-    const upgradedAttachment =
-      await window.Signal.Migrations.processNewAttachment({
-        ...omit(attachment, ['error', 'pending', 'downloadPath']),
-        ...downloaded,
-      });
+    const upgradedAttachment = await dependencies.processNewAttachment({
+      ...omit(attachment, ['error', 'pending', 'downloadPath']),
+      ...downloaded,
+    });
 
     await addAttachmentToMessage(messageId, upgradedAttachment, logId, {
       type: attachmentType,

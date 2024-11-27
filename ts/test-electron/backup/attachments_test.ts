@@ -31,9 +31,22 @@ import { isVoiceMessage, type AttachmentType } from '../../types/Attachment';
 import { strictAssert } from '../../util/assert';
 import { SignalService } from '../../protobuf';
 import { getRandomBytes } from '../../Crypto';
-import { loadAll } from '../../services/allLoaders';
+import { loadAllAndReinitializeRedux } from '../../services/allLoaders';
 
 const CONTACT_A = generateAci();
+
+const NON_ROUNDTRIPPED_FIELDS = [
+  'path',
+  'iv',
+  'thumbnail',
+  'screenshot',
+  'isReencryptableToSameDigest',
+];
+
+const NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS = [
+  ...NON_ROUNDTRIPPED_FIELDS,
+  'uploadTimestamp',
+];
 
 describe('backup/attachments', () => {
   let sandbox: sinon.SinonSandbox;
@@ -52,7 +65,7 @@ describe('backup/attachments', () => {
       { systemGivenName: 'CONTACT_A', active_at: 1 }
     );
 
-    await loadAll();
+    await loadAllAndReinitializeRedux();
 
     sandbox = sinon.createSandbox();
     const getAbsoluteAttachmentPath = sandbox.stub(
@@ -98,6 +111,7 @@ describe('backup/attachments', () => {
       size: 100,
       contentType: IMAGE_JPEG,
       path: `/path/to/file${index}.png`,
+      isReencryptableToSameDigest: true,
       uploadTimestamp: index,
       thumbnail: {
         size: 1024,
@@ -122,6 +136,7 @@ describe('backup/attachments', () => {
       received_at_ms: timestamp,
       sourceServiceId: CONTACT_A,
       sourceDevice: 1,
+      schemaVersion: 0,
       sent_at: timestamp,
       timestamp,
       readStatus: ReadStatus.Read,
@@ -152,12 +167,12 @@ describe('backup/attachments', () => {
         [
           composeMessage(1, {
             attachments: [
-              omit(longMessageAttachment, ['path', 'iv', 'thumbnail']),
-              omit(normalAttachment, ['path', 'iv', 'thumbnail']),
+              omit(longMessageAttachment, NON_ROUNDTRIPPED_FIELDS),
+              omit(normalAttachment, NON_ROUNDTRIPPED_FIELDS),
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Messages }
+        { backupLevel: BackupLevel.Free }
       );
     });
     it('migration creates long-message attachment if there is a long message.body (i.e. schemaVersion < 13)', async () => {
@@ -178,7 +193,7 @@ describe('backup/attachments', () => {
           }),
         ],
         {
-          backupLevel: BackupLevel.Media,
+          backupLevel: BackupLevel.Paid,
           comparator: (expected, msgInDB) => {
             assert.deepStrictEqual(
               omit(expected, 'bodyAttachment'),
@@ -226,7 +241,7 @@ describe('backup/attachments', () => {
           composeMessage(1, {
             body: 'a'.repeat(2048),
             bodyAttachment: {
-              ...omit(attachment, ['iv', 'path', 'uploadTimestamp']),
+              ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
               backupLocator: {
                 mediaName: digestToMediaName(attachment.digest),
               },
@@ -234,7 +249,7 @@ describe('backup/attachments', () => {
           }),
         ],
         {
-          backupLevel: BackupLevel.Media,
+          backupLevel: BackupLevel.Paid,
           comparator: (expected, msgInDB) => {
             assert.deepStrictEqual(
               omit(expected, 'bodyAttachment'),
@@ -254,7 +269,7 @@ describe('backup/attachments', () => {
   });
 
   describe('normal attachments', () => {
-    it('BackupLevel.Messages, roundtrips normal attachments', async () => {
+    it('BackupLevel.Free, roundtrips normal attachments', async () => {
       const attachment1 = composeAttachment(1);
       const attachment2 = composeAttachment(2);
 
@@ -268,15 +283,15 @@ describe('backup/attachments', () => {
         [
           composeMessage(1, {
             attachments: [
-              omit(attachment1, ['path', 'iv', 'thumbnail']),
-              omit(attachment2, ['path', 'iv', 'thumbnail']),
+              omit(attachment1, NON_ROUNDTRIPPED_FIELDS),
+              omit(attachment2, NON_ROUNDTRIPPED_FIELDS),
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Messages }
+        { backupLevel: BackupLevel.Free }
       );
     });
-    it('BackupLevel.Media, roundtrips normal attachments', async () => {
+    it('BackupLevel.Paid, roundtrips normal attachments', async () => {
       const attachment = composeAttachment(1);
       strictAssert(attachment.digest, 'digest exists');
 
@@ -292,12 +307,7 @@ describe('backup/attachments', () => {
             // but there will be a backupLocator
             attachments: [
               {
-                ...omit(attachment, [
-                  'path',
-                  'iv',
-                  'thumbnail',
-                  'uploadTimestamp',
-                ]),
+                ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                 backupLocator: {
                   mediaName: digestToMediaName(attachment.digest),
                 },
@@ -305,7 +315,7 @@ describe('backup/attachments', () => {
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
     it('roundtrips voice message attachments', async () => {
@@ -326,12 +336,7 @@ describe('backup/attachments', () => {
           composeMessage(1, {
             attachments: [
               {
-                ...omit(attachment, [
-                  'path',
-                  'iv',
-                  'thumbnail',
-                  'uploadTimestamp',
-                ]),
+                ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                 backupLocator: {
                   mediaName: digestToMediaName(attachment.digest),
                 },
@@ -339,13 +344,13 @@ describe('backup/attachments', () => {
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
   });
 
   describe('Preview attachments', () => {
-    it('BackupLevel.Messages, roundtrips preview attachments', async () => {
+    it('BackupLevel.Free, roundtrips preview attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
 
       await asymmetricRoundtripHarness(
@@ -361,15 +366,15 @@ describe('backup/attachments', () => {
               {
                 url: 'url',
                 date: 1,
-                image: omit(attachment, ['path', 'iv', 'thumbnail']),
+                image: omit(attachment, NON_ROUNDTRIPPED_FIELDS),
               },
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Messages }
+        { backupLevel: BackupLevel.Free }
       );
     });
-    it('BackupLevel.Media, roundtrips preview attachments', async () => {
+    it('BackupLevel.Paid, roundtrips preview attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
       strictAssert(attachment.digest, 'digest exists');
 
@@ -398,12 +403,7 @@ describe('backup/attachments', () => {
                 image: {
                   // path, iv, and uploadTimestamp will not be roundtripped,
                   // but there will be a backupLocator
-                  ...omit(attachment, [
-                    'path',
-                    'iv',
-                    'thumbnail',
-                    'uploadTimestamp',
-                  ]),
+                  ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                   backupLocator: {
                     mediaName: digestToMediaName(attachment.digest),
                   },
@@ -412,13 +412,13 @@ describe('backup/attachments', () => {
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
   });
 
   describe('contact attachments', () => {
-    it('BackupLevel.Messages, roundtrips contact attachments', async () => {
+    it('BackupLevel.Free, roundtrips contact attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
 
       await asymmetricRoundtripHarness(
@@ -433,17 +433,17 @@ describe('backup/attachments', () => {
             contact: [
               {
                 avatar: {
-                  avatar: omit(attachment, ['path', 'iv', 'thumbnail']),
+                  avatar: omit(attachment, NON_ROUNDTRIPPED_FIELDS),
                   isProfile: false,
                 },
               },
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Messages }
+        { backupLevel: BackupLevel.Free }
       );
     });
-    it('BackupLevel.Media, roundtrips contact attachments', async () => {
+    it('BackupLevel.Paid, roundtrips contact attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
       strictAssert(attachment.digest, 'digest exists');
 
@@ -461,12 +461,7 @@ describe('backup/attachments', () => {
               {
                 avatar: {
                   avatar: {
-                    ...omit(attachment, [
-                      'path',
-                      'iv',
-                      'thumbnail',
-                      'uploadTimestamp',
-                    ]),
+                    ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                     backupLocator: {
                       mediaName: digestToMediaName(attachment.digest),
                     },
@@ -477,13 +472,13 @@ describe('backup/attachments', () => {
             ],
           }),
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
   });
 
   describe('quotes', () => {
-    it('BackupLevel.Messages, roundtrips quote attachments', async () => {
+    it('BackupLevel.Free, roundtrips quote attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
       const authorAci = generateAci();
       const quotedMessage: QuotedMessageType = {
@@ -491,7 +486,6 @@ describe('backup/attachments', () => {
         isViewOnce: false,
         id: Date.now(),
         referencedMessageNotFound: false,
-        messageId: '',
         isGiftBadge: true,
         attachments: [{ thumbnail: attachment, contentType: VIDEO_MP4 }],
       };
@@ -507,20 +501,19 @@ describe('backup/attachments', () => {
           composeMessage(1, {
             quote: {
               ...quotedMessage,
-              referencedMessageNotFound: true,
               attachments: [
                 {
-                  thumbnail: omit(attachment, ['iv', 'path', 'thumbnail']),
+                  thumbnail: omit(attachment, NON_ROUNDTRIPPED_FIELDS),
                   contentType: VIDEO_MP4,
                 },
               ],
             },
           }),
         ],
-        { backupLevel: BackupLevel.Messages }
+        { backupLevel: BackupLevel.Free }
       );
     });
-    it('BackupLevel.Media, roundtrips quote attachments', async () => {
+    it('BackupLevel.Paid, roundtrips quote attachments', async () => {
       const attachment = composeAttachment(1, { clientUuid: undefined });
       strictAssert(attachment.digest, 'digest exists');
       const authorAci = generateAci();
@@ -529,7 +522,6 @@ describe('backup/attachments', () => {
         isViewOnce: false,
         id: Date.now(),
         referencedMessageNotFound: false,
-        messageId: '',
         isGiftBadge: true,
         attachments: [{ thumbnail: attachment, contentType: VIDEO_MP4 }],
       };
@@ -544,16 +536,10 @@ describe('backup/attachments', () => {
           composeMessage(1, {
             quote: {
               ...quotedMessage,
-              referencedMessageNotFound: true,
               attachments: [
                 {
                   thumbnail: {
-                    ...omit(attachment, [
-                      'iv',
-                      'path',
-                      'uploadTimestamp',
-                      'thumbnail',
-                    ]),
+                    ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                     backupLocator: {
                       mediaName: digestToMediaName(attachment.digest),
                     },
@@ -564,7 +550,7 @@ describe('backup/attachments', () => {
             },
           }),
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
 
@@ -585,7 +571,6 @@ describe('backup/attachments', () => {
         isViewOnce: false,
         id: existingMessageTimestamp,
         referencedMessageNotFound: false,
-        messageId: '',
         isGiftBadge: false,
         attachments: [{ thumbnail: quoteAttachment, contentType: VIDEO_MP4 }],
       };
@@ -601,12 +586,10 @@ describe('backup/attachments', () => {
             ...existingMessage,
             attachments: [
               {
-                ...omit(existingAttachment, [
-                  'path',
-                  'iv',
-                  'uploadTimestamp',
-                  'thumbnail',
-                ]),
+                ...omit(
+                  existingAttachment,
+                  NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS
+                ),
                 backupLocator: {
                   mediaName: digestToMediaName(existingAttachment.digest),
                 },
@@ -623,7 +606,10 @@ describe('backup/attachments', () => {
                   // The thumbnail will not have been copied over yet since it has not yet
                   // been downloaded
                   thumbnail: {
-                    ...omit(quoteAttachment, ['iv', 'path', 'uploadTimestamp']),
+                    ...omit(
+                      quoteAttachment,
+                      NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS
+                    ),
                     backupLocator: {
                       mediaName: digestToMediaName(quoteAttachment.digest),
                     },
@@ -634,7 +620,7 @@ describe('backup/attachments', () => {
             },
           },
         ],
-        { backupLevel: BackupLevel.Media }
+        { backupLevel: BackupLevel.Paid }
       );
     });
 
@@ -645,7 +631,6 @@ describe('backup/attachments', () => {
         isViewOnce: false,
         id: originalMessage.timestamp,
         referencedMessageNotFound: false,
-        messageId: '',
         isGiftBadge: false,
         attachments: [
           {
@@ -682,7 +667,7 @@ describe('backup/attachments', () => {
           },
         ],
         {
-          backupLevel: BackupLevel.Media,
+          backupLevel: BackupLevel.Paid,
           comparator: (msgBefore, msgAfter) => {
             if (msgBefore.timestamp === originalMessage.timestamp) {
               return assert.deepStrictEqual(msgBefore, msgAfter);
@@ -720,7 +705,7 @@ describe('backup/attachments', () => {
     const packKey = Bytes.toBase64(getRandomBytes(32));
 
     describe('when copied over from sticker pack (i.e. missing encryption info)', () => {
-      it('BackupLevel.Media, generates new encryption info', async () => {
+      it('BackupLevel.Paid, generates new encryption info', async () => {
         await asymmetricRoundtripHarness(
           [
             composeMessage(1, {
@@ -756,7 +741,7 @@ describe('backup/attachments', () => {
             }),
           ],
           {
-            backupLevel: BackupLevel.Media,
+            backupLevel: BackupLevel.Paid,
             comparator: (msgBefore, msgAfter) => {
               assert.deepStrictEqual(
                 omit(msgBefore, 'sticker.data'),
@@ -785,7 +770,7 @@ describe('backup/attachments', () => {
           }
         );
       });
-      it('BackupLevel.Messages, generates invalid attachment locator', async () => {
+      it('BackupLevel.Free, generates invalid attachment locator', async () => {
         // since we aren't re-uploading with new encryption info, we can't include this
         // attachment in the backup proto
         await asymmetricRoundtripHarness(
@@ -824,7 +809,7 @@ describe('backup/attachments', () => {
             }),
           ],
           {
-            backupLevel: BackupLevel.Messages,
+            backupLevel: BackupLevel.Free,
           }
         );
       });
@@ -853,12 +838,7 @@ describe('backup/attachments', () => {
                 packKey,
                 stickerId: 0,
                 data: {
-                  ...omit(attachment, [
-                    'iv',
-                    'path',
-                    'thumbnail',
-                    'uploadTimestamp',
-                  ]),
+                  ...omit(attachment, NON_ROUNDTRIPPED_BACKUP_LOCATOR_FIELDS),
                   backupLocator: {
                     mediaName: digestToMediaName(attachment.digest),
                   },
@@ -867,7 +847,7 @@ describe('backup/attachments', () => {
             }),
           ],
           {
-            backupLevel: BackupLevel.Media,
+            backupLevel: BackupLevel.Paid,
           }
         );
       });

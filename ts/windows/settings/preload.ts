@@ -15,6 +15,7 @@ import {
 import { awaitObject } from '../../util/awaitObject';
 import { DurationInSeconds } from '../../util/durations';
 import { createSetting, createCallback } from '../../util/preload';
+import { findBestMatchingAudioDeviceIndex } from '../../calling/findBestMatchingDevice';
 
 function doneRendering() {
   ipcRenderer.send('settings-done-rendering');
@@ -242,6 +243,30 @@ async function renderPreferences() {
   const preferredSystemLocales =
     MinimalSignalContext.getPreferredSystemLocales();
 
+  const selectedMicIndex = findBestMatchingAudioDeviceIndex(
+    {
+      available: availableMicrophones,
+      preferred: selectedMicrophone,
+    },
+    OS.isWindows()
+  );
+  const recomputedSelectedMicrophone =
+    selectedMicIndex !== undefined
+      ? availableMicrophones[selectedMicIndex]
+      : undefined;
+
+  const selectedSpeakerIndex = findBestMatchingAudioDeviceIndex(
+    {
+      available: availableSpeakers,
+      preferred: selectedSpeaker,
+    },
+    OS.isWindows()
+  );
+  const recomputedSelectedSpeaker =
+    selectedSpeakerIndex !== undefined
+      ? availableSpeakers[selectedSpeakerIndex]
+      : undefined;
+
   const props = {
     // Settings
     availableCameras,
@@ -283,8 +308,8 @@ async function renderPreferences() {
     preferredSystemLocales,
     resolvedLocale,
     selectedCamera,
-    selectedMicrophone,
-    selectedSpeaker,
+    selectedMicrophone: recomputedSelectedMicrophone,
+    selectedSpeaker: recomputedSelectedSpeaker,
     sentMediaQualitySetting,
     themeSetting,
     universalExpireTimer: DurationInSeconds.fromSeconds(universalExpireTimer),

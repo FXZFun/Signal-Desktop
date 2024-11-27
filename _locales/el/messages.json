@@ -53,6 +53,15 @@
   "icu:appleSilicon": {
     "messageformat": "Apple silicon"
   },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)"
+  },
   "icu:copyErrorAndQuit": {
     "messageformat": "Αντιγραφή σφάλματος και έξοδος"
   },
@@ -575,14 +584,14 @@
   "icu:decryptionErrorToast": {
     "messageformat": "Το Desktop αντιμετώπισε ένα σφάλμα αποκρυπτογράφησης από τον/την {name}, συσκευή {deviceId}"
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "Υποβολή αρχείου"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "Υποβολή αρχείου καταγραφής"
   },
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements"
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Δεν μπορείς να επιλέξεις φωτογραφίες και βίντεο μαζί με αρχεία."
@@ -680,6 +689,9 @@
   "icu:search": {
     "messageformat": "Αναζήτηση"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "Αναζήτηση μη αναγνωσμένων συνομιλιών"
+  },
   "icu:clearSearch": {
     "messageformat": "Εκκαθάριση αναζήτησης"
   },
@@ -689,11 +701,26 @@
   "icu:noSearchResults": {
     "messageformat": "Δεν υπάρχουν αποτελέσματα για \"{searchTerm}\""
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "Δεν υπάρχουν αποτελέσματα για \"{searchTerm}\" σε μη αναγνωσμένες συνομιλίες"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "Καμία μη αναγνωσμένη συνομιλία"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "Οι επαφές SMS/MMS δεν είναι διαθέσιμες στο Desktop."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Δε βρέθηκαν αποτελέσματα για \"{searchTerm}\" στο {conversationName}"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "Φιλτράρισμα με μη αναγνωσμένα"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "Φιλτράρισμα με μη αναγνωσμένα"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "Διαγραφή φίλτρου"
   },
   "icu:conversationsHeader": {
     "messageformat": "Συνομιλίες"
@@ -791,8 +818,14 @@
   "icu:attachmentSaved": {
     "messageformat": "Το συνημμένο αποθηκεύτηκε."
   },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, one {Το συνημμένο αποθηκεύτηκε} other {{count,number} συνημμένα αποθηκεύτηκαν}}"
+  },
   "icu:attachmentSavedShow": {
     "messageformat": "Εμφάνιση στο φάκελο"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "{count, plural, one {Δεν είναι δυνατή η αποθήκευση του συνημμένου, καθώς δεν έχει ολοκληρωθεί ακόμα η λήψη του} other {Δεν είναι δυνατή η αποθήκευση των συνημμένων, καθώς δεν έχει ολοκληρωθεί ακόμα η λήψη {count,number}}}"
   },
   "icu:you": {
     "messageformat": "Εσύ"
@@ -1003,6 +1036,18 @@
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "Όλα τα μηνύματα σε αυτήν τη συνομιλία θα διαγραφούν από όλες τις συσκευές. Μπορείς ακόμα να κάνεις αναζήτηση αυτής της συνομιλίας αφού διαγράψεις μηνύματα."
+  },
+  "icu:deleteConversation": {
+    "messageformat": "Διαγραφή"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "Διαγραφή συνομιλίας;"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "Όλα τα μηνύματα σε αυτή τη συνομιλία θα διαγραφούν από αυτή τη συσκευή."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "Όλα τα μηνύματα σε αυτήν τη συνομιλία θα διαγραφούν από όλες τις συσκευές."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Αποχώρηση απ' την ομάδα"
@@ -1229,6 +1274,9 @@
   "icu:calling__call-link-default-title": {
     "messageformat": "Κλήση Signal"
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "Δεν ήταν δυνατή η διαγραφή του συνδέσμου. Έλεγξε τη σύνδεσή σου και δοκίμασε πάλι."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "Το αίτημα συμμετοχής σου στην κλήση απορρίφθηκε."
   },
@@ -1370,6 +1418,9 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{others, plural, one {Οι {first}, {second} και {others,number} ακόμα είναι στην κλήση} other {Οι {first}, {second} και {others,number} ακόμα είναι στην κλήση}}"
   },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, one {{count,number} άτομο είναι στην κλήση} other {{count,number} άτομα είναι στην κλήση}}"
+  },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Το Signal θα καλέσει με κουδόυνισμα τον/την {person}"
   },
@@ -1440,7 +1491,7 @@
     "messageformat": "Το Signal διαμοιράζεται το {window}."
   },
   "icu:calling__presenting--info--unknown": {
-    "messageformat": "Signal screen sharing is active"
+    "messageformat": "Η κοινή χρήση οθόνης Signal είναι ενεργή"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Επανασύνδεση…"
@@ -2976,7 +3027,7 @@
     "messageformat": "Δεν μπορείς να μπεις στην ομάδα μέσω του συνδέσμου της ομάδας, επειδή κάποιος διαχειριστής σε αφαίρεσε."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
+    "messageformat": "Κάποιος διαχειριστής/τρια αυτής της ομάδας θα πρέπει να εγκρίνει το αίτημά σου για να μπορέσεις να μπεις στην ομάδα. Όταν ζητήσεις να μπεις, το όνομα και η φωτογραφία σου θα μοιραστούν με τα μέλη της."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Μπες στη κλήση"
@@ -3536,6 +3587,9 @@
   "icu:BackupImportScreen__progressbar-hint": {
     "messageformat": "Λήψη {currentSize} από {totalSize} ({fractionComplete,number,percent})..."
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "Ολοκλήρωση μεταφοράς μηνύματος..."
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "Προετοιμασία για λήψη..."
   },
@@ -3544,6 +3598,9 @@
   },
   "icu:BackupImportScreen__cancel": {
     "messageformat": "Ακύρωση μεταφοράς"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "Τα μηνύματα και οι πληροφορίες συνομιλίας προστατεύονται με κρυπτογράφηση από άκρο σε άκρο, συμπεριλαμβανομένης της διαδικασίας συγχρονισμού. <learnMoreLink>Μάθε περισσότερα</learnMoreLink>"
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "Ακύρωση μεταφοράς;"
@@ -3557,11 +3614,38 @@
   "icu:BackupImportScreen__cancel-confirmation__confirm": {
     "messageformat": "Ακύρωση μεταφοράς"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "Σφάλμα κατά την μεταφορά μηνυμάτων"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "Δεν ήταν δυνατή η μεταφορά των μηνυμάτων σου. Έλεγξε τη σύνδεσή σου στο διαδίκτυο και ξαναδοκίμασε."
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "Επανάληψη"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "Παράλειψη"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "Παράβλεψη μεταφοράς μηνύματος;"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "Εάν επιλέξεις την παράλειψη, δεν θα έχεις πρόσβαση σε κανένα από τα μηνύματα ή τα πολυμέσα σου σε αυτήν τη συσκευή. Μπορείς να ξεκινήσεις μια νέα μεταφορά αφού κάνεις παράλειψη από τις Ρυθμίσεις > Συνομιλίες > Μεταφορά."
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "Ακύρωση"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Επαναφορά πολυμέσων"
   },
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "Επαναφορά σε παύση"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "Έγινε επαναφορά {currentSize} από {totalSize}"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "Η λήψη πολυμέσων θα συνεχιστεί στο παρασκήνιο"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "Παύση μεταφοράς"
@@ -4445,12 +4529,6 @@
   "icu:ProfileEditorModal--error": {
     "messageformat": "Το προφίλ σου δεν μπόρεσε να ανανεωθεί. Παρακαλώ προσπάθησε ξανά."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "Μη έγκυροι χαρακτήρες"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "Ένας ή περισσότεροι χαρακτήρες που έχεις εισαγάγει δεν μπορούν να χρησιμοποιηθούν. Ξαναπροσπάθησε."
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Μήνυμα σε διαχειριστή"
   },
@@ -4651,6 +4729,15 @@
   },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Το Signal αντιμετωπίζει τεχνικές δυσκολίες. Εργαζόμαστε σκληρά για να αποκαταστήσουμε την υπηρεσία το συντομότερο δυνατό."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "Απαιτείται αναβάθμιση"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "Για να ολοκληρώσεις τον συγχρονισμό των μηνυμάτων σου, ενημέρωσε το Signal Desktop τώρα."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "Ενημέρωση"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "Απαιτείται αναβάθμιση"
@@ -5199,7 +5286,7 @@
     "messageformat": "Ιστορία"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Unhide story"
+    "messageformat": "Επανεμφάνιση ιστορίας"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Απόκρυψη ιστορίας"
@@ -5470,7 +5557,10 @@
     "messageformat": "Διαγραφή ιστορικού κλήσεων;"
   },
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
-    "messageformat": "Με αυτή την επιλογή θα διαγραφεί μόνιμα το ιστορικό κλήσεων"
+    "messageformat": "Με αυτή την επιλογή θα διαγραφεί μόνιμα το ιστορικό κλήσεων."
+  },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "Με αυτή την επιλογή θα διαγραφεί μόνιμα το ιστορικό κλήσεων. Οι σύνδεσμοι κλήσης που δημιούργησες δεν θα λειτουργούν πλέον για τα άτομα που τους έχουν. "
   },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
     "messageformat": "Εκκαθάριση"
@@ -5478,11 +5568,23 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Το ιστορικό κλήσεων διαγράφηκε"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "Δεν ήταν δυνατή η διαγραφή όλων των συνδέσμων κλήσης. Έλεγξε τη σύνδεσή σου και δοκίμασε πάλι."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "Δεν ήταν δυνατή η διαγραφή όλων των συνδέσμων κλήσης. Έλεγξε τη σύνδεσή σου και δοκίμασε πάλι."
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "Πάτα <newCallButtonIcon></newCallButtonIcon> για να ξεκινήσεις μια νέα φωνητική κλήση ή μια βιντεοκλήση."
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "Αναζήτηση αναπάντητων κλήσεων"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Αναζήτηση"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "Φιλτράρισμα ανά αναπάντητες"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Φίλτρο ανά αναπάντητες"
@@ -5496,14 +5598,14 @@
   "icu:CallsList__EmptyState--noQuery__subtitle": {
     "messageformat": "Οι νέες κλήσεις θα εμφανίζονται εδώ."
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "Δεν υπάρχουν αναπάντητες κλήσεις"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Οι χαμένες κλήσεις θα εμφανίζονται εδώ."
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Δεν βρέθηκαν αποτελέσματα για “{query}”"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "Δεν υπάρχουν αποτελέσματα για το \"{query}\" στις αναπάντητες κλήσεις"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "Δεν υπάρχουν αναπάντητες κλήσεις"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "Δημιουργήστε σύνδεσμο κλήσης"
@@ -5674,16 +5776,16 @@
     "messageformat": "Μικρές τροποποιήσεις, επιδιορθώσεις σφαλμάτων και βελτιώσεις απόδοσης. Ευχαριστούμε που χρησιμοποιείς το Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "Αυτή η ενημέρωση διορθώνει ένα σφάλμα που καθιστούσε δύσκολη την αναζήτηση μιας ομάδας μετά την αποχώρησή σου από αυτήν."
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "Το νέο εικονίδιο φίλτρου δίπλα στο πλαίσιο αναζήτησης διευκολύνει τη γρήγορη εύρεση μη αναγνωσμένων συνομιλιών."
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "Τώρα μπορείς να αφαιρέσεις τις αναφερόμενες απαντήσεις από τα επεξεργασμένα μηνύματα."
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "Αυτή η ενημέρωση εισάγει υποστήριξη για νέους επεξεργαστές στα Windows, όπως ο Snapdragon X Elite."
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "Διορθώσαμε επίσης ένα σφάλμα που κατέστρεφε το σκούρο θέμα στο Signal όταν οι ρυθμίσεις του λειτουργικού σου συστήματος ήταν ρυθμισμένες σε ανοιχτό θέμα."
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
   }
 }

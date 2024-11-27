@@ -53,6 +53,15 @@
   "icu:appleSilicon": {
     "messageformat": "Apple silicon"
   },
+  "icu:About__AppEnvironment": {
+    "messageformat": "{appEnv}"
+  },
+  "icu:About__AppEnvironment--AppleSilicon": {
+    "messageformat": "{appEnv} (Apple silicon)"
+  },
+  "icu:About__AppEnvironment--AppleIntel": {
+    "messageformat": "{appEnv} (Intel)"
+  },
   "icu:copyErrorAndQuit": {
     "messageformat": "Sao chép lỗi và thoát"
   },
@@ -575,14 +584,14 @@
   "icu:decryptionErrorToast": {
     "messageformat": "Máy tính để bàn gặp lỗi giải mã từ {name}, thiết bị {deviceId}"
   },
-  "icu:decryptionErrorToastAction": {
-    "messageformat": "Gửi nhật ký"
-  },
   "icu:Toast__ActionLabel--SubmitLog": {
     "messageformat": "Gửi nhật ký"
   },
   "icu:Toast--FailedToSendWithEndorsements": {
     "messageformat": "Failed to send message with endorsements"
+  },
+  "icu:Toast--FailedToImportBackup": {
+    "messageformat": "Failed to process some frames during backup import. Please share your logs."
   },
   "icu:cannotSelectPhotosAndVideosAlongWithFiles": {
     "messageformat": "Bạn không thể chọn ảnh và video cùng các tập tin."
@@ -680,6 +689,9 @@
   "icu:search": {
     "messageformat": "Tìm kiếm"
   },
+  "icu:searchUnreadChats": {
+    "messageformat": "Tìm cuộc trò chuyện chưa đọc"
+  },
   "icu:clearSearch": {
     "messageformat": "Xoá Tìm kiếm"
   },
@@ -689,11 +701,26 @@
   "icu:noSearchResults": {
     "messageformat": "Không có kết quả cho \"{searchTerm}\""
   },
+  "icu:noSearchResultsWithUnreadFilter": {
+    "messageformat": "Không có kết quả cho \"{searchTerm}\" trong số cuộc trò chuyện chưa đọc"
+  },
+  "icu:noSearchResultsOnlyUnreadFilter": {
+    "messageformat": "Không có cuộc trò chuyện chưa đọc"
+  },
   "icu:noSearchResults--sms-only": {
     "messageformat": "Liên hệ SMS/MMS không có sẵn trên Desktop."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Không có kết quả cho \"{searchTerm}\" trong {conversationName}"
+  },
+  "icu:conversationsUnreadHeader": {
+    "messageformat": "Đã lọc theo trạng thái chưa đọc"
+  },
+  "icu:filterByUnreadButtonLabel": {
+    "messageformat": "Lọc theo trạng thái Chưa đọc"
+  },
+  "icu:clearFilterButton": {
+    "messageformat": "Bỏ lọc"
   },
   "icu:conversationsHeader": {
     "messageformat": "Trò chuyện"
@@ -791,8 +818,14 @@
   "icu:attachmentSaved": {
     "messageformat": "Đã lưu đính kèm."
   },
+  "icu:attachmentSavedPlural": {
+    "messageformat": "{count, plural, other {Đã lưu {count,number} tập tin đính kèm}}"
+  },
   "icu:attachmentSavedShow": {
     "messageformat": "Hiển thị trong thư mục"
+  },
+  "icu:attachmentStillDownloading": {
+    "messageformat": "{count, plural, other {Không thể lưu tập tin đính kèm, vì vẫn còn {count,number} tập tin chưa tải xong}}"
   },
   "icu:you": {
     "messageformat": "Bạn"
@@ -1003,6 +1036,18 @@
   },
   "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
     "messageformat": "Tất cả tin nhắn trong cuộc trò chuyện này sẽ được xóa khỏi tất cả thiết bị của bạn. Bạn vẫn có thể tìm cuộc trò chuyện này sau khi xóa tin nhắn."
+  },
+  "icu:deleteConversation": {
+    "messageformat": "Xóa"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__title": {
+    "messageformat": "Xóa cuộc trò chuyện?"
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description": {
+    "messageformat": "Tất cả tin nhắn trong cuộc trò chuyện này sẽ được xóa khỏi thiết bị này."
+  },
+  "icu:ConversationHeader__DeleteConversationConfirmation__description-with-sync": {
+    "messageformat": "Tất cả tin nhắn trong cuộc trò chuyện này sẽ được xóa khỏi tất cả thiết bị của bạn."
   },
   "icu:ConversationHeader__ContextMenu__LeaveGroupAction__title": {
     "messageformat": "Rời nhóm"
@@ -1229,6 +1274,9 @@
   "icu:calling__call-link-default-title": {
     "messageformat": "Cuộc gọi Signal"
   },
+  "icu:calling__call-link-delete-failed": {
+    "messageformat": "Không thể xóa đường dẫn. Kiểm tra kết nối của bạn và thử lại."
+  },
   "icu:calling__join-request-denied": {
     "messageformat": "Yêu cầu tham gia cuộc gọi này của bạn đã bị từ chối."
   },
@@ -1370,6 +1418,9 @@
   "icu:calling__pre-call-info--many-people-in-call": {
     "messageformat": "{others, plural, other {{first}, {second}, và {others,number} người khác đang trong cuộc gọi này}}"
   },
+  "icu:calling__pre-call-info--only-unknown-contacts-in-call": {
+    "messageformat": "{count, plural, other {{count,number} người đang trong cuộc gọi này}}"
+  },
   "icu:calling__pre-call-info--will-ring-1": {
     "messageformat": "Signal sẽ đổ chuông {person}"
   },
@@ -1440,7 +1491,7 @@
     "messageformat": "Signal đang chia sẻ {window}."
   },
   "icu:calling__presenting--info--unknown": {
-    "messageformat": "Signal screen sharing is active"
+    "messageformat": "Tính năng chia sẻ màn hình của Signal đang hoạt động"
   },
   "icu:calling__presenting--reconnecting": {
     "messageformat": "Đang kết nối lại…"
@@ -2976,7 +3027,7 @@
     "messageformat": "Bạn không thể tham gia nhóm này qua đường dẫn nhóm vì một quản trị viên đã xóa bạn khỏi nhóm."
   },
   "icu:GroupV2--join--prompt-with-approval": {
-    "messageformat": "An admin of this group must approve your request before you can join this group. When you request to join, your name and photo will be shared with its members."
+    "messageformat": "Cần một quản trị viên chấp nhận yêu cầu trước khi bạn tham gia nhóm này. Khi bạn yêu cầu tham gia, tên và ảnh đại diện của bạn sẽ được công khai với các thành viên nhóm."
   },
   "icu:GroupV2--join--join-button": {
     "messageformat": "Tham gia"
@@ -3536,6 +3587,9 @@
   "icu:BackupImportScreen__progressbar-hint": {
     "messageformat": "Hiện tải được {currentSize} của tổng {totalSize} ({fractionComplete,number,percent})..."
   },
+  "icu:BackupImportScreen__progressbar-hint--processing": {
+    "messageformat": "Đang hoàn tất việc chuyển tin nhắn..."
+  },
   "icu:BackupImportScreen__progressbar-hint--preparing": {
     "messageformat": "Đang chuẩn bị tải xuống..."
   },
@@ -3544,6 +3598,9 @@
   },
   "icu:BackupImportScreen__cancel": {
     "messageformat": "Hủy chuyển"
+  },
+  "icu:BackupImportScreen__security-description": {
+    "messageformat": "Thông tin tin nhắn và cuộc trò chuyện được bảo vệ bằng hình thức mã hóa đầu cuối, bao gồm cả quá trình đồng bộ. <learnMoreLink>Tìm hiểu thêm</learnMoreLink>"
   },
   "icu:BackupImportScreen__cancel-confirmation__title": {
     "messageformat": "Hủy chuyển?"
@@ -3557,11 +3614,38 @@
   "icu:BackupImportScreen__cancel-confirmation__confirm": {
     "messageformat": "Hủy chuyển"
   },
+  "icu:BackupImportScreen__error__title": {
+    "messageformat": "Có lỗi khi chuyển tin nhắn của bạn"
+  },
+  "icu:BackupImportScreen__error__body": {
+    "messageformat": "Tin nhắn của bạn không thể được chuyển. Kiểm tra kết nối internet của bạn và thử lại."
+  },
+  "icu:BackupImportScreen__error__confirm": {
+    "messageformat": "Thử lại"
+  },
+  "icu:BackupImportScreen__skip": {
+    "messageformat": "Bỏ qua"
+  },
+  "icu:BackupImportScreen__skip-confirmation__title": {
+    "messageformat": "Bỏ qua việc chuyển tin nhắn?"
+  },
+  "icu:BackupImportScreen__skip-confirmation__body": {
+    "messageformat": "Nếu bạn chọn bỏ qua, bạn sẽ không có quyền truy cập bất kỳ tin nhắn hoặc tập tin đa phương tiện nào trên thiết bị này. Bạn có thể bắt đầu một quá trình chuyển mới sau khi bỏ qua từ mục Cài đặt > Trò chuyện > Chuyển."
+  },
+  "icu:BackupImportScreen__skip-confirmation__cancel": {
+    "messageformat": "Hủy"
+  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Đang khôi phục tập tin đa phương tiện"
   },
   "icu:BackupMediaDownloadProgress__title-paused": {
     "messageformat": "Khôi phục được tạm dừng"
+  },
+  "icu:BackupMediaDownloadProgress__title-idle": {
+    "messageformat": "Đã khôi phục {currentSize} trên tổng số {totalSize}"
+  },
+  "icu:BackupMediaDownloadProgress__description-idle": {
+    "messageformat": "Tập tin đa phương tiện vẫn sẽ tiếp tục được tải xuống ở chế độ nền"
   },
   "icu:BackupMediaDownloadProgress__button-pause": {
     "messageformat": "Tạm dừng chuyển"
@@ -4445,12 +4529,6 @@
   "icu:ProfileEditorModal--error": {
     "messageformat": "Hồ sơ của bạn không thể cập nhật. Vui lòng thử lại."
   },
-  "icu:ProfileEditor__invalid-about__title": {
-    "messageformat": "Ký tự không hợp lệ"
-  },
-  "icu:ProfileEditor__invalid-about__body": {
-    "messageformat": "Có một hoặc nhiều ký tự bạn nhập không hợp lệ. Thử lại."
-  },
   "icu:AnnouncementsOnlyGroupBanner--modal": {
     "messageformat": "Nhắn tin cho quản trị viên"
   },
@@ -4651,6 +4729,15 @@
   },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal đang gặp trục trặc kĩ thuật. Chúng thôi đang cố hết sức để khôi phục dịch vụ càng sớm càng tốt."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__title": {
+    "messageformat": "Yêu cầu Cập nhật"
+  },
+  "icu:InstallScreenUpdateDialog--update-required__body": {
+    "messageformat": "Để hoàn thành đồng bộ tin nhắn, cập nhật Signal Desktop ngay."
+  },
+  "icu:InstallScreenUpdateDialog--update-required__action-update": {
+    "messageformat": "Cập nhật"
   },
   "icu:InstallScreenUpdateDialog--unsupported-os__title": {
     "messageformat": "Yêu cầu Cập nhật"
@@ -5199,7 +5286,7 @@
     "messageformat": "Story"
   },
   "icu:StoryListItem__unhide": {
-    "messageformat": "Unhide story"
+    "messageformat": "Bỏ ẩn story"
   },
   "icu:StoryListItem__hide": {
     "messageformat": "Ẩn story"
@@ -5470,7 +5557,10 @@
     "messageformat": "Xóa lịch sử cuộc gọi?"
   },
   "icu:CallsTab__ConfirmClearCallHistory__Body": {
-    "messageformat": "Thao tác này sẽ xóa vĩnh viễn tất cả lịch sử cuộc gọi"
+    "messageformat": "Thao tác này sẽ xóa vĩnh viễn tất cả lịch sử cuộc gọi."
+  },
+  "icu:CallsTab__ConfirmClearCallHistory__Body--call-links": {
+    "messageformat": "Thao tác này sẽ xóa vĩnh viễn tất cả lịch sử cuộc gọi. Các đường dẫn cuộc gọi bạn đã tạo không còn hiệu lực cho những người được bạn gửi đến. "
   },
   "icu:CallsTab__ConfirmClearCallHistory__ConfirmButton": {
     "messageformat": "Xoá"
@@ -5478,11 +5568,23 @@
   "icu:CallsTab__ToastCallHistoryCleared": {
     "messageformat": "Đã xóa lịch xử cuộc gọi"
   },
+  "icu:CallsTab__ClearCallHistoryError--call-links": {
+    "messageformat": "Không thể xóa một số đường dẫn cuộc gọi. Kiểm tra kết nối của bạn và thử lại."
+  },
+  "icu:CallsTab__ClearCallHistoryError": {
+    "messageformat": "Không thể xóa một số lịch sử cuộc gọi. Kiểm tra kết nối của bạn và thử lại."
+  },
   "icu:CallsTab__EmptyStateText--with-icon-2": {
     "messageformat": "Bấm <newCallButtonIcon></newCallButtonIcon> để bắt đầu một cuộc gọi thoại hoặc cuộc gọi video mới."
   },
+  "icu:CallsList__SearchInputPlaceholder--missed-calls": {
+    "messageformat": "Tìm cuộc gọi nhỡ"
+  },
   "icu:CallsList__SearchInputPlaceholder": {
     "messageformat": "Tìm kiếm"
+  },
+  "icu:CallsList__FilteredByMissedHeader": {
+    "messageformat": "Đã lọc cuộc gọi nhỡ"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Lọc cuộc gọi nhỡ"
@@ -5496,14 +5598,14 @@
   "icu:CallsList__EmptyState--noQuery__subtitle": {
     "messageformat": "Các cuộc gọi gần nhất sẽ hiển thị ở đây."
   },
-  "icu:CallsList__EmptyState--noQuery--missed__title": {
-    "messageformat": "Không có cuộc gọi nhỡ"
-  },
-  "icu:CallsList__EmptyState--noQuery--missed__subtitle": {
-    "messageformat": "Các cuộc gọi nhỡ sẽ hiển thị ở đây."
-  },
   "icu:CallsList__EmptyState--hasQuery": {
     "messageformat": "Không có kết quả cho “{query}”"
+  },
+  "icu:CallsList__EmptyState--hasQueryAndMissedCalls": {
+    "messageformat": "Không có kết quả cho \"{query}\" trong số cuộc gọi nhỡ"
+  },
+  "icu:CallsList__EmptyState--missedCalls": {
+    "messageformat": "Không có cuộc gọi nhỡ"
   },
   "icu:CallsList__CreateCallLink": {
     "messageformat": "Tạo Đường dẫn Cuộc gọi"
@@ -5674,16 +5776,16 @@
     "messageformat": "Các tinh chỉnh, sửa lỗi, và cải thiện hiệu năng. Cảm ơn bạn đã sử dụng Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.26--0": {
-    "messageformat": "Bản cập nhật này sửa lỗi khó tìm lại nhóm sau khi rời nhóm đó."
+  "icu:WhatsNew__v7.34--0": {
+    "messageformat": "Biểu tượng bộ lọc mới ở cạnh ô tìm kiếm giúp tìm cuộc trò chuyện chưa đọc dễ dàng hơn."
   },
-  "icu:WhatsNew__v7.27--0": {
-    "messageformat": "Giờ đây bạn có thể xóa các câu trả lời được trích dẫn từ những tin nhắn đã chỉnh sửa."
+  "icu:WhatsNew__v7.34--1": {
+    "messageformat": "Bản cập nhật này bắt đầu hỗ trợ các bộ xử lý mới trên Windows như Snapdragon X Elite."
   },
-  "icu:WhatsNew__v7.28--0": {
-    "messageformat": "We fixed a bug that prevented stickers from working correctly in the media editor, and now the picker no longer gets stuck when you're trying to stick a sticker on a picture."
+  "icu:WhatsNew__v7.34--2": {
+    "messageformat": "Chúng tôi cũng đã sửa lỗi ảnh hưởng đến giao diện chủ đề tối của Signal khi hệ điều hành sử dụng chủ đề sáng."
   },
-  "icu:WhatsNew__v7.28--1": {
-    "messageformat": "This update also includes support for the new screen sharing interface in macOS Sequoia."
+  "icu:WhatsNew__v7.35--0": {
+    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
   }
 }

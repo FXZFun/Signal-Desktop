@@ -10,9 +10,13 @@ import type {
   AttachmentType,
   AttachmentWithHydratedData,
   LocalAttachmentV2Type,
+  LocallySavedAttachment,
+  ReencryptableAttachment,
 } from './Attachment';
 import {
   captureDimensionsAndScreenshot,
+  getAttachmentIdForLogging,
+  isAttachmentLocallySaved,
   removeSchemaVersion,
   replaceUnicodeOrderOverrides,
   replaceUnicodeV2,
@@ -53,6 +57,10 @@ export const GROUP = 'group';
 export const PRIVATE = 'private';
 
 export type ContextType = {
+  doesAttachmentExist: (relativePath: string) => Promise<boolean>;
+  ensureAttachmentIsReencryptable: (
+    attachment: LocallySavedAttachment
+  ) => Promise<ReencryptableAttachment>;
   getImageDimensions: (params: {
     objectUrl: string;
     logger: LoggerType;
@@ -134,6 +142,8 @@ export type ContextWithMessageType = ContextType & {
 //   - Attachments: encrypt attachments on disk
 // Version 13:
 //   - Attachments: write bodyAttachment to disk
+// Version 14
+//   - All attachments: ensure they are reencryptable to a known digest
 
 const INITIAL_SCHEMA_VERSION = 0;
 
@@ -239,10 +249,11 @@ export const _withSchemaVersion = ({
       upgradedMessage = await upgrade(message, context);
     } catch (error) {
       logger.error(
-        `Message._withSchemaVersion: error updating message ${message.id}:`,
+        `Message._withSchemaVersion: error updating message ${message.id}, 
+        attempt ${message.schemaMigrationAttempts}:`,
         Errors.toLogFormat(error)
       );
-      return message;
+      throw error;
     }
 
     if (!isValid(upgradedMessage)) {
@@ -279,6 +290,52 @@ export const _mapAttachments =
       (message.attachments || []).map(upgradeWithContext)
     );
     return { ...message, attachments };
+  };
+
+export const _mapAllAttachments =
+  (upgradeAttachment: UpgradeAttachmentType) =>
+  async (
+    message: MessageAttributesType,
+    context: ContextType
+  ): Promise<MessageAttributesType> => {
+    let result = { ...message };
+    result = await _mapAttachments(upgradeAttachment)(result, context);
+    result = await _mapQuotedAttachments(upgradeAttachment)(result, context);
+    result = await _mapPreviewAttachments(upgradeAttachment)(result, context);
+    result = await _mapContact(async contact => {
+      if (!contact.avatar?.avatar) {
+        return contact;
+      }
+
+      return {
+        ...contact,
+        avatar: {
+          ...contact.avatar,
+          avatar: await upgradeAttachment(
+            contact.avatar.avatar,
+            context,
+            result
+          ),
+        },
+      };
+    })(result, context);
+
+    if (result.sticker?.data) {
+      result.sticker.data = await upgradeAttachment(
+        result.sticker.data,
+        context,
+        result
+      );
+    }
+    if (result.bodyAttachment) {
+      result.bodyAttachment = await upgradeAttachment(
+        result.bodyAttachment,
+        context,
+        result
+      );
+    }
+
+    return result;
   };
 
 // Public API
@@ -583,6 +640,37 @@ const toVersion13 = _withSchemaVersion({
   upgrade: migrateBodyAttachmentToDisk,
 });
 
+const toVersion14 = _withSchemaVersion({
+  schemaVersion: 14,
+  upgrade: _mapAllAttachments(
+    async (
+      attachment,
+      { logger, ensureAttachmentIsReencryptable, doesAttachmentExist }
+    ) => {
+      if (!isAttachmentLocallySaved(attachment)) {
+        return attachment;
+      }
+
+      if (!(await doesAttachmentExist(attachment.path))) {
+        // Attachments may be missing, e.g. for quote thumbnails that reference messages
+        // which have been deleted
+        logger.info(
+          `Message2.toVersion14(id=${getAttachmentIdForLogging(attachment)}: File does not exist`
+        );
+        return attachment;
+      }
+
+      if (!attachment.digest) {
+        // Messages that are being upgraded prior to being sent may not have encrypted the
+        // attachment yet
+        return attachment;
+      }
+
+      return ensureAttachmentIsReencryptable(attachment);
+    }
+  ),
+});
+
 const VERSIONS = [
   toVersion0,
   toVersion1,
@@ -598,6 +686,7 @@ const VERSIONS = [
   toVersion11,
   toVersion12,
   toVersion13,
+  toVersion14,
 ];
 
 export const CURRENT_SCHEMA_VERSION = VERSIONS.length - 1;
@@ -611,6 +700,8 @@ export const upgradeSchema = async (
   {
     readAttachmentData,
     writeNewAttachmentData,
+    doesAttachmentExist,
+    ensureAttachmentIsReencryptable,
     getRegionCode,
     makeObjectUrl,
     revokeObjectUrl,
@@ -621,8 +712,17 @@ export const upgradeSchema = async (
     deleteOnDisk,
     logger,
     maxVersion = CURRENT_SCHEMA_VERSION,
-  }: ContextType
+  }: ContextType,
+  upgradeOptions: {
+    versions: ReadonlyArray<
+      (
+        message: MessageAttributesType,
+        context: ContextType
+      ) => Promise<MessageAttributesType>
+    >;
+  } = { versions: VERSIONS }
 ): Promise<MessageAttributesType> => {
+  const { versions } = upgradeOptions;
   if (!isFunction(readAttachmentData)) {
     throw new TypeError('context.readAttachmentData is required');
   }
@@ -658,28 +758,45 @@ export const upgradeSchema = async (
   }
 
   let message = rawMessage;
-  for (let index = 0, max = VERSIONS.length; index < max; index += 1) {
+  const startingVersion = message.schemaVersion ?? 0;
+  for (let index = 0, max = versions.length; index < max; index += 1) {
     if (maxVersion < index) {
       break;
     }
 
-    const currentVersion = VERSIONS[index];
-    // We really do want this intra-loop await because this is a chained async action,
-    //   each step dependent on the previous
-    // eslint-disable-next-line no-await-in-loop
-    message = await currentVersion(message, {
-      readAttachmentData,
-      writeNewAttachmentData,
-      makeObjectUrl,
-      revokeObjectUrl,
-      getImageDimensions,
-      makeImageThumbnail,
-      makeVideoScreenshot,
-      logger,
-      getRegionCode,
-      writeNewStickerData,
-      deleteOnDisk,
-    });
+    const currentVersion = versions[index];
+    try {
+      // We really do want this intra-loop await because this is a chained async action,
+      //   each step dependent on the previous
+      // eslint-disable-next-line no-await-in-loop
+      message = await currentVersion(message, {
+        readAttachmentData,
+        writeNewAttachmentData,
+        makeObjectUrl,
+        revokeObjectUrl,
+        doesAttachmentExist,
+        ensureAttachmentIsReencryptable,
+        getImageDimensions,
+        makeImageThumbnail,
+        makeVideoScreenshot,
+        logger,
+        getRegionCode,
+        writeNewStickerData,
+        deleteOnDisk,
+      });
+    } catch (e) {
+      // Throw the error if we were unable to upgrade the message at all
+      if (message.schemaVersion === startingVersion) {
+        throw e;
+      } else {
+        // Otherwise, return the message upgraded as far as it could be. On the next
+        // migration attempt, it will fail.
+        logger.error(
+          `Upgraded message from ${startingVersion} -> ${message.schemaVersion}; failed on upgrade to ${index}`
+        );
+        break;
+      }
+    }
   }
 
   return message;
@@ -690,6 +807,7 @@ export const upgradeSchema = async (
 export const processNewAttachment = async (
   attachment: AttachmentType,
   {
+    ensureAttachmentIsReencryptable,
     writeNewAttachmentData,
     makeObjectUrl,
     revokeObjectUrl,
@@ -707,6 +825,7 @@ export const processNewAttachment = async (
     | 'makeVideoScreenshot'
     | 'logger'
     | 'deleteOnDisk'
+    | 'ensureAttachmentIsReencryptable'
   >
 ): Promise<AttachmentType> => {
   if (!isFunction(writeNewAttachmentData)) {
@@ -731,15 +850,25 @@ export const processNewAttachment = async (
     throw new TypeError('context.logger is required');
   }
 
-  const finalAttachment = await captureDimensionsAndScreenshot(attachment, {
-    writeNewAttachmentData,
-    makeObjectUrl,
-    revokeObjectUrl,
-    getImageDimensions,
-    makeImageThumbnail,
-    makeVideoScreenshot,
-    logger,
-  });
+  let upgradedAttachment = attachment;
+
+  if (isAttachmentLocallySaved(upgradedAttachment)) {
+    upgradedAttachment =
+      await ensureAttachmentIsReencryptable(upgradedAttachment);
+  }
+
+  const finalAttachment = await captureDimensionsAndScreenshot(
+    upgradedAttachment,
+    {
+      writeNewAttachmentData,
+      makeObjectUrl,
+      revokeObjectUrl,
+      getImageDimensions,
+      makeImageThumbnail,
+      makeVideoScreenshot,
+      logger,
+    }
+  );
 
   return finalAttachment;
 };

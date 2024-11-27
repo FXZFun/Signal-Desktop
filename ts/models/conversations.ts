@@ -174,6 +174,7 @@ import { ReceiptType } from '../types/Receipt';
 import { getQuoteAttachment } from '../util/makeQuote';
 import { deriveProfileKeyVersion } from '../util/zkgroup';
 import { incrementMessageCounter } from '../util/incrementMessageCounter';
+import { generateMessageId } from '../util/generateMessageId';
 import { getMessageAuthorText } from '../util/getMessageAuthorText';
 import { downscaleOutgoingAttachment } from '../util/attachments';
 import { MessageRequestResponseEvent } from '../types/MessageRequestResponseEvent';
@@ -187,6 +188,7 @@ import { explodePromise } from '../util/explodePromise';
 import { getCallHistorySelector } from '../state/selectors/callHistory';
 import { migrateLegacyReadStatus } from '../messages/migrateLegacyReadStatus';
 import { migrateLegacySendAttributes } from '../messages/migrateLegacySendAttributes';
+import { getIsInitialSync } from '../services/contactSync';
 
 /* eslint-disable more/no-then */
 window.Whisper = window.Whisper || {};
@@ -929,7 +931,7 @@ export class ConversationModel extends window.Backbone
     const wasBlocked = this.isBlocked();
 
     const serviceId = this.getServiceId();
-    if (serviceId) {
+    if (serviceId && isAciString(serviceId)) {
       drop(window.storage.blocked.addBlockedServiceId(serviceId));
       blocked = true;
     }
@@ -961,7 +963,7 @@ export class ConversationModel extends window.Backbone
     const wasBlocked = this.isBlocked();
 
     const serviceId = this.getServiceId();
-    if (serviceId) {
+    if (serviceId && isAciString(serviceId)) {
       drop(window.storage.blocked.removeBlockedServiceId(serviceId));
       unblocked = true;
     }
@@ -1016,7 +1018,7 @@ export class ConversationModel extends window.Backbone
       this.captureChange('removeContact');
     }
 
-    this.disableProfileSharing({ viaStorageServiceSync });
+    this.disableProfileSharing({ reason: 'remove', viaStorageServiceSync });
 
     // Drop existing message request state to avoid sending receipts and
     // display MR actions.
@@ -1075,24 +1077,39 @@ export class ConversationModel extends window.Backbone
     }
   }
 
-  enableProfileSharing({ viaStorageServiceSync = false } = {}): void {
+  enableProfileSharing({
+    reason,
+    viaStorageServiceSync = false,
+  }: {
+    reason: string;
+    viaStorageServiceSync?: boolean;
+  }): void {
     log.info(
-      `enableProfileSharing: ${this.idForLogging()} storage? ${viaStorageServiceSync}`
+      `enableProfileSharing: ${this.idForLogging()} reason=${reason} ` +
+        `storage? ${viaStorageServiceSync}`
     );
     const before = this.get('profileSharing');
+    if (before === true) {
+      return;
+    }
 
     this.set({ profileSharing: true });
 
-    const after = this.get('profileSharing');
-
-    if (!viaStorageServiceSync && Boolean(before) !== Boolean(after)) {
-      this.captureChange('enableProfileSharing');
+    if (!viaStorageServiceSync) {
+      this.captureChange(`enableProfileSharing/${reason}`);
     }
   }
 
-  disableProfileSharing({ viaStorageServiceSync = false } = {}): void {
+  disableProfileSharing({
+    reason,
+    viaStorageServiceSync = false,
+  }: {
+    reason: string;
+    viaStorageServiceSync?: boolean;
+  }): void {
     log.info(
-      `disableProfileSharing: ${this.idForLogging()} storage? ${viaStorageServiceSync}`
+      `disableProfileSharing: ${this.idForLogging()} reason=${reason} ` +
+        `storage? ${viaStorageServiceSync}`
     );
     const before = this.get('profileSharing');
 
@@ -1101,7 +1118,7 @@ export class ConversationModel extends window.Backbone
     const after = this.get('profileSharing');
 
     if (!viaStorageServiceSync && Boolean(before) !== Boolean(after)) {
-      this.captureChange('disableProfileSharing');
+      this.captureChange(`disableProfileSharing/${reason}`);
     }
   }
 
@@ -1170,6 +1187,7 @@ export class ConversationModel extends window.Backbone
     options: { force?: boolean } = {}
   ): Promise<void> {
     if (!isGroupV2(this.attributes)) {
+      log.info('fetchLatestGroupV2Data: Not groupV2');
       return;
     }
 
@@ -2328,11 +2346,10 @@ export class ConversationModel extends window.Backbone
         : lastMessageTimestamp;
 
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       type: 'message-request-response-event',
       sent_at: maybeLastMessageTimestamp,
-      received_at: incrementMessageCounter(),
       received_at_ms: maybeLastMessageTimestamp,
       readStatus: ReadStatus.Read,
       seenStatus: SeenStatus.NotApplicable,
@@ -2344,6 +2361,10 @@ export class ConversationModel extends window.Backbone
       ourAci: window.textsecure.storage.user.getCheckedAci(),
       forceSave: true,
     });
+    if (!getIsInitialSync() && !this.get('active_at')) {
+      this.set({ active_at: Date.now() });
+      await DataWriter.updateConversation(this.attributes);
+    }
     window.MessageCache.toMessageAttributes(message);
     this.trigger('newmessage', message);
     drop(this.updateLastMessage());
@@ -2420,7 +2441,10 @@ export class ConversationModel extends window.Backbone
         }
 
         if (isBlock || isDelete) {
-          this.disableProfileSharing({ viaStorageServiceSync });
+          this.disableProfileSharing({
+            reason: isBlock ? 'block' : 'delete',
+            viaStorageServiceSync,
+          });
         }
 
         if (isDelete) {
@@ -2453,7 +2477,10 @@ export class ConversationModel extends window.Backbone
         if (!viaStorageServiceSync) {
           await this.restoreContact({ shouldSave: false });
         }
-        this.enableProfileSharing({ viaStorageServiceSync });
+        this.enableProfileSharing({
+          reason: 'ACCEPT Message Request',
+          viaStorageServiceSync,
+        });
 
         // We really don't want to call this if we don't have to. It can take a lot of
         //   time to go through old messages to download attachments.
@@ -3085,12 +3112,11 @@ export class ConversationModel extends window.Backbone
     });
 
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(receivedAtCounter),
       conversationId: this.id,
       type: 'chat-session-refreshed',
       timestamp: receivedAt,
       sent_at: receivedAt,
-      received_at: receivedAtCounter,
       received_at_ms: receivedAt,
       readStatus: ReadStatus.Unread,
       seenStatus: SeenStatus.Unseen,
@@ -3133,12 +3159,11 @@ export class ConversationModel extends window.Backbone
     }
 
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(receivedAtCounter),
       conversationId: this.id,
       type: 'delivery-issue',
       sourceServiceId: senderAci,
       sent_at: receivedAt,
-      received_at: receivedAtCounter,
       received_at_ms: receivedAt,
       timestamp: receivedAt,
       readStatus: ReadStatus.Unread,
@@ -3183,12 +3208,11 @@ export class ConversationModel extends window.Backbone
 
       const timestamp = Date.now();
       const message: MessageAttributesType = {
-        id: generateGuid(),
+        ...generateMessageId(incrementMessageCounter()),
         conversationId: this.id,
         type: 'keychange',
         sent_at: timestamp,
         timestamp,
-        received_at: incrementMessageCounter(),
         received_at_ms: timestamp,
         key_changed: keyChangedId,
         readStatus: ReadStatus.Read,
@@ -3245,12 +3269,11 @@ export class ConversationModel extends window.Backbone
 
     const timestamp = Date.now();
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       type: 'conversation-merge',
       sent_at: timestamp,
       timestamp,
-      received_at: incrementMessageCounter(),
       received_at_ms: timestamp,
       conversationMerge: {
         renderInfo,
@@ -3294,12 +3317,11 @@ export class ConversationModel extends window.Backbone
     log.info(`${logId}: adding notification`);
     const timestamp = Date.now();
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       type: 'phone-number-discovery',
       sent_at: timestamp,
       timestamp,
-      received_at: incrementMessageCounter(),
       received_at_ms: timestamp,
       phoneNumberDiscovery: {
         e164,
@@ -3343,12 +3365,11 @@ export class ConversationModel extends window.Backbone
 
     const timestamp = Date.now();
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       local: Boolean(options.local),
       readStatus: ReadStatus.Read,
       received_at_ms: timestamp,
-      received_at: incrementMessageCounter(),
       seenStatus: options.local ? SeenStatus.Seen : SeenStatus.Unseen,
       sent_at: lastMessage,
       timestamp,
@@ -3388,11 +3409,10 @@ export class ConversationModel extends window.Backbone
   ): Promise<void> {
     const now = Date.now();
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       type: 'profile-change',
       sent_at: now,
-      received_at: incrementMessageCounter(),
       received_at_ms: now,
       readStatus: ReadStatus.Read,
       seenStatus: SeenStatus.NotApplicable,
@@ -3432,11 +3452,10 @@ export class ConversationModel extends window.Backbone
   ): Promise<string> {
     const now = Date.now();
     const message: MessageAttributesType = {
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       conversationId: this.id,
       type,
       sent_at: now,
-      received_at: incrementMessageCounter(),
       received_at_ms: now,
       timestamp: now,
 
@@ -4102,7 +4121,7 @@ export class ConversationModel extends window.Backbone
 
     // Here we move attachments to disk
     const attributes = await upgradeMessageSchema({
-      id: generateGuid(),
+      ...generateMessageId(incrementMessageCounter()),
       timestamp: now,
       type: 'outgoing',
       body,
@@ -4112,7 +4131,6 @@ export class ConversationModel extends window.Backbone
       preview,
       attachments: attachmentsToSend,
       sent_at: now,
-      received_at: incrementMessageCounter(),
       received_at_ms: now,
       expirationStartTimestamp,
       expireTimer,
@@ -4143,6 +4161,11 @@ export class ConversationModel extends window.Backbone
       typeof attributes.timestamp === 'number',
       'Expected a timestamp'
     );
+
+    // Make sure profile sharing is enabled before job is queued and run
+    this.enableProfileSharing({
+      reason: 'mandatoryProfileSharing',
+    });
 
     await conversationJobQueue.add(
       {
@@ -4656,32 +4679,37 @@ export class ConversationModel extends window.Backbone
       expireTimer = undefined;
     }
 
+    const timerMatchesLocalValue =
+      this.get('expireTimer') === expireTimer ||
+      (!expireTimer && !this.get('expireTimer'));
+
+    const localVersion = this.getExpireTimerVersion();
+
     const logId =
       `updateExpirationTimer(${this.idForLogging()}, ` +
       `${expireTimer || 'disabled'}, version=${version || 0}) ` +
-      `source=${source ?? '?'} reason=${reason}`;
+      `source=${source ?? '?'} localValue=${this.get('expireTimer')} ` +
+      `localVersion=${localVersion}, reason=${reason}`;
 
     if (isSetByOther) {
-      const expireTimerVersion = this.getExpireTimerVersion();
       if (version) {
-        if (expireTimerVersion && version < expireTimerVersion) {
-          log.warn(
-            `${logId}: not updating, local version is ${expireTimerVersion}`
-          );
+        if (localVersion && version < localVersion) {
+          log.warn(`${logId}: not updating, local version is ${localVersion}`);
           return;
         }
-        if (version === expireTimerVersion) {
-          log.warn(`${logId}: expire version glare`);
+
+        if (version === localVersion) {
+          if (!timerMatchesLocalValue) {
+            log.warn(`${logId}: expire version glare`);
+          }
         } else {
           this.set({ expireTimerVersion: version });
           log.info(`${logId}: updating expire version`);
         }
       }
     }
-    if (
-      this.get('expireTimer') === expireTimer ||
-      (!expireTimer && !this.get('expireTimer'))
-    ) {
+
+    if (timerMatchesLocalValue) {
       return;
     }
 
@@ -4734,9 +4762,9 @@ export class ConversationModel extends window.Backbone
     const shouldBeRead =
       (isInitialSync && isFromSyncOperation) || isFromMe || isNoteToSelf;
 
-    const id = generateGuid();
+    const counter = receivedAt ?? incrementMessageCounter();
     const attributes = {
-      id,
+      ...generateMessageId(counter),
       conversationId: this.id,
       expirationTimerUpdate: {
         expireTimer,
@@ -4747,7 +4775,6 @@ export class ConversationModel extends window.Backbone
       flags: Proto.DataMessage.Flags.EXPIRATION_TIMER_UPDATE,
       readStatus: shouldBeRead ? ReadStatus.Read : ReadStatus.Unread,
       received_at_ms: receivedAtMS,
-      received_at: receivedAt ?? incrementMessageCounter(),
       seenStatus: shouldBeRead ? SeenStatus.Seen : SeenStatus.Unseen,
       sent_at: sentAt,
       timestamp: sentAt,
@@ -4760,7 +4787,7 @@ export class ConversationModel extends window.Backbone
     });
 
     window.MessageCache.__DEPRECATED$register(
-      id,
+      attributes.id,
       attributes,
       'updateExpirationTimer'
     );
@@ -4878,9 +4905,17 @@ export class ConversationModel extends window.Backbone
     const conversations =
       this.getMembers() as unknown as Array<ConversationModel>;
 
+    const groupId = isGroupV2(this.attributes)
+      ? (this.get('groupId') ?? null)
+      : null;
+
     await Promise.all(
       conversations.map(conversation =>
-        getProfile(conversation.getServiceId(), conversation.get('e164'))
+        getProfile({
+          serviceId: conversation.getServiceId() ?? null,
+          e164: conversation.get('e164') ?? null,
+          groupId,
+        })
       )
     );
   }
@@ -4922,7 +4957,7 @@ export class ConversationModel extends window.Backbone
     }
   }
 
-  async setProfileAvatar(
+  async setAndMaybeFetchProfileAvatar(
     avatarUrl: undefined | null | string,
     decryptionKey: Uint8Array
   ): Promise<void> {
@@ -4970,6 +5005,11 @@ export class ConversationModel extends window.Backbone
       reason,
     }: { viaStorageServiceSync?: boolean; reason: string }
   ): Promise<boolean> {
+    strictAssert(
+      profileKey == null || profileKey.length > 0,
+      'setProfileKey: Profile key cannot be an empty string'
+    );
+
     const oldProfileKey = this.get('profileKey');
 
     // profileKey is a string so we can compare it directly

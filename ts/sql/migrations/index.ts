@@ -98,10 +98,13 @@ import { updateToSchemaVersion1180 } from './1180-add-attachment-download-source
 import { updateToSchemaVersion1190 } from './1190-call-links-storage';
 import { updateToSchemaVersion1200 } from './1200-attachment-download-source-index';
 import { updateToSchemaVersion1210 } from './1210-call-history-started-id';
+import { updateToSchemaVersion1220 } from './1220-blob-sessions';
+import { updateToSchemaVersion1230 } from './1230-call-links-admin-key-index';
+import { updateToSchemaVersion1240 } from './1240-defunct-call-links-table';
 import {
-  updateToSchemaVersion1220,
+  updateToSchemaVersion1250,
   version as MAX_VERSION,
-} from './1220-blob-sessions';
+} from './1250-defunct-call-links-storage';
 
 function updateToSchemaVersion1(
   currentVersion: number,
@@ -2069,6 +2072,9 @@ export const SCHEMA_VERSIONS = [
   updateToSchemaVersion1200,
   updateToSchemaVersion1210,
   updateToSchemaVersion1220,
+  updateToSchemaVersion1230,
+  updateToSchemaVersion1240,
+  updateToSchemaVersion1250,
 ];
 
 export class DBVersionFromFutureError extends Error {

@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Bedingungen & Datenschutzerklärung"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple Silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -714,7 +711,7 @@
     "messageformat": "Keine Ergebnisse für »{searchTerm}« in {conversationName}"
   },
   "icu:conversationsUnreadHeader": {
-    "messageformat": "Gefiltert nach Ungelesen"
+    "messageformat": "Gefiltert nach: Ungelesen"
   },
   "icu:filterByUnreadButtonLabel": {
     "messageformat": "Nach Ungelesen filtern"
@@ -814,9 +811,6 @@
   },
   "icu:voiceNoteError": {
     "messageformat": "Es gab einen Fehler bei der Sprachaufzeichnung."
-  },
-  "icu:attachmentSaved": {
-    "messageformat": "Anhang gespeichert."
   },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Anhang gesichert.} other {{count,number} Anhänge gesichert.}}"
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Nachrichten löschen"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Nachrichten löschen?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Alle Nachrichten in diesem Chat werden von diesem Gerät gelöscht. Du kannst nach dem Löschen von Nachrichten weiterhin nach diesem Chat suchen."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Alle Nachrichten in diesem Chat werden von all deinen Geräten gelöscht. Du kannst nach dem Löschen von Nachrichten weiterhin nach diesem Chat suchen."
-  },
   "icu:deleteConversation": {
     "messageformat": "Löschen"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Symbol, das auf eine Beschriftung des Bildes hinweist"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Speichern"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} ruft dich, {first}, {second} und {remaining,number} weitere Person an} other {{ringer} ruft dich, {first}, {second} und {remaining,number} weitere Personen an}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Verbindung wird hergestellt …"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Klingelt …"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Deine Nachrichten konnten nicht übertragen werden. Überprüfe deine Internetverbindung und versuche es erneut."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Erneut versuchen"
@@ -5776,16 +5782,13 @@
     "messageformat": "Kleine Optimierungen, Fehlerbehebungen und Leistungsverbesserungen. Danke, dass du Signal nutzt!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Mit dem neuen Filtersymbol neben dem Suchfeld kannst du ungelesene Chats jetzt viel schneller finden. Aber lass dir ruhig Zeit bei der Entscheidung, ob du etwas Ungelesen lassen möchtest oder nicht."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Dieses Update behebt einen Fehler unter macOS Sonoma, der dafür verantwortlich war, dass die Bildschirmfreigabe nicht richtig funktionierte, wenn die Berechtigung zuvor verweigert wurde. Jetzt kannst du deinen Bildschirm ohne Fehlermeldung freigeben."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Mit diesem Update werden neue Prozessoren unter Windows, wie Snapdragon X Elite, vorgestellt – jetzt musst du dir keinen ARM mehr abhacken, um es mit x86 aufnehmen zu können."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Der Ungelesen-Filter hebt jetzt den ausgewählten Chat hervor – außerdem wird die Liste der ungelesenen Chats automatisch aktualisiert, wenn neue Nachrichten eingehen oder wenn du in einem Chat plauderst und auf einen anderen klickst."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Wir haben auch einen Fehler behoben, der den Dunkelmodus geschrottet hat, sobald deine Systemeinstellungen für Hellmodus konfiguriert waren. Signal Desktop kann deine gespaltene Modus-Persönlichkeit jetzt problemlos bewältigen."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Syarat & Kebijakan Privasi"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Terjadi kesalahan dengan perekam suara."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Lampiran disimpan."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, other {{count,number} lampiran disimpan}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Hapus pesan"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Hapus pesan?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Semua pesan dalam obrolan ini akan dihapus dari perangkat. Anda masih bisa mencari obrolan ini setelah menghapus pesan."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Semua pesan di obrolan ini akan dihapus dari semua perangkat Anda. Anda masih bisa mencari obrolan ini setelah pesan dihapus."
-  },
   "icu:deleteConversation": {
     "messageformat": "Hapus"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikon menunjukkan bahwa gambar ini memiliki keterangan"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Simpan"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, other {{ringer} memanggil Anda, {first}, {second}, dan {remaining,number} lainnya}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Menghubungkan …"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Berdering…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Pesan Anda tidak dapat ditransfer. Periksa koneksi internet Anda dan coba lagi."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Coba lagi"
@@ -5776,16 +5782,13 @@
     "messageformat": "Tambahan penyesuaian kecil, perbaikan bug, dan peningkatan performa. Terima kasih telah menggunakan Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Ikon filter baru di samping kotak pencarian membantu agar Anda bisa dengan menemukan obrolan yang belum dibaca."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Pembaruan ini memperbaiki bug berbagi layar di macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Pembaruan ini memperkenalkan dukungan untuk prosesor baru di Windows seperti Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filter berdasarkan Belum Dibaca kini menyoroti obrolan yang dipilih serta memberikan pembaruan saat pesan dibaca dan diterima."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Kami juga memperbaiki bug yang mengacaukan tema gelap di Signal ketika pengaturan sistem operasi Anda menggunakan konfigurasi tema terang."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

@@ -66,7 +66,6 @@ export type AttachmentType = {
   /** For messages not already on disk, this will be a data url */
   url?: string;
   size: number;
-  fileSize?: string;
   pending?: boolean;
   width?: number;
   height?: number;
@@ -88,8 +87,9 @@ export type AttachmentType = {
   textAttachment?: TextAttachmentType;
   wasTooBig?: boolean;
 
+  totalDownloaded?: number;
   incrementalMac?: string;
-  incrementalMacChunkSize?: number;
+  chunkSize?: number;
 
   backupLocator?: {
     mediaName: string;
@@ -779,6 +779,21 @@ export function isDownloaded(
   return Boolean(resolved && (resolved.path || resolved.textAttachment));
 }
 
+export function isReadyToView(
+  attachment?: Pick<
+    AttachmentType,
+    'incrementalMac' | 'chunkSize' | 'path' | 'textAttachment'
+  >
+): boolean {
+  const fullyDownloaded = isDownloaded(attachment);
+  if (fullyDownloaded) {
+    return fullyDownloaded;
+  }
+
+  const resolved = resolveNestedAttachment(attachment);
+  return Boolean(resolved && (resolved.path || resolved.textAttachment));
+}
+
 export function hasNotResolved(attachment?: AttachmentType): boolean {
   const resolved = resolveNestedAttachment(attachment);
   return Boolean(resolved && !resolved.url && !resolved.textAttachment);
@@ -1088,6 +1103,16 @@ export const canBeDownloaded = (
 export function getAttachmentSignature(attachment: AttachmentType): string {
   strictAssert(attachment.digest, 'attachment missing digest');
   return attachment.digest;
+}
+
+export function getAttachmentSignatureSafe(
+  attachment: AttachmentType
+): string | undefined {
+  try {
+    return getAttachmentSignature(attachment);
+  } catch {
+    return undefined;
+  }
 }
 
 type RequiredPropertiesForDecryption = 'key' | 'digest';

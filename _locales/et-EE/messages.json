@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Tingimused ja privaatsuspoliitika"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple Silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Häälesalvestajal tekkis tõrge."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Manus salvestatud."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Manus salvestatud} other {{count,number} manust salvestatud}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Teave"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Kustuta sõnumid"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Kas kustutada sõnumid?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Kõik selle vestluse sõnumid kustutatakse sellest seadmest. Saad pärast sõnumite kustutamist endiselt seda vestlust otsida."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Kõik selle vestluse sõnumid kustutatakse kõigist sinu seadmetest. Saad pärast sõnumite kustutamist endiselt seda vestlust otsida."
-  },
   "icu:deleteConversation": {
     "messageformat": "Kustuta"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikoon näitamaks, et sellel pildil on seletus."
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Salvesta"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} helistab sulle, kasutajatele {first}, {second} ja {remaining,number} teisele} other {{ringer} helistab sulle, kasutajatele {first}, {second} ja {remaining,number} teisele}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Ühendamine…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Helisemine…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Sinu sõnumeid ei saanud edastada. Kontrolli oma võrguühendust ja proovi uuesti."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Proovi uuesti"
@@ -5776,16 +5782,13 @@
     "messageformat": "Väikesed muudatused, vigade parandused ja jõudluse täiustused. Aitäh, et kasutad Signalit!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Otsingukasti kõrval olev uus filtri ikoon muudab lugemata vestluste leidmise kiireks ja lihtsaks."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Selle uuendusega parandatakse macOS Sonoma viga, mis takistas ekraani jagamise korrektset toimimist, kui ekraani jagamise luba oli varem keelatud – enam ei pea sa oma ekraani tõrketeatega jagama."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "See uuendus sisaldab tuge uutele Windowsi protsessoritele, nagu Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtreerimine lugemata oleku alusel tõstab nüüd valitud vestluse esile ning uuendab automaatselt uute sõnumite saabumisel või kui lülitud ühelt vestluselt teisele."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Samuti parandasime vea, mille tõttu Signali tume režiim ei töötanud, kui sinu operatsioonisüsteemis oli valitud hele režiim."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

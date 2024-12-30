@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Käyttöehdot ja tietosuoja"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Ääniviestin tallennuksessa tapahtui virhe."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Liite tallennettu."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Liite tallennettu} other {{count,number} liitettä tallennettu}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Tietoja"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Poista viestit"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Poistetaanko viesti?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Tämän keskustelun viestit poistetaan tästä laitteesta. Voit edelleen etsiä tätä keskustelua viestien poistamisen jälkeen."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Kaikki tämän keskustelun viestit poistetaan kaikista laitteistasi. Voit edelleen etsiä tätä keskustelua viestien poistamisen jälkeen."
-  },
   "icu:deleteConversation": {
     "messageformat": "Poista"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Kuvake, joka näyttää, että tällä kuvalla on kuvateksti"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Tallenna"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} soittaa sinulle, {first}:lle, {second}:lle sekä {remaining,number}:lle muulle} other {{ringer} soittaa sinulle, käyttäjille {first}, {second} sekä {remaining,number} muulle}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Yhdistetään…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Soitetaan…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Viestejäsi ei voitu siirtää. Tarkista verkkoyhteytesi ja yritä uudelleen."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Yritä uudelleen"
@@ -5776,16 +5782,13 @@
     "messageformat": "Pieniä säätöjä, virheenkorjauksia ja suorituskykyparannuksia. Kiitos, että käytät Signalia!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Hakukentän vieressä oleva uusi suodatinkuvake helpottaa lukemattomien keskustelujen löytämistä."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Tämä päivitys korjaa macOS Sonoman virheen näytön jakamisessa."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Päivitys tuo tuen uusille Windows-prosessoreille, kuten Snapdragon X Elitelle."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Suodata lukemattomat viestit korostaa nyt valitun keskustelun ja päivittyy, kun uusia viestejä saapuu tai niitä luetaan."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Korjasimme myös virheen, joka rikkoi Signalin tumman teeman, kun käyttöjärjestelmän asetukset määritettiin käyttämään vaaleaa teemaa."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

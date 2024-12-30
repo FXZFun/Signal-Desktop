@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Regulamin i Polityka prywatności"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple Sillicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Błąd nagrywania dźwięku."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Zapisano załącznik."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Zapisano załącznik} few {Zapisano {count,number} załączniki} many {Zapisano {count,number} załączników} other {Zapisano {count,number} załączników}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Informacje"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Usuń wiadomości"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Usunąć wiadomości?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Wszystkie wiadomości z tego czatu zostaną skasowane z tego urządzenia. Po skasowaniu wiadomości wciąż będziesz mieć możliwość wyszukania tego czatu."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Wszystkie wiadomości z tego czatu zostaną usunięte ze wszystkich Twoich urządzeń. Po usunięciu wiadomości wciąż będziesz mieć możliwość wyszukania tego czatu."
-  },
   "icu:deleteConversation": {
     "messageformat": "Usuń"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikona informująca, że to zdjęcie ma podpis"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Zapisz"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} dzwoni do Ciebie, {first}, {second} i {remaining,number} innego} few {{ringer} dzwoni do Ciebie, {first}, {second} i {remaining,number} innych} many {{ringer} dzwoni do Ciebie, {first}, {second} i {remaining,number} innych} other {{ringer} dzwoni do Ciebie, {first}, {second} i {remaining,number} innych}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Łączenie…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Dzwonienie…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Nie udało się przenieść Twoich wiadomości. Sprawdź połączenie z internetem i spróbuj ponownie."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Ponów"
@@ -5776,16 +5782,13 @@
     "messageformat": "Małe ulepszenia, poprawki błędów i zwiększona funkcjonalność. Dzięki za korzystanie z Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Nowa ikona filtra obok pola wyszukiwania ułatwia odnajdywanie czatów z nieodczytanymi wiadomościami. Czy odpiszesz? Ta decyzja należy do Ciebie."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "W tej aktualizacji naprawiliśmy błąd, który występował w systemie macOS Sonoma i powodował nieprawidłowe działanie funkcji udostępnienia ekranu, jeśli wcześniej nie udzielono pozwolenia na udostępnianie. Teraz możesz śmiało pokazywać swój ekran światu – nie będzie na nim komunikatu o błędzie."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Od teraz ARM nie musi już udawać x86. W tej aktualizacji dodaliśmy obsługę nowych procesorów w systemie Windows, takich jak Snapdragon X Elite. Każdy procesor może więc pozostać sobą."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Od teraz funkcja filtrowania według nieodczytanych podświetli wybrany czat, a lista nieodczytanych czatów będzie automatycznie aktualizowana w miarę przychodzenia nowych wiadomości oraz wtedy, gdy skończysz przeglądać któryś z czatów i klikniesz inny."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Naprawiliśmy również błąd, który powodował niepoprawne działanie trybu ciemnego w aplikacji Signal wtedy, gdy w ustawieniach systemowych komputera skonfigurowano tryb jasny. Teraz Signal Desktop i Twój komputer mogą być niczym yin i yang."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

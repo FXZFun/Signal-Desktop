@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Termeni și politică de confidențialitate"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Am întâmpinat o eroare cu înregistrarea vocală."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Atașamentul a fost salvat."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Atașamentul a fost salvat} few {{count,number} atașamente au fost salvate} other {{count,number} de atașamente au fost salvate}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Informații"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Șterge mesajele"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Ștergi mesajele?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Mesajele din această conversație vor fi șterse de pe acest dispozitiv. Poți căuta în continuare acest chat, după ce ștergi mesajele."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Toate mesajele din această conversație vor fi eliminate de pe toate dispozitivele tale. Poți căuta în continuare această conversație după ce ștergi mesajele."
-  },
   "icu:deleteConversation": {
     "messageformat": "Șterge"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Pictogramă ce arată că această imagine are titlu"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Salvează"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} apelează pe tine, {first}, {second} și {remaining,number} altul} few {{ringer} apelează pe tine, {first}, {second} și {remaining,number} alții} other {{ringer} apelează pe tine, {first}, {second} și {remaining,number} alții}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Se conectează..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Sună..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Mesajele tale nu au putut fi transferate. Verifică conexiunea la internet a telefonului și încearcă din nou."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Încearcă din nou"
@@ -5776,16 +5782,13 @@
     "messageformat": "Mici ajustări, soluționări de bug-uri și îmbunătățiri ale performanței. Mersi că folosești Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Noua pictogramă de filtru de lângă caseta de căutare facilitează găsirea rapidă a conversațiilor necitite, dar nu ezita să-ți acorzi timp pentru a decide dacă le lași citite sau nu după ce ai văzut ce au de spus."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Această actualizare remediază o eroare pe macOS Sonoma care împiedica partajarea ecranului să funcționeze corect dacă permisiunea de a partaja ecranul a fost refuzată anterior — astfel încât nu mai trebuie să partajezi ecranul cu un mesaj de eroare."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Această actualizare introduce asistență pentru noi procesoare pe Windows, cum ar fi Snapdragon X Elite, astfel încât nu mai trebuie să-ți forțezi ARM-ul pentru a emula x86."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtrarea după mesaje necitite evidențiază acum conversația selectată, iar lista de conversații necitite se va actualiza automat pe măsură ce sosesc mesaje noi sau când ai parcurs mesajele dintr-un chat și dai clic pe altul."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Am remediat și o eroare care făcea să cedeze modul întunecat în Signal atunci când setările sistemului de operare erau configurate pentru a utiliza modul luminos. Signal Desktop poate gestiona acum corect personalitatea ta dublă din punct de vedere tematic."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Şərtlər və Gizlilik Siyasəti"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Səsyazanda bir xəta baş verdi."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Qoşma yaddaşda saxlanıldı."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Qoşma yadda saxlanıldı} other {{count,number} qoşma yadda saxlanıldı}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Məlumat"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Mesajları sil"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Mesajlar silinsin?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Bu çatda olan bütün mesajlar bu cihazdan silinəcək. Mesajları sildikdən sonra da bu çata daxil ola bilərsiniz."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Bu çatdakı bütün mesajlar bütün cihazlarınızdan silinəcək. Mesajları sildikdən sonra da bu çata daxil ola bilərsiniz."
-  },
   "icu:deleteConversation": {
     "messageformat": "Sil"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Nişan, bu təsvirin başlığının olduğunu göstərir"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Saxla"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer}, sizə, {first}, {second} və digər {remaining,number} nəfərə zəng edir} other {{ringer}, sizə, {first}, {second} və digər {remaining,number} nəfərə zəng edir}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Bağlantı qurulur..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Zəng çalır..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Mesajlarınızı köçürmək mümkün olmadı. İnternet bağlantınızı yoxlayıb yenidən cəhd edin."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Yenidən sına"
@@ -5776,16 +5782,13 @@
     "messageformat": "Kiçik spesifik tənzimləmələr, xəta düzəlişləri və məhsuldarlığın artırılması. Signal istifadə etdiyiniz üçün təşəkkürlər!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Axtarış qutusunun yanındakı yeni filtr piktoqramı oxunmamış çatların vaxt itirmədən tapılmasını asanlaşdırır, lakin onların dediklərini gördükdən sonra onları oxuyub-oxumamaq barədə qərar verməkdən çəkinməyin."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "macOS Sonoma-da ekranı paylaşma icazəsi əvvəl rədd edilibsə, bu yeniləmə həmin nasazlığı aradan qaldırır — bununla da ekranı xəta mesajı ilə paylaşmırsınız."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Bu yeniləmə Windows-da Snapdragon X Elite kimi yeni prosessorlar üçün dəstək təmin edir, beləliklə, ARM-inizi artıq x86-nı təqlid etmək üçün çevirməyə ehtiyac yoxdur."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Artıq \"Oxunmamışlara görə filtrlə\" seçimini etmək seçilmiş çatı vurğulayır, yeni mesajlar gəldikdən, oxunduqdan və qəbul edildikdən sonra isə siyahı yenilənir."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Əməliyyat sistemi parametrləriniz açıq rəngli temadan istifadə etmək üçün konfiqurasiya edildikdə, Signal-da tünd rəngli temanı sıradan çıxaran səhvi də aradan qaldırdıq. Signal Desktop artıq tematik olaraq bölünmüş kimliyinizi müvafiq şəkildə idarə edə bilər."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

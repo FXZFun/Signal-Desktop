@@ -31,7 +31,6 @@ import type {
   UploadedAttachmentType,
 } from '../../types/Attachment';
 import { copyCdnFields } from '../../util/attachments';
-import { LONG_ATTACHMENT_LIMIT } from '../../types/Message';
 import type { RawBodyRange } from '../../types/BodyRange';
 import type { EmbeddedContactWithUploadedAvatar } from '../../types/EmbeddedContact';
 import type { StoryContextType } from '../../types/Util';
@@ -55,6 +54,8 @@ import {
   getChangesForPropAtTimestamp,
 } from '../../util/editHelpers';
 import { getMessageSentTimestamp } from '../../util/getMessageSentTimestamp';
+import { isSignalConversation } from '../../util/isSignalConversation';
+import { isBodyTooLong, trimBody } from '../../util/longAttachment';
 
 const MAX_CONCURRENT_ATTACHMENT_UPLOADS = 5;
 
@@ -72,7 +73,10 @@ export async function sendNormalMessage(
   const { Message } = window.Signal.Types;
 
   const { messageId, revision, editedMessageTimestamp } = data;
-  const message = await __DEPRECATED$getMessageById(messageId);
+  const message = await __DEPRECATED$getMessageById(
+    messageId,
+    'sendNormalMessage'
+  );
   if (!message) {
     log.info(
       `message ${messageId} was not found, maybe because it was deleted. Giving up on sending it`
@@ -84,6 +88,13 @@ export async function sendNormalMessage(
   if (messageConversation !== conversation) {
     log.error(
       `Message conversation '${messageConversation?.idForLogging()}' does not match job conversation ${conversation.idForLogging()}`
+    );
+    return;
+  }
+
+  if (isSignalConversation(messageConversation)) {
+    log.error(
+      `Message conversation '${messageConversation?.idForLogging()}' is the Signal serviceId, not sending`
     );
     return;
   }
@@ -587,8 +598,8 @@ async function getMessageSendData({
     targetTimestamp,
   });
 
-  if (body && body.length > LONG_ATTACHMENT_LIMIT) {
-    body = body.slice(0, LONG_ATTACHMENT_LIMIT);
+  if (body && isBodyTooLong(body)) {
+    body = trimBody(body);
   }
 
   const uploadQueue = new PQueue({
@@ -646,7 +657,9 @@ async function getMessageSendData({
       uploadQueue,
     }),
     uploadMessageSticker(message, uploadQueue),
-    storyId ? __DEPRECATED$getMessageById(storyId) : undefined,
+    storyId
+      ? __DEPRECATED$getMessageById(storyId, 'sendNormalMessage')
+      : undefined,
   ]);
 
   // Save message after uploading attachments

@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Vilkår og personvernerklæring"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Det oppstod et problem med opptaket."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Vedlegget er lagret."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Vedlegget ble lagret} other {{count,number} vedlegg ble lagret}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Slett meldingene"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Vil du slette meldingene?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Alle meldingene i denne samtalen slettes fra enheten. Du kan søke etter samtalen selv om meldingene er slettet."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Alle meldingene i denne samtalen slettes fra alle enhetene dine. Du kan søke etter samtalen selv om meldingene er slettet."
-  },
   "icu:deleteConversation": {
     "messageformat": "Slett"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikon som viser at bildet har bildetekst"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Lagre"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} ringer deg, {first}, {second} og {remaining,number} annen} other {{ringer} ringer deg, {first}, {second} og {remaining,number} andre}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Kobler til …"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Det ringer …"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Meldingene dine kunne ikke overføres. Sjekk internettilkoblingen og prøv igjen."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Prøv på nytt"
@@ -5776,16 +5782,13 @@
     "messageformat": "Noen små justeringer, feilrettinger og ytelsesforbedringer. Takk for at du bruker Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Det nye filtreringsikonet ved siden av søkefeltet gjør det enkelt å finne uleste samtaler."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "I denne oppdateringen har vi rettet opp i en feil med skjermdeling i macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Denne oppdateringen inkluderer støtte for nye prosessorer på Windows, som Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Når du velger «Filtrer etter ulest», fremheves den valgte samtalen, og samtalene oppdateres ettersom du mottar og åpner meldinger."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Vi rettet også en feil som førte til at du ikke kunne slå på mørkt tema i Signal hvis du hadde slått på lyst tema i operasjonssystemet."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

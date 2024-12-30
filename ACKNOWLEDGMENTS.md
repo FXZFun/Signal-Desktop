@@ -5476,7 +5476,7 @@ limitations under the License.
 
 ```
 
-## boring 4.9.0
+## boring 4.13.0
 
 ```
 Copyright 2011-2017 Google Inc.
@@ -5945,7 +5945,7 @@ express Statement of Purpose.
    CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ```
 
-## boring-sys 4.9.0
+## boring-sys 4.13.0
 
 ```
 /* Copyright (c) 2015, Google Inc.
@@ -6285,7 +6285,7 @@ DEALINGS IN THE SOFTWARE.
 
 ```
 
-## backtrace 0.3.74, cc 1.1.18, cfg-if 1.0.0, cmake 0.1.48, flate2 1.0.33, jobserver 0.1.32, openssl-probe 0.1.5, rustc-demangle 0.1.24, scoped-tls 1.0.1, socket2 0.5.7
+## backtrace 0.3.74, cc 1.1.18, cfg-if 1.0.0, cmake 0.1.48, flate2 1.0.33, jobserver 0.1.32, openssl-probe 0.1.5, pkg-config 0.3.31, rustc-demangle 0.1.24, scoped-tls 1.0.1, socket2 0.5.7
 
 ```
 Copyright (c) 2014 Alex Crichton
@@ -6316,11 +6316,43 @@ DEALINGS IN THE SOFTWARE.
 
 ```
 
-## boring-sys 4.9.0
+## boring-sys 4.13.0
 
 ```
 Copyright (c) 2014 Alex Crichton
 Copyright (c) 2020 Ivan Nikulin <ifaaan@gmail.com>
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+```
+
+## libz-sys 1.1.20
+
+```
+Copyright (c) 2014 Alex Crichton
+Copyright (c) 2020 Josh Triplett
 
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
@@ -6953,7 +6985,7 @@ DEALINGS IN THE SOFTWARE.
 
 ```
 
-## boring-sys 4.9.0
+## boring-sys 4.13.0
 
 ```
 Copyright (c) 2015-2016 the fiat-crypto authors (see
@@ -7243,6 +7275,18 @@ DEALINGS IN THE SOFTWARE.
 
 ```
 
+## intmap 2.0.0
+
+```
+Copyright (c) 2016 Jesper Axelsson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+
 ## utf8parse 0.2.2
 
 ```
@@ -7480,7 +7524,7 @@ SOFTWARE.
 
 ```
 
-## tokio-boring 4.9.0
+## tokio-boring 4.13.0
 
 ```
 Copyright (c) 2016 Tokio contributors
@@ -7866,6 +7910,38 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+```
+
+## vcpkg 0.2.15
+
+```
+Copyright (c) 2017 Jim McGrath
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
 
 ```
 
@@ -9145,6 +9221,31 @@ SOFTWARE.
 
 ```
 
+## openssl-macros 0.1.1
+
+```
+Copyright (c) 2022 Steven Fackler
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+```
+
 ## inout 0.1.3
 
 ```
@@ -10155,6 +10256,33 @@ SOFTWARE.
 
 ```
 
+## visibility 0.1.1
+
+```
+MIT License
+
+Copyright (c) 2024 Daniel Henry-Mantilla
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+```
+
 ## cesu8 1.1.0, half 2.4.1, pqcrypto-internals 0.2.5, pqcrypto-kyber 0.7.9, pqcrypto-kyber 0.8.1, pqcrypto-traits 0.3.5
 
 ```
@@ -10999,7 +11127,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## boring-sys 4.9.0, ring 0.17.8
+## boring-sys 4.13.0, ring 0.17.8
 
 ```
 /* ====================================================================
@@ -11784,7 +11912,7 @@ For more information on this, and how to apply and follow the GNU AGPL, see
 
 ```
 
-## libsignal-core 0.1.0, mrp 2.48.7, protobuf 2.48.7, ringrtc 2.48.7, regex-aot 0.1.0, partial-default-derive 0.1.0
+## libsignal-core 0.1.0, mrp 2.49.1, protobuf 2.49.1, ringrtc 2.49.1, regex-aot 0.1.0, partial-default-derive 0.1.0
 
 ```
 GNU AFFERO GENERAL PUBLIC LICENSE
@@ -12568,7 +12696,7 @@ THIS SOFTWARE.
 
 ```
 
-## cubeb-core 0.17.0, cubeb-sys 0.17.0, cubeb 0.17.0
+## cubeb-core 0.18.0, cubeb-sys 0.18.0, cubeb 0.18.0
 
 ```
 Copyright © 2017 Mozilla Foundation

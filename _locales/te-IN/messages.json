@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "నిబంధనలు & గోప్యతా విధానం"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "వాయిస్ రికార్డర్‌తో సమస్య ఉంది."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "అటాచ్‌మెంట్ సేవ్ చేయబడింది."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {అటాచ్మెంట్ సేవ్ చేయబడింది} other {{count,number} అటాచ్మెంట్లు సేవ్ చేయబడ్డాయి}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "సమాచారం"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "సందేశాలను తొలగించండి"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "సందేశాలను తొలగించేదా?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "ఈ చాట్‌లోని సందేశాలన్నీ ఈ పరికరం నుండి తొలగించబడతాయి. మీరు సందేశాలను తొలగించిన తర్వాత కూడా మీరు ఇంకా ఈ చాట్ కోసం శోధించవచ్చు."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "ఈ చాట్‌లోని అన్ని సందేశాలు మీ పరికరాలు అన్నింటి నుండి తొలగించబడతాయి. మీరు సందేశాలను తొలగించిన తర్వాత కూడా ఈ చాట్ కోసం మీరు వెతకవచ్చు."
-  },
   "icu:deleteConversation": {
     "messageformat": "తొలగించండి"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "ఈ చిత్రానికి శీర్షిక ఉందని చూపించే ఐకాన్"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "భద్రపరుచు"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} మీకు, {first}, {second}, మరియు {remaining,number} తదితరులకు కాల్ చేస్తున్నారు} other {{ringer} మీకు, {first}, {second}, మరియు {remaining,number} ఇతరులకు కాల్ చేస్తున్నారు}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "కనెక్ట్ చేస్తోంది..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "రింగ్ అవుతోంది..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "మీ సందేశాలు బదిలీ చేయడం సాధ్యం కాదు. మీ ఇంటర్నెట్ కనెక్షన్‌ను తనిఖీ చేసుకొని మళ్ళీ ప్రయత్నించండి."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "మళ్ళీ ప్రయత్నించు"
@@ -5776,16 +5782,13 @@
     "messageformat": "చిన్న ట్వీక్‌లు, బగ్ ఫిక్స్‌లు, మరియు పనితీరు మెరుగుదలలు. Signal ఉపయోగించినందుకు మీకు ధన్యవాదాలు!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "శోధన పెట్టె పక్కన ఉన్న కొత్త ఫిల్టర్ ఐకాన్ చదవని చాట్లను త్వరగా కనుగొనడాన్ని సులభతరం చేస్తుంది."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "ఈ అప్‌డేట్ macOS Sonoma లో స్క్రీన్ షేరింగ్ బగ్‌ను పరిష్కరిస్తుంది."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "ఈ అప్‌డేట్ స్నాప్‌డ్రాగన్ X ఎలైట్ లాగా Windows లో కొత్త ప్రాసెసర్‌లకు మద్దతును పరిచయం చేస్తుంది."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "చదవని వాటి ద్వారా ఫిల్టర్ ఇప్పుడు ఎంచుకున్న చాట్‌ను హైలైట్ చేస్తుంది మరియు సందేశాలు చదవబడినప్పుడు మరియు అందుకోబడినప్పుడు అప్‌డేట్‌ చేస్తుంది."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "మీ ఆపరేటింగ్ సిస్టమ్ సెట్టింగ్‌లు లైట్ థీమ్‌ను ఉపయోగించడానికి కాన్ఫిగర్ చేయబడినప్పుడు Signal లో డార్క్ థీమ్‌ను విచ్ఛిన్నం చేసిన బగ్‌ను కూడా మేము పరిష్కరించాము. Signal డెస్క్‌టాప్ ఇప్పుడు మీ ఇతివృత్తంగా విభజించబడిన వ్యక్తిత్వాన్ని సరిగ్గా నిర్వహించగలదు."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

@@ -113,6 +113,7 @@ import {
   DecryptionErrorEvent,
   DeleteForMeSyncEvent,
   DeliveryEvent,
+  DeviceNameChangeSyncEvent,
   EmptyEvent,
   EnvelopeQueuedEvent,
   EnvelopeUnsealedEvent,
@@ -154,6 +155,7 @@ import {
 import { checkOurPniIdentityKey } from '../util/checkOurPniIdentityKey';
 import { CallLinkUpdateSyncType } from '../types/CallLink';
 import { bytesToUuid } from '../util/uuidToBytes';
+import { isBodyTooLong } from '../util/longAttachment';
 
 const GROUPV2_ID_LENGTH = 32;
 const RETRY_TIMEOUT = 2 * 60 * 1000;
@@ -698,6 +700,11 @@ export default class MessageReceiver
   public override addEventListener(
     name: 'deleteForMeSync',
     handler: (ev: DeleteForMeSyncEvent) => void
+  ): void;
+
+  public override addEventListener(
+    name: 'deviceNameChangeSync',
+    handler: (ev: DeviceNameChangeSyncEvent) => void
   ): void;
 
   public override addEventListener(name: string, handler: EventHandler): void {
@@ -2157,7 +2164,8 @@ export default class MessageReceiver
     envelope: ProcessedEnvelope,
     sentContainer: ProcessedSent
   ) {
-    log.info('MessageReceiver.handleSentMessage', getEnvelopeId(envelope));
+    const logId = `MessageReceiver.handleSentMessage/${getEnvelopeId(envelope)}`;
+    log.info(logId);
 
     logUnexpectedUrgentValue(envelope, 'sentSync');
 
@@ -2172,7 +2180,7 @@ export default class MessageReceiver
     } = sentContainer;
 
     if (!msg) {
-      throw new Error('MessageReceiver.handleSentMessage: message was falsey!');
+      throw new Error(`${logId}: message was falsey!`);
     }
 
     // TODO: DESKTOP-5804
@@ -2180,13 +2188,17 @@ export default class MessageReceiver
       if (destinationServiceId) {
         await this.handleEndSession(envelope, destinationServiceId);
       } else {
-        throw new Error(
-          'MessageReceiver.handleSentMessage: Cannot end session with falsey destination'
-        );
+        throw new Error(`${logId}: Cannot end session with falsey destination`);
       }
     }
 
     const message = this.processDecrypted(envelope, msg);
+
+    if (message.body && isBodyTooLong(message.body)) {
+      const length = Buffer.byteLength(message.body);
+      this.removeFromCache(envelope);
+      log.warn(`${logId}: Dropping too-long message. Length: ${length}`);
+    }
 
     const ev = new SentEvent(
       {
@@ -2487,12 +2499,12 @@ export default class MessageReceiver
     envelope: UnsealedEnvelope,
     msg: Proto.IDataMessage
   ): Promise<void> {
-    const logId = getEnvelopeId(envelope);
-    log.info('MessageReceiver.handleDataMessage', logId);
+    const logId = `MessageReceiver.handleDataMessage/${getEnvelopeId(envelope)}`;
+    log.info(logId);
 
     if (getStoriesBlocked() && msg.storyContext) {
       log.info(
-        `MessageReceiver.handleDataMessage/${logId}: Dropping incoming dataMessage with storyContext field`
+        `${logId}: Dropping incoming dataMessage with storyContext field`
       );
       this.removeFromCache(envelope);
       return;
@@ -2501,15 +2513,10 @@ export default class MessageReceiver
     let p: Promise<void> = Promise.resolve();
     const { sourceServiceId: sourceAci } = envelope;
     if (!sourceAci) {
-      throw new Error(
-        'MessageReceiver.handleDataMessage: sourceAci was falsey'
-      );
+      throw new Error(`${logId}: sourceAci was falsey`);
     }
 
-    strictAssert(
-      isAciString(sourceAci),
-      'MessageReceiver.handleDataMessage: received message from PNI'
-    );
+    strictAssert(isAciString(sourceAci), `${logId}: received message from PNI`);
 
     if (this.isInvalidGroupData(msg, envelope)) {
       this.removeFromCache(envelope);
@@ -2542,10 +2549,10 @@ export default class MessageReceiver
       );
 
       if (isProfileKeyUpdate) {
-        return this.dispatchAndWait(logId, ev);
+        return this.dispatchAndWait(getEnvelopeId(envelope), ev);
       }
 
-      drop(this.dispatchAndWait(logId, ev));
+      drop(this.dispatchAndWait(getEnvelopeId(envelope), ev));
     }
     await p;
 
@@ -2573,11 +2580,15 @@ export default class MessageReceiver
     const isBlocked = groupId ? this.isGroupBlocked(groupId) : false;
 
     if (groupId && isBlocked) {
-      log.warn(
-        `Message ${getEnvelopeId(envelope)} ignored; destined for blocked group`
-      );
+      log.warn(`${logId}: message ignored; destined for blocked group`);
       this.removeFromCache(envelope);
       return undefined;
+    }
+
+    if (message.body && isBodyTooLong(message.body)) {
+      const length = Buffer.byteLength(message.body);
+      this.removeFromCache(envelope);
+      log.warn(`${logId}: Dropping too-long message. Length: ${length}`);
     }
 
     const ev = new MessageEvent(
@@ -3185,6 +3196,12 @@ export default class MessageReceiver
     }
     if (syncMessage.deleteForMe) {
       return this.handleDeleteForMeSync(envelope, syncMessage.deleteForMe);
+    }
+    if (syncMessage.deviceNameChange) {
+      return this.handleDeviceNameChangeSync(
+        envelope,
+        syncMessage.deviceNameChange
+      );
     }
 
     this.removeFromCache(envelope);
@@ -3810,6 +3827,39 @@ export default class MessageReceiver
     await this.dispatchAndWait(logId, deleteSyncEventSync);
 
     log.info('handleDeleteForMeSync: finished');
+  }
+
+  private async handleDeviceNameChangeSync(
+    envelope: ProcessedEnvelope,
+    deviceNameChange: Proto.SyncMessage.IDeviceNameChange
+  ): Promise<void> {
+    const logId = `MessageReceiver.handleDeviceNameChangeSync: ${getEnvelopeId(envelope)}`;
+    log.info(logId);
+
+    logUnexpectedUrgentValue(envelope, 'deviceNameChangeSync');
+
+    const { deviceId } = deviceNameChange;
+    const localDeviceId = parseIntOrThrow(
+      this.storage.user.getDeviceId(),
+      'MessageReceiver.handleDeviceNameChangeSync: localDeviceId'
+    );
+
+    if (deviceId == null) {
+      log.warn(logId, 'deviceId was falsey');
+      this.removeFromCache(envelope);
+      return;
+    }
+
+    if (deviceId !== localDeviceId) {
+      log.info(logId, 'meant for other device:', deviceId);
+      this.removeFromCache(envelope);
+      return;
+    }
+
+    const deviceNameChangeEvent = new DeviceNameChangeSyncEvent(
+      this.removeFromCache.bind(this, envelope)
+    );
+    await this.dispatchAndWait(logId, deviceNameChangeEvent);
   }
 
   private async handleContacts(

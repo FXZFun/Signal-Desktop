@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Uvjeti i pravila o privatnosti"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Došlo je do pogreške s diktafonom."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Privitak je spremljen."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Privitak je spremljen} few {{count,number} privitka su spremljena} many {{count,number} privitaka je spremljeno} other {{count,number} privitaka je spremljeno}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Detalji"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Izbriši poruke"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Izbrisati poruke?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Sve poruke iz ovog razgovora bit će izbrisane s ovog uređaja. I dalje možete pretražiti ovaj razgovor nakon što izbrišete poruke."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Sve poruke iz ovog razgovora bit će izbrisane sa svih vaših uređaja. I dalje možete pretražiti ovaj razgovor nakon što izbrišete poruke."
-  },
   "icu:deleteConversation": {
     "messageformat": "Izbriši"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikona koja pokazuje da ova slika ima natpis"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Spremi"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} zove vas, {first}, {second} i još {remaining,number} osobu} few {{ringer} zove vas, {first}, {second} i još {remaining,number} osobe} many {{ringer} zove vas, {first}, {second} i još {remaining,number} osoba} other {{ringer} zove vas, {first}, {second} i još {remaining,number} osoba}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Povezivanje…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Pozivanje…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Prijenos vaših poruka nije uspio. Provjerite internetsku vezu i pokušajte ponovno."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Pokušajte ponovno"
@@ -5776,16 +5782,13 @@
     "messageformat": "Manja podešavanja, ispravci grešaka i poboljšanje rada aplikacije. Hvala vam što koristite Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Brzo pronađite nepročitane razgovore pomoću nove ikone za filtriranje pored okvira za pretraživanje."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Ovo ažuriranje ispravlja programsku pogrešku u sustavu macOS Sonoma koja je sprječavala ispravno funkcioniranje dijeljenja zaslona."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Ovo ažuriranje uvodi podršku za nove procesore u sustavu Windows kao što je Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtriranje nepročitanih poruka sada ističe odabrani razgovor i ažurira ga svaki put kad stigne nova poruka ili kada pročitate postojeće."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Također smo ispravili programsku pogrešku zbog koje tamna tema u Signalu za desktop nije radila kad su postavke operativnog sustava bile postavljene na svijetlu temu."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

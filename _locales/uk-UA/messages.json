@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Умови надання послуг і Політика конфіденційності"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Сталася помилка з записувачем голосового повідомлення."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Вкладення збережено."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Вкладення збережено} few {{count,number} вкладення збережено} many {{count,number} вкладень збережено} other {{count,number} вкладення збережено}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Інформація"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Видалити повідомлення"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Видалити повідомлення?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Усі повідомлення в цьому чаті буде видалено з пристрою. Ви зможете знайти цей чат навіть після видалення повідомлень."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Усі повідомлення в цьому чаті буде видалено з усіх ваших пристроїв. Після видалення повідомлень ви все одно зможете знайти цей чат."
-  },
   "icu:deleteConversation": {
     "messageformat": "Видалити"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Значок який показує, що в цьому зображенні є підпис"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Зберегти"
@@ -2178,7 +2178,7 @@
     "messageformat": "Тварина"
   },
   "icu:EmojiPicker__button--food": {
-    "messageformat": "Їжа"
+    "messageformat": "Їжа і напої"
   },
   "icu:EmojiPicker__button--activity": {
     "messageformat": "Активність"
@@ -2740,6 +2740,9 @@
   },
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {Вам, користувачам {first}, {second} і ще {remaining,number} користувачу дзвонить {ringer}} few {Вам, користувачам {first}, {second} і ще {remaining,number} користувачам дзвонить {ringer}} many {Вам, користувачам {first}, {second} і ще {remaining,number} користувачам дзвонить {ringer}} other {Вам, користувачам {first}, {second} і ще {remaining,number} користувача дзвонить {ringer}}}"
+  },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Триває з'єднання…"
   },
   "icu:outgoingCallRinging": {
     "messageformat": "Лунає дзвінок…"
@@ -3620,6 +3623,9 @@
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Не вдалося перенести повідомлення. Перевірте з'єднання з інтернетом і здійсніть перенесення ще раз."
   },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
+  },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Перенести ще раз"
   },
@@ -4125,7 +4131,7 @@
     "messageformat": "Поради щодо безпеки"
   },
   "icu:MessageRequestWarning__dialog__details": {
-    "messageformat": "У вас немає спільних груп з цією особою. Уважно розглядайте запити перед тим, як їх прийняти, щоб уникнути небажаних повідомлень."
+    "messageformat": "У вас немає спільних груп із цією людиною. Щоб уникнути небажаних повідомлень, не приймайте запитів без уважної перевірки відправника."
   },
   "icu:MessageRequestWarning__dialog__learn-even-more": {
     "messageformat": "Про запити на листування"
@@ -5446,7 +5452,7 @@
     "messageformat": "Колір"
   },
   "icu:UsernameLinkModalBody__copy": {
-    "messageformat": "Копіювати до буферу обміну"
+    "messageformat": "Копіювати в буфер обміну"
   },
   "icu:UsernameLinkModalBody__help": {
     "messageformat": "Діліться QR-кодом і посиланням лише з тими, кому довіряєте. Перейшовши за посиланням чи зісканувавши код, інші користувачі побачать ваше ім'я користувача й зможуть почати з вами чат."
@@ -5584,7 +5590,7 @@
     "messageformat": "Пошук"
   },
   "icu:CallsList__FilteredByMissedHeader": {
-    "messageformat": "Показати пропущені"
+    "messageformat": "Показано пропущені"
   },
   "icu:CallsList__ToggleFilterByMissedLabel": {
     "messageformat": "Фільтр за пропущеними"
@@ -5776,16 +5782,13 @@
     "messageformat": "Дрібні поліпшення, виправлення помилок і покращення роботи застосунку. Дякуємо, що ви з Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "З новим значком фільтра біля поля пошуку можна швидко й легко знаходити непрочитані чати. А от відповісти одразу чи потягнути час ще трошки — вирішувати тільки вам."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "У цьому оновленні ми виправили помилку на macOS Sonoma, через яку демонстрація екрана не працювала належним чином, якщо раніше ви вже відхиляли дозвіл на його демонстрацію. Тепер сповіщення про помилку не відхилятиме вашої уваги від важливих справ."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "У цьому оновленні ми додали підтримку нових процесорів для Windows, як-от Snapdragon X Elite. Тож тепер не треба мучитися з емуляцією процесора x86 на ARM."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Фільтр за непрочитаними тепер виділяє вибраний чат, а список непрочитаних чатів автоматично оновлюється, коли ви отримуєте нові повідомлення або спілкуєтеся в одному чаті, а потім натискаєте на інший."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Ми також виправили помилку, через яку не працювала темна тема в Signal, якщо ваша операційна система використовувала світлу. Тепер Signal Desktop не виринатиме з темряви, навіть якщо деінде ви надаєте перевагу світлу."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

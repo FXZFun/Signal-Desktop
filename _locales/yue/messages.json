@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "條款同私隱政策"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "錄音器發生錯誤。"
   },
-  "icu:attachmentSaved": {
-    "messageformat": "附件已儲存。"
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, other {儲存咗 {count,number} 個附件}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "詳細"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "刪除訊息"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "係咪要刪除訊息？"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "聊天入面嘅訊息會喺呢部機度刪除。刪除訊息之後，你仍然可以搜尋到呢個聊天。"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "聊天入面嘅所有訊息會喺你全部裝置度刪除。刪除訊息之後，你仍然可以搜尋到呢個聊天。"
-  },
   "icu:deleteConversation": {
     "messageformat": "刪除"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "用嚟表示呢張圖片有描述嘅圖示"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "儲存"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, other {{ringer} 打緊畀您、{first}、{second} 同其餘 {remaining,number} 人}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "連接緊..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "響緊..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "轉移唔到你嘅訊息。請檢查你嘅互聯網連線，然後再試多次。"
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "再試多次"
@@ -5776,16 +5782,13 @@
     "messageformat": "我哋做咗啲調整、修復咗一啲錯誤，同埋加強咗程式功能。多謝你使用 Signal！",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "搜尋方格隔離嘅新篩選圖示可以幫你極速搵到未讀嘅聊天。"
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "呢次更新修正咗一個 macOS Sonoma 嘅畫面分享錯誤，以後就算你曾經被拒絕過分享畫面，分享畫面功能都可以正常運作喇。"
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "呢次更新將會支援 Windows 嘅新處理器 (例如 Snapdragon X Elite)，咁你就唔使再將 ARM 轉做模擬 x86 啦。"
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "「用未讀訊息篩選」而家會重點顯示揀咗嘅聊天，而喺收到新訊息或者睇咗某個聊天訊息之後，未讀聊天清單將會自動更新。"
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "我哋仲修正咗一個錯誤，以後當你嘅作業系統設定咗用淺色主題嗰陣，Signal 嘅深色主題都唔會受到影響。"
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

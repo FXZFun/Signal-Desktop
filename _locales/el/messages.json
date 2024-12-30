@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Όροι & Πολιτική απορρήτου"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Υπήρξε κάποιο σφάλμα με την εγγραφή φωνής."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Το συνημμένο αποθηκεύτηκε."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Το συνημμένο αποθηκεύτηκε} other {{count,number} συνημμένα αποθηκεύτηκαν}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Πληροφορίες"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Διαγραφή μηνυμάτων"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Διαγραφή μηνυμάτων;"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Όλα τα μηνύματα σε αυτή τη συνομιλία θα διαγραφούν από αυτή τη συσκευή. Μπορείς ακόμα να κάνεις αναζήτηση αυτής της συνομιλίας αφού διαγράψεις μηνύματα."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Όλα τα μηνύματα σε αυτήν τη συνομιλία θα διαγραφούν από όλες τις συσκευές. Μπορείς ακόμα να κάνεις αναζήτηση αυτής της συνομιλίας αφού διαγράψεις μηνύματα."
-  },
   "icu:deleteConversation": {
     "messageformat": "Διαγραφή"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Εικονίδιο που δείχνει ότι αυτή η εικόνα έχει λεζάντα"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Αποθήκευση"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {Ο/Η {ringer} καλεί εσένα, τους {first}, {second} και {remaining,number} ακόμα} other {Ο/Η {ringer} καλεί εσένα, τους {first}, {second} και {remaining,number} ακόμα}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Γίνεται σύνδεση…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Χτυπάει…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Δεν ήταν δυνατή η μεταφορά των μηνυμάτων σου. Έλεγξε τη σύνδεσή σου στο διαδίκτυο και ξαναδοκίμασε."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Επανάληψη"
@@ -5776,16 +5782,13 @@
     "messageformat": "Μικρές τροποποιήσεις, επιδιορθώσεις σφαλμάτων και βελτιώσεις απόδοσης. Ευχαριστούμε που χρησιμοποιείς το Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Το νέο εικονίδιο φίλτρου δίπλα στο πλαίσιο αναζήτησης διευκολύνει τη γρήγορη εύρεση μη αναγνωσμένων συνομιλιών."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Αυτή η ενημέρωση διορθώνει ένα σφάλμα κοινής χρήσης οθόνης στο macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Αυτή η ενημέρωση εισάγει υποστήριξη για νέους επεξεργαστές στα Windows, όπως ο Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Το Φιλτράρισμα με μη αναγνωσμένα επισημαίνει τώρα την επιλεγμένη συνομιλία και ενημερώνεται όσο τα μηνύματα διαβάζονται και λαμβάνονται."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Διορθώσαμε επίσης ένα σφάλμα που κατέστρεφε το σκούρο θέμα στο Signal όταν οι ρυθμίσεις του λειτουργικού σου συστήματος ήταν ρυθμισμένες σε ανοιχτό θέμα."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

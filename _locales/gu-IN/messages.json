@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "શરતો અને ગોપનીયતા નીતિ"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple સિલિકોન"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "વૉઈસ રેકોર્ડર સાથે કોઈ ત્રુટિ આવી હતી."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "અટેચમેન્ટ સેવ કર્યું."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {જોડાણ સેવ કર્યું} other {{count,number} જોડાણો સેવ કર્યા}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "માહિતી"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "મેસેજ ડિલીટ કરો"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "મેસેજ ડિલીટ કરવા છે?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "આ ડિવાઇસમાંથી આ ચેટમાંના તમામ મેસેજને ડિલીટ કરવામાં આવશે. તમે મેસેજ ડિલીટ કરી નાખો તે પછી પણ તમે આ ચેટ માટે શોધ કરી શકો છો."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "આ ચેટમાંના તમામ મેસેજને તમારા બધા ડિવાઇસમાંથી ડિલીટ કરવામાં આવશે. તમે મેસેજ ડિલીટ કરી નાખો તે પછી પણ તમે આ ચેટ માટે શોધ કરી શકો છો."
-  },
   "icu:deleteConversation": {
     "messageformat": "ડિલીટ કરો"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "આ ઈમેજનું કૅપ્શન છે તે દર્શાવતું આઈકોન"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "સેવ કરો"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} તમને, {first}, {second} અને {remaining,number} અન્યને કૉલ કરી રહ્યાં છે} other {{ringer} તમને, {first}, {second} અને {remaining,number} અન્યોને કૉલ કરી રહ્યાં છે}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "કનેક્ટ થાય છે..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "રીંગિંગ..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "તમારા મેસેજ ટ્રાન્સફર કરી શકાયા નથી. તમારું ઇન્ટરનેટ તપાસો અને ફરી પ્રયાસ કરો."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "ફરી પ્રયાસ કરો"
@@ -5776,16 +5782,13 @@
     "messageformat": "નાના ફેરફારો, ભૂલ સુધારા અને પ્રદર્શનમાં વધારો. Signalનો ઉપયોગ કરવા બદલ આભાર!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "શોધ બોક્સની બાજુમાં આવેલો નવો ફિલ્ટર આઇકન ન વાંચેલી ચેટને ઝડપથી શોધવાનું સરળ બનાવે છે."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "આ અપડેટ macOS Sonoma પર સ્ક્રીન શેરિંગને લગતા બગને ઠીક કરે છે."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "આ અપડેટ Windows પર Snapdragon X Elite જેવા નવા પ્રોસેસર માટે સપોર્ટ પ્રસ્તુત કરે છે."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "ન વાંચેલા દ્વારા ફિલ્ટર કરવાનું હવે પસંદ કરેલ ચેટને હાઇલાઇટ કરે છે, અને જેમ-જેમ મેસેજ વાંચવામાં આવે અને પ્રાપ્ત થાય તે મુજબ અપડેટ થાય છે."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "જ્યારે તમારી ઓપરેટિંગ સિસ્ટમ સેટિંગ્સને લાઇટ થીમનો ઉપયોગ કરવા માટે કન્ફિગર કરવામાં આવી હતી ત્યારે અમે Signalમાં ડાર્ક થીમને બગાડતાં બગને પણ ઠીક કર્યો છે."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

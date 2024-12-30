@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "നിബന്ധനകളും സ്വകാര്യതാ നയവും"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple സിലിക്കൺ"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "ശബ്‌ദ റെക്കോർഡറിൽ ഒരു പിശക് ഉണ്ടായിരുന്നു."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "അറ്റാച്ചുമെന്റ് സംരക്ഷിച്ചു."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {അറ്റാച്ച്മെൻ്റ് സംരക്ഷിച്ചു} other {{count,number} അറ്റാച്ച്മെൻ്റ് സംരക്ഷിച്ചു}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "വിവരം"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "സന്ദേശങ്ങൾ ഇല്ലാതാക്കൂ"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "സന്ദേശങ്ങൾ ഇല്ലാതാക്കണോ?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "ഈ ഉപകരണത്തിൽ നിന്ന് ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും ഇല്ലാതാക്കപ്പെടും. സന്ദേശങ്ങൾ ഇല്ലാതാക്കിയതിന് ശേഷവും നിങ്ങൾക്ക് ഈ ചാറ്റ് തിരയാനാകും."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "ഈ ചാറ്റിലെ എല്ലാ സന്ദേശങ്ങളും നിങ്ങളുടെ എല്ലാ ഉപകരണങ്ങളിൽ നിന്നും ഇല്ലാതാക്കപ്പെടും. സന്ദേശങ്ങൾ ഇല്ലാതാക്കിയതിന് ശേഷവും നിങ്ങൾക്ക് ഈ ചാറ്റ് തിരയാനാകും."
-  },
   "icu:deleteConversation": {
     "messageformat": "ഇല്ലാതാക്കൂ"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "ഈ ചിത്രത്തിന് ഒരു അടിക്കുറിപ്പ് ഉണ്ടെന്ന് കാണിക്കുന്ന ഐക്കൺ"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "സംരക്ഷിക്കൂ"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} നിങ്ങളെയും {first}-നെയും {second}-നെയും മറ്റ് {remaining,number} പേരെയും വിളിക്കുന്നു} other {{ringer} നിങ്ങളെയും {first}-നെയും {second}-നെയും മറ്റ് {remaining,number} പേരെയും വിളിക്കുന്നു}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "കണക്റ്റ് ചെയ്യുന്നു..."
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "റിംഗ് ചെയ്യുന്നു..."
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "നിങ്ങളുടെ സന്ദേശങ്ങൾ കൈമാറാൻ കഴിഞ്ഞില്ല. നിങ്ങളുടെ ഇൻ്റർനെറ്റ് കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "വീണ്ടും ശ്രമിക്കുക"
@@ -5776,16 +5782,13 @@
     "messageformat": "ചെറിയ മാറ്റങ്ങളും ബഗ് പരിഹരിക്കലുകളും പ്രകടന മെച്ചപ്പെടുത്തലുകളും. Signal ഉപയോഗിക്കുന്നതിന് നന്ദി!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "തിരയൽ ബോക്‌സിന് അടുത്തുള്ള പുതിയ ഫിൽട്ടർ ഐക്കൺ വായിക്കാത്ത ചാറ്റുകൾ വേഗത്തിൽ കണ്ടെത്തുന്നത് എളുപ്പമാക്കുന്നു, എന്നാൽ അവർക്ക് എന്താണ് പറയാനുള്ളത് എന്ന് കണ്ടതിന് ശേഷം അവ വായിച്ചത് എന്നതിൽ ഇടണോ വേണ്ടയോ എന്ന് തീരുമാനിക്കാൻ മടിക്കേണ്ടതില്ല."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "സ്‌ക്രീൻ പങ്കിടാനുള്ള അനുമതി മുമ്പ് നിരസിക്കപ്പെട്ടിരുന്നെങ്കിൽ സ്‌ക്രീൻ പങ്കിടൽ ശരിയായി പ്രവർത്തിക്കുന്നത് തടഞ്ഞിരുന്ന MacOS Sonoma-യിലെ ഒരു ബഗ് ഈ അപ്‌ഡേറ്റ് പരിഹരിക്കുന്നു - അതിനാൽ നിങ്ങൾക്ക് ഒരു പിശക് സന്ദേശവുമായി ഇനി സ്‌ക്രീൻ പങ്കിടേണ്ടി വരില്ല."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Snapdragon X Elite പോലെയുള്ള Windows-ലെ പുതിയ പ്രോസസ്സറുകൾക്കുള്ള പിന്തുണ ഈ അപ്‌ഡേറ്റ് അവതരിപ്പിക്കുന്നു, അതിനാൽ x86 അനുകരിക്കുന്നതിന് നിങ്ങളുടെ ARM-നെ ട്വിസ്റ്റ് ചെയ്യേണ്ടതില്ല."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "വായിക്കാത്തവ പ്രകാരം ഫിൽട്ടർ ചെയ്യൽ, ഇപ്പോൾ തിരഞ്ഞെടുത്ത ചാറ്റിനെ ഹൈലൈറ്റ് ചെയ്യുന്നു, പുതിയ സന്ദേശങ്ങൾ വരുമ്പോൾ അല്ലെങ്കിൽ നിങ്ങൾ ഒരു ചാറ്റ് നോക്കിയ ശേഷം മറ്റൊന്നിൽ ക്ലിക്ക് ചെയ്യുമ്പോൾ വായിക്കാത്ത ചാറ്റുകളുടെ ലിസ്റ്റ് സ്വയമേവ അപ്‌ഡേറ്റ് ചെയ്യപ്പെടും."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "ഒരു ലൈറ്റ് തീം ഉപയോഗിക്കുന്നതിന് നിങ്ങളുടെ ഓപ്പറേറ്റിംഗ് സിസ്റ്റം ക്രമീകരണങ്ങൾ കോൺഫിഗർ ചെയ്തപ്പോൾ Signal-ലെ ഡാർക്ക് തീം തകർത്ത ഒരു ബഗും ഞങ്ങൾ പരിഹരിച്ചു. Signal ഡെസ്ക്ടോപ്പിന് ഇപ്പോൾ നിങ്ങളുടെ പ്രമേയപരമായി വിഭജിക്കപ്പെട്ട വ്യക്തിത്വം ശരിയായി കൈകാര്യം ചെയ്യാൻ കഴിയും."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

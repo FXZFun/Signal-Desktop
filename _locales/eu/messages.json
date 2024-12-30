@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Baldintzak eta pribatutasun arauak"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Errore bat izan da ahots-grabagailuarekin."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Gorde da eranskina."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Gorde da eranskina} other {Gorde dira {count,number} eranskinak}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Ezabatu mezuak"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Mezuak ezabatu nahi dituzu?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Txat honetako mezuak gailu honetatik ezabatuko dira. Mezuak ezabatuta ere, txat hau bilatu ahalko duzu."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Txat honetako mezuak gailu guztietatik ezabatuko dira. Mezuak ezabatuta ere, txat hau bilatu ahalko duzu."
-  },
   "icu:deleteConversation": {
     "messageformat": "Ezabatu"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Irudi honek azpitestu bak duela erakusteko ikonoa"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Gorde"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} zu, {first}, {second} eta beste {remaining,number} deitzen ari da} other {{ringer} zuri, {first}(r)i, {second}(r)i eta beste {remaining,number} pertsonari deitzen ari da}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Konektatzen…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Deitzen…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Ezin izan dira transferitu mezuak. Egiaztatu Internetera konektatuta zaudela eta saiatu berriro."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Berriro saiatu"
@@ -5776,16 +5782,13 @@
     "messageformat": "Doikuntza txikiak, akats-konponketak eta errendimendu-hobekuntzak. Eskerrik asko Signal erabiltzeagatik!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Bilaketa-koadroaren alboko iragazkiaren ikono berriari esker, irakurri gabeko txatak erraz aurki daitezke."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Eguneraketa honen bidez, macOS Sonoma-n pantaila partekatzeko akats bat konpondu da."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Eguneratze honen bidez, Windows-eko prozesadore berriekiko bateragarritasuna eskaintzen da (adibidez, Snapdragon X Elite)."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Orain, irakurri gabeen arabera iragaztean, hautatutako txata nabarmentzen da eta, mezuak irakurri eta jaso ahala, txaten zerrenda eguneratu egiten da."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Halaber, sistema eragilearen ezarpenak gai argia erabiltzeko konfiguratuta zeudenean Signal-en gai iluna hondatzen zuen akats bat konpondu dugu."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

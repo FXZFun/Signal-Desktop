@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Kushte & Rregulla Privatësie"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Pati një gabim me regjistruesin e zërit."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Bashkëngjitja u ruajt."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Bashkëngjitja u ruajt} other {{count,number} bashkëngjitje u ruajtën}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Fshi mesazhet"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Të fshihen mesazhet?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Të gjitha mesazhet në këtë bisedë do të fshihen nga kjo pajisje. Mund ta kërkosh ende këtë bisedë pasi të fshish mesazhet."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Të gjitha mesazhet në këtë bisedë do të fshihen nga të gjitha pajisjet. Mund ta kërkosh ende këtë bisedë pasi të fshish mesazhet."
-  },
   "icu:deleteConversation": {
     "messageformat": "Fshije"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikonë që tregon  se për këtë figurë ka një titull"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Ruaje"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} po thërret ju, {first}, {second}, dhe {remaining,number} tjetër} other {{ringer} po thërret ju, {first}, {second}, dhe {remaining,number} të tjerë}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Po lidhet…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Po i bihet ziles…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Mesazhet nuk mund të transferoheshin. Kontrollo lidhjen e internetit dhe riprovo."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Riprovo"
@@ -5776,16 +5782,13 @@
     "messageformat": "Rregullme të vogla, riparime të gabimeve dhe përmirësime të mbarëvajtjes.  Faleminderit që përdorni Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Ikona e re e filtrit pranë kutisë së kërkimit e bën të lehtë gjetjen e shpejtë të bisedave të palexuara, por mos ngurro të marrësh kohën tënde për të vendosur nëse do t'i lësh ose jo të lexuara pasi të shohëh se çfarë kishin për të thënë."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Përditësimi ka rregulluar defektin në macOS Sonoma që pengonte funksionimin e duhur të ndarjes së ekranit nëse leja për të ndarë ekranin ishte refuzuar më parë — ndaj nuk ke më nevojë ta ndash ekranin me një mesazh gabimi."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Ky përditësim prezanton ndihmë për procesorë të rinj në Windows si Snapdragon X Elite, kështu që nuk ke më nevojë ta kthesh ARM-in për të imituar x86."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtrimi sipas opsionit \"Të palexuar\" thekson bisedën e zgjedhur dhe lista e bisedave të palexuara do të përditësohet automatikisht teska të vijnë mesazhe të reja ose kur rikthehesh në një bisedë dhe klikon në një tjetër."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Kemi rregulluar edhe defektin që prishi temën e errët në \"Signal\" kur cilësimet e sistemit operativ u konfiguruan për të përdorur një temë të hapur. Signal Desktop tani mund ta trajtojë siç duhet personalitetin tënd të ndarë tematikisht."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

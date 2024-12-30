@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "תנאים ומדיניות פרטיות"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "הייתה שגיאה עם מקליט הקול."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "צרופה נשמרה."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {קובץ מצורף נשמר} two {{count,number} קבצים מצורפים נשמרו} many {{count,number} קבצים מצורפים נשמרו} other {{count,number} קבצים מצורפים נשמרו}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "מידע"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "מחיקת הודעות"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "למחוק הודעות?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "כל ההודעות בצ׳אט הזה יימחקו ממכשיר זה. עדיין תהיה לך אפשרות לחפש את הצ׳אט הזה אחרי מחיקת ההודעות."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "כל ההודעות בצ׳אט הזה יימחקו מכל המכשירים שלך. עדיין תהיה לך אפשרות לחפש את הצ׳אט הזה אחרי מחיקת ההודעות."
-  },
   "icu:deleteConversation": {
     "messageformat": "מחיקה"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "ראות איקון שיש לתמונה זו כיתוב"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "שמור"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} מתקשר/ת אליך, {first}, {second} ואל {remaining,number} אחר} two {{ringer} מתקשר/ת אליך, {first}, {second} ואל {remaining,number} אחרים} many {{ringer} מתקשר/ת אליך, {first}, {second} ואל {remaining,number} אחרים} other {{ringer} מתקשר/ת אליך, {first}, {second} ואל {remaining,number} אחרים}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "מתחבר…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "מצלצל…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "לא היה ניתן להעביר את ההודעות שלך. יש לבדוק את חיבור האינטרנט שלך ולנסות שוב."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "נסה שוב"
@@ -5776,16 +5782,13 @@
     "messageformat": "התאמות קטנות, תיקוני באגים ושיפורי ביצועים. תודה על השימוש ב-Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "סמל הסינון החדש ליד תיבת החיפוש מקל ומזרז איתור צ׳אטים שלא נקראו."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "העדכון הזה מתקן באג שיתוף מסך ב–macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "העדכון הזה מוסיף תמיכה עבור מעבדים חדשים של Windows כמו Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "סינון לפי ׳לא נקרא׳ מדגיש כעת את הצ׳אט הנבחר ומתעדכן כשהודעות נקראות ומתקבלות."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "תיקנו גם באג ששיבש את ערכת הנושא הכהה ב–Signal כשמערכת ההפעלה הוגדרה לשימוש בערכת נושא בהירה."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Sąlygos ir Privatumo politika"
   },
-  "icu:appleSilicon": {
-    "messageformat": "„Apple Silicon“"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Įvyko klaida su balso rašytuvu."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Priedas įrašytas."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Priedas įrašytas} few {{count,number} priedai įrašyti} many {{count,number} priedo įrašyta} other {{count,number} priedų įrašyti}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Informacija"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Ištrinti žinutes"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Ištrinti žinutes?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Visos šio pokalbio žinutės bus ištrintos iš šio įrenginio. Net kai ištrinsite žinutes, vis tiek galėsite ieškoti šio pokalbio."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Visos šio pokalbio žinutės bus ištrintos iš visų jūsų įrenginių. Net kai ištrinsite žinutes, vis tiek galėsite ieškoti šio pokalbio."
-  },
   "icu:deleteConversation": {
     "messageformat": "Ištrinti"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Piktograma, rodanti, kad šis paveikslas turi paaiškinimą"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Įrašyti"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} skambina jums ir naudotojams {first}, {second} bei dar {remaining,number} žmogui} few {{ringer} skambina jums ir naudotojams {first}, {second} bei dar {remaining,number} žmonėms} many {{ringer} skambina jums ir naudotojams {first}, {second} bei dar {remaining,number} žmonių} other {{ringer} skambina jums ir naudotojams {first}, {second} bei dar {remaining,number} žmogui}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Jungiamasi…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Skambinama…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Nepavyko perkelti žinučių. Patikrinkite interneto ryšį ir bandykite dar kartą."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Bandyti dar kartą"
@@ -5776,16 +5782,13 @@
     "messageformat": "Smulkūs patobulinimai, klaidų pataisymai ir veikimo pagerinimas. Ačiū, kad naudoji „Signal“!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Dėl naujos filtro piktogramos šalia paieškos laukelio lengvai ir greitai rasite neskaitytus pokalbius."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Šiuo naujiniu ištaisoma ekrano bendrinimo klaida sistemoje „macOS Sonoma“."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Šiuo naujinimu pristatomas naujų „Windows“ procesorių, pvz., „Snapdragon X Elite“, palaikymas."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Funkcija „Filtruoti pagal neperskaitytus“ dabar paryškina pasirinktą pokalbį ir atnaujina, kai žinutės perskaitomos ir gaunamos."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Taip pat ištaisėme klaidą, nutraukusią „Signal“ tamsųjį apipavidalinimą, kai operacinės sistemos nustatymai buvo sukonfigūruoti naudoti šviesųjį apipavidalinimą."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

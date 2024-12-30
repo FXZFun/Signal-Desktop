@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Bepalings & Privaatheidsbeleid"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Daar was 'n fout met die stemopnemer."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Aanhegsel gestoor."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Aanhegsel gestoor} other {{count,number} aanhegsels gestoor}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Inligting"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Skrap boodskappe"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Skrap boodskap?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Al die boodskappe in hierdie klets sal van hierdie toestel af geskrap word. Jy kan steeds vir hierdie klets soek nadat jy boodskappe uitgevee het."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Al die boodskappe in hierdie klets sal van al jou toestelle af geskrap word. Jy kan steeds vir hierdie klets soek nadat jy boodskappe geskrap het."
-  },
   "icu:deleteConversation": {
     "messageformat": "Skrap"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikoon wat wys dat hierdie beeld 'n onderskrif het"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Stoor"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} is besig om jou, {first}, {second} en {remaining,number} ander te skakel} other {{ringer} is besig om jou, {first}, {second} en {remaining,number} ander te skakel}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Besig om te konnekteer…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Lui tans…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Jou boodskappe kon nie oorgedra word nie. Gaan jou internetverbinding na en probeer weer."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Probeer weer"
@@ -5776,16 +5782,13 @@
     "messageformat": "Klein veranderings, foutregstellings en prestasieverbeterings. Dankie dat jy Signal gebruik!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Die nuwe filtreer-ikoon langs die soekblokkie maak dit maklik om ongeleesde kletse vinnig op te spoor, maar neem gerus jou tyd om te besluit of jy dit as gelees moet laat al dan nie nadat jy gesien het wat hulle te sê het."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Hierdie opdatering stel 'n skermdelingsfout in macOS Sonoma reg."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Hierdie opdatering stel ondersteuning bekend vir nuwe verwerkers op Windows soos die Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtreer volgens Ongelees verlig nou die geselekteerde klets, en doen opdatering na gelang boodskappe gelees en ontvang word."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Ons het ook 'n fout reggestel wat die donker tema in Signal laat faal het wanneer jou bedryfstelselinstellings opgestel was om 'n ligte tema te gebruik."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

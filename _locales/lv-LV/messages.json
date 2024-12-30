@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Noteikumi un privātuma politika"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Balss ierakstīšanas laikā radās kļūda."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Pielikums saglabāts."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, zero {Saglabāti {count,number} pielikumi} one {Pielikums saglabāts} other {Saglabāti {count,number} pielikumi}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Informācija"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Ziņu dzēšana"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Vai dzēst ziņas?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Visas ziņas šajā sarunā tiks dzēstas no šīs ierīces. Pēc ziņu dzēšanas joprojām varēsiet atrast šo sarunu, izmantojot meklēšanas funkciju."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Visas ziņas šajā sarunā tiks dzēstas no visām jūsu ierīcēm. Pēc ziņu dzēšanas joprojām varēsiet atrast šo sarunu, izmantojot meklēšanas funkciju."
-  },
   "icu:deleteConversation": {
     "messageformat": "Dzēst"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikona, kas parāda, ka šim attēlam ir paraksts"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Saglabāt"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, zero {{ringer} zvana Jums, {first}, {second}, un {remaining,number} citiem} one {{ringer} zvana Jums, {first}, {second}, un {remaining,number} citam} other {{ringer} zvana Jums, {first}, {second}, un {remaining,number} citiem}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Notiek savienošanās"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Zvana…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Ziņas neizdevās pārsūtīt. Pārbaudiet interneta savienojumu un mēģiniet vēlreiz."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Mēģināt vēlreiz"
@@ -5776,16 +5782,13 @@
     "messageformat": "Nelielas izmaiņas, kļūdu labojumi un darbības uzlabojumi. Paldies, ka lietojat Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Jaunā filtru ikona blakus meklēšanas lodziņam ļauj ātri un ērti atrast nelasītās sarunas. Kad atbildēt uz šīm ziņām, vēl aizvien paliek jūsu ziņā."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Šajā atjauninājumā ir novērsta kļūda, kas traucēja kopīgot ekrānu macOS Sonoma operētājsistēmas ierīcēs, ja atļauja kopīgot ekrānu iepriekš tika noraidīta."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Šajā atjauninājumā ir ieviests atbalsts jauniem Windows procesoriem, piemēram, Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Filtrējot nelasītās ziņas, tagad tiks izcelta atlasītā saruna, un saraksts ar nelasītajām sarunām automātiski atjaunināsies, kolīdz parādīsies jaunas ziņas vai kad pārslēgsieties no vienas sarunas uz citu."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Tāpat izlabojām kļūdu, kas pārtrauc Signal tumšā dizaina izmantošanu, ja operētājsistēmas iestatījumos ir uzstādīts gaišais dizains. Signal Desktop tagad spēj pienācīgi tikt galā ar jūsu personības dalīšanos."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

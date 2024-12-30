@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Termos e política de privacidade"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Existe um erro com o gravador de voz."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Anexo guardado."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Anexo guardado} other {{count,number} anexos guardados}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Eliminar mensagens"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Eliminar mensagens?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "As mensagens neste chat serão eliminadas deste dispositivo. Ainda pode procurar este chat após eliminar as mensagens."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Todas as mensagens neste chat serão eliminadas de todos os seus dispositivos. Ainda pode procurar este chat após eliminar as mensagens."
-  },
   "icu:deleteConversation": {
     "messageformat": "Eliminar"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ícone que mostra que esta imagem tem uma legenda"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Guardar"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} está a ligar-lhe, {first}, {second} e {remaining,number} outro} other {{ringer} está a ligar-lhe, {first}, {second}, e outros {remaining,number}}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "A ligar…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "A tocar…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "As suas mensagens não puderam ser transferidas. Verifique a sua ligação à internet e tente novamente."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Tentar novamente"
@@ -5776,16 +5782,13 @@
     "messageformat": "Pequenos ajustes adicionais, correções de bugs e melhorias de desempenho. Obrigado por usar o Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "O novo ícone de filtro na caixa de pesquisa torna fácil encontrar chats não lidos."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Esta atualização corrige um erro de partilha de ecrã no macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Esta atualização introduz apoio para novos processadores no Windows, como o Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "O \"filtrar por não lido\" agora destaca o chat selecionado e atualiza-se enquanto as mensagens são lidas e recebidas."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Também corrigimos um erro que fazia o tema escuro do Signal deixar de funcionar quando as definições do seu sistema operativo estivessem configuradas para usar o tema claro."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

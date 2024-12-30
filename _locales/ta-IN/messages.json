@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கை"
   },
-  "icu:appleSilicon": {
-    "messageformat": "ஆப்பிள் சிலிகான்"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "குரல் ரெக்கார்டரில் பிழை."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "இணைப்பு சேமிக்கப்பட்டது."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {இணைப்பு சேமிக்கப்பட்டது} other {{count,number} இணைப்புகள் சேமிக்கப்பட்டன}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "தகவல்"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "மெசேஜ்களை நீக்கு"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "மெசேஜ்களை நீக்க வேண்டுமா?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "இந்த சாட்டில் உள்ள அனைத்து மெசேஜ்களும் இந்த டிவைஸிலிருந்து நீக்கப்படும். மெசேஜ்களை நீக்கிய பிறகும் நீங்கள் இந்த சாட்டைத் தேடலாம்."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "இந்தச் சாட்டில் உள்ள அனைத்து மெசேஜ்களும் உங்கள் எல்லா சாதனங்களிலிருந்தும் அழிக்கப்படும். மெசேஜ்களை அழித்த பிறகும் நீங்கள் இந்தச் சாட்டில் தேடலாம்."
-  },
   "icu:deleteConversation": {
     "messageformat": "நீக்கு"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "இந்த படத்திற்கு ஒரு தலைப்பு இருப்பதைக் காட்டும் ஐகான்"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "சேமி"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} உங்களை, {first}, {second}, மற்றும் {remaining,number} நபரை அழைக்கிறார்} other {{ringer} உங்களை அழைக்கிறார், {first}, {second}, மற்றும் {remaining,number} நபர்கள்}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "இணைக்கிறது…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "ஒலிக்கிறது…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "உங்கள் மெசேஜ்களை இடமாற்ற முடியவில்லை. உங்கள் இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயலவும்."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "மீண்டும் முயற்சி செய்"
@@ -5776,16 +5782,13 @@
     "messageformat": "சிறு மாற்றங்கள், பிழை திருத்தங்கள் மற்றும் செயல்திறன் மேம்பாடுகள். சிக்னலைப் பயன்படுத்தியதற்கு நன்றி!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "தேடல் பெட்டிக்கு அடுத்துள்ள புதிய வடிகட்டி ஐகான் படிக்காத சாட்ஸை விரைவாகக் கண்டறிவதை எளிதாக்குகிறது."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "இந்தப் புதுப்பிப்பு macOS Sonomaஇல் உள்ள பிழையைச் சரிசெய்கிறது, இது திரையைப் பகிர்வதற்கான அனுமதி முன்பு மறுக்கப்பட்டிருந்தால், திரைப் பகிர்வைச் சரியாகச் செய்வதைத் தடுக்கிறது — எனவே நீங்கள் இனி உங்கள் திரையைப் பிழைச் செய்தியுடன் பகிர வேண்டியதில்லை."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "இந்தப் புதுப்பிப்பு Snapdragon X Elite போன்ற Windows இல் புதிய செயலிகளுக்கான ஆதரவை அறிமுகப்படுத்துகிறது."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "படிக்காதவை என்ற விருப்பத்தின் மூலம் வடிகட்டுதல் இப்போது தேர்ந்தெடுக்கப்பட்ட சாட்டை முன்னிலைப்படுத்துகிறது மேலும் புதிய சாட்ஸ் வரும்போது அல்லது நீங்கள் ஒரு சாட்டிலிருந்து மற்றொரு சாட்டைக் கிளிக் செய்யும்போது படிக்காத சாட்களின் பட்டியல் தானாகவே புதுப்பிக்கப்படும்."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "பிரகாசமான தீமைப் பயன்படுத்த உங்கள் இயக்க முறைமை அமைப்புகள் உள்ளமைக்கப்பட்டபோது, சிக்னலில் இருண்ட தீம் செயலிழக்கும் பிழையையும் நாங்கள் சரிசெய்துள்ளோம்."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

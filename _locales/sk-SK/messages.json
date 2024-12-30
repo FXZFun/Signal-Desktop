@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Podmienky a Ochrana osobných údajov"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Vyskytla sa chyba v záznamníku hlasu."
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Príloha bola uložená."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, one {Príloha bola uložená} few {Boli uložené {count,number} prílohy} many {Bolo uloženej {count,number} prílohy} other {Bolo uložených {count,number} príloh}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Info"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Vymazať správy"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Vymazať správy?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Všetky správy v tomto čete budú vymazané z tohto zariadenia. Po vymazaní správ budete môcť tento čet stále vyhľadať."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Všetky správy v tomto čete budú vymazané zo všetkých vašich zariadení. Po vymazaní správ budete môcť tento čet stále vyhľadať."
-  },
   "icu:deleteConversation": {
     "messageformat": "Vymazať"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Ikona indukujúca, že tento obrázok má popis"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Uložiť"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, one {{ringer} vám, {first}, {second} a {remaining,number} ďalšiemu volá} few {{ringer} vám, {first}, {second} a {remaining,number} ďalším volá} many {{ringer} vám, {first}, {second} a {remaining,number} ďalším volá} other {{ringer} vám, {first}, {second} a {remaining,number} ďalším volá}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Pripája sa…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Zvoní…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Vaše správy nebolo možné preniesť. Skontrolujte internetové pripojenie a skúste to znova."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Skúsiť znovu"
@@ -5776,16 +5782,13 @@
     "messageformat": "Malé úpravy, opravy chýb a vylepšenia výkonu. Ďakujeme, že používate Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Nová ikona filtra vedľa vyhľadávacieho poľa uľahčuje rýchle vyhľadanie neprečítaných četov."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Táto aktualizácia opravuje chybu súvisiacu so zdieľaním obrazovky v systéme macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Táto aktualizácia zavádza podporu pre nové procesory v systéme Windows, ako je Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Možnosť Filtrovať podľa neprečítaných správ teraz zvýrazní vybratý čet a aktualizuje sa pri čítaní a prijímaní správ."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Opravili sme tiež chybu, ktorá spôsobovala zrušenie tmavej témy v aplikácii, keď boli nastavenia operačného systému nakonfigurované na používanie svetlej témy."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }

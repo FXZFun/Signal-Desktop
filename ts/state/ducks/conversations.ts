@@ -187,7 +187,10 @@ import { getAddedByForOurPendingInvitation } from '../../util/getAddedByForOurPe
 import { getConversationIdForLogging } from '../../util/idForLogging';
 import { singleProtoJobQueue } from '../../jobs/singleProtoJobQueue';
 import MessageSender from '../../textsecure/SendMessage';
-import { AttachmentDownloadUrgency } from '../../jobs/AttachmentDownloadManager';
+import {
+  AttachmentDownloadManager,
+  AttachmentDownloadUrgency,
+} from '../../jobs/AttachmentDownloadManager';
 import type {
   DeleteForMeSyncEventData,
   MessageToDelete,
@@ -201,7 +204,6 @@ import { markCallHistoryReadInConversation } from './callHistory';
 import type { CapabilitiesType } from '../../textsecure/WebAPI';
 import { actions as searchActions } from './search';
 import type { SearchActionType } from './search';
-
 // State
 
 export type DBConversationType = ReadonlyDeep<{
@@ -318,6 +320,7 @@ export type ConversationType = ReadonlyDeep<
     phoneNumber?: string;
     membersCount?: number;
     hasMessages?: boolean;
+    messagesDeleted?: boolean;
     accessControlAddFromInviteLink?: number;
     accessControlAttributes?: number;
     accessControlMembers?: number;
@@ -1084,6 +1087,7 @@ export const actions = {
   blockAndReportSpam,
   blockConversation,
   blockGroupLinkRequests,
+  cancelAttachmentDownload,
   cancelConversationVerification,
   changeHasGroupLink,
   clearCancelledConversationVerification,
@@ -1406,7 +1410,10 @@ function markMessageRead(
       return;
     }
 
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'markMessageRead'
+    );
     if (!message) {
       throw new Error(`markMessageRead: failed to load message ${messageId}`);
     }
@@ -1760,7 +1767,10 @@ function deleteMessages({
       await Promise.all(
         messageIds.map(
           async (messageId): Promise<MessageToDelete | undefined> => {
-            const message = await __DEPRECATED$getMessageById(messageId);
+            const message = await __DEPRECATED$getMessageById(
+              messageId,
+              'deleteMessages'
+            );
             if (!message) {
               throw new Error(`deleteMessages: Message ${messageId} missing!`);
             }
@@ -1920,7 +1930,9 @@ function setMessageToEdit(
       return;
     }
 
-    const message = (await __DEPRECATED$getMessageById(messageId))?.attributes;
+    const message = (
+      await __DEPRECATED$getMessageById(messageId, 'setMessageToEdit')
+    )?.attributes;
     if (!message) {
       return;
     }
@@ -2013,7 +2025,10 @@ function generateNewGroupLink(
  * replace it with an actual action that fits in with the redux approach.
  */
 export const markViewed = (messageId: string): void => {
-  const message = window.MessageCache.__DEPRECATED$getById(messageId);
+  const message = window.MessageCache.__DEPRECATED$getById(
+    messageId,
+    'markViewed'
+  );
   if (!message) {
     throw new Error(`markViewed: Message ${messageId} missing!`);
   }
@@ -2277,7 +2292,10 @@ function kickOffAttachmentDownload(
   options: Readonly<{ messageId: string }>
 ): ThunkAction<void, RootStateType, unknown, NoopActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(options.messageId);
+    const message = await __DEPRECATED$getMessageById(
+      options.messageId,
+      'kickOffAttachmentDownload'
+    );
     if (!message) {
       throw new Error(
         `kickOffAttachmentDownload: Message ${options.messageId} missing!`
@@ -2302,6 +2320,47 @@ function kickOffAttachmentDownload(
   };
 }
 
+function cancelAttachmentDownload({
+  messageId,
+}: Readonly<{ messageId: string }>): ThunkAction<
+  void,
+  RootStateType,
+  unknown,
+  NoopActionType
+> {
+  return async dispatch => {
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'cancelAttachmentDownload'
+    );
+    if (!message) {
+      log.warn(`cancelAttachmentDownload: Message ${messageId} missing!`);
+    } else {
+      message.set({
+        attachments: (message.get('attachments') || []).map(attachment => ({
+          ...attachment,
+          pending: false,
+        })),
+      });
+
+      const ourAci = window.textsecure.storage.user.getCheckedAci();
+      await DataWriter.saveMessage(message.attributes, { ourAci });
+    }
+
+    // A click kicks off downloads for every attachment in a message, so cancel does too
+    await AttachmentDownloadManager.cancelJobs(job => {
+      return job.messageId === messageId;
+    });
+
+    await DataWriter.removeAttachmentDownloadJobsForMessage(messageId);
+
+    dispatch({
+      type: 'NOOP',
+      payload: null,
+    });
+  };
+}
+
 type AttachmentOptions = ReadonlyDeep<{
   messageId: string;
   attachment: AttachmentType;
@@ -2311,7 +2370,10 @@ function markAttachmentAsCorrupted(
   options: AttachmentOptions
 ): ThunkAction<void, RootStateType, unknown, NoopActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(options.messageId);
+    const message = await __DEPRECATED$getMessageById(
+      options.messageId,
+      'markAttachmentAsCorrupted'
+    );
     if (!message) {
       throw new Error(
         `markAttachmentAsCorrupted: Message ${options.messageId} missing!`
@@ -2330,7 +2392,10 @@ function openGiftBadge(
   messageId: string
 ): ThunkAction<void, RootStateType, unknown, ShowToastActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'openGiftBadge'
+    );
     if (!message) {
       throw new Error(`openGiftBadge: Message ${messageId} missing!`);
     }
@@ -2350,7 +2415,10 @@ function retryMessageSend(
   messageId: string
 ): ThunkAction<void, RootStateType, unknown, NoopActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'retryMessageSend'
+    );
     if (!message) {
       throw new Error(`retryMessageSend: Message ${messageId} missing!`);
     }
@@ -2367,7 +2435,10 @@ export function copyMessageText(
   messageId: string
 ): ThunkAction<void, RootStateType, unknown, NoopActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'copyMessageText'
+    );
     if (!message) {
       throw new Error(`copy: Message ${messageId} missing!`);
     }
@@ -2386,7 +2457,10 @@ export function retryDeleteForEveryone(
   messageId: string
 ): ThunkAction<void, RootStateType, unknown, NoopActionType> {
   return async dispatch => {
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'retryDeleteForEveryone'
+    );
     if (!message) {
       throw new Error(`retryDeleteForEveryone: Message ${messageId} missing!`);
     }
@@ -2689,14 +2763,8 @@ function conversationsUpdated(
       calling.groupMembersChanged(conversation.id);
     }
 
-    const { conversationLookup } = getState().conversations;
-
-    const someConversationsHaveNewMessages = data.some(conversation => {
-      return (
-        conversationLookup[conversation.id]?.lastMessageReceivedAt !==
-        conversation.lastMessageReceivedAt
-      );
-    });
+    const { conversationLookup: oldConversationLookup } =
+      getState().conversations;
 
     dispatch({
       type: 'CONVERSATIONS_UPDATED',
@@ -2705,9 +2773,12 @@ function conversationsUpdated(
       },
     });
 
-    if (someConversationsHaveNewMessages) {
-      dispatch(searchActions.refreshSearch());
-    }
+    dispatch(
+      searchActions.updateSearchResultsOnConversationUpdate(
+        oldConversationLookup,
+        data
+      )
+    );
   };
 }
 
@@ -3176,7 +3247,12 @@ function pushPanelForConversation(
 
       const message =
         conversations.messagesLookup[messageId] ||
-        (await __DEPRECATED$getMessageById(messageId))?.attributes;
+        (
+          await __DEPRECATED$getMessageById(
+            messageId,
+            'pushPanelForConversation'
+          )
+        )?.attributes;
       if (!message) {
         throw new Error(
           'pushPanelForConversation: could not find message for MessageDetails'
@@ -3252,7 +3328,10 @@ function deleteMessagesForEveryone(
     await Promise.all(
       messageIds.map(async messageId => {
         try {
-          const message = window.MessageCache.__DEPRECATED$getById(messageId);
+          const message = window.MessageCache.__DEPRECATED$getById(
+            messageId,
+            'deleteMessagesForEveryone'
+          );
           if (!message) {
             throw new Error(
               `deleteMessageForEveryone: Message ${messageId} missing!`
@@ -3963,7 +4042,10 @@ export function saveAttachmentFromMessage(
   providedAttachment?: AttachmentType
 ): ThunkAction<void, RootStateType, unknown, ShowToastActionType> {
   return async (dispatch, getState) => {
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'saveAttachmentFromMessage'
+    );
     if (!message) {
       throw new Error(
         `saveAttachmentFromMessage: Message ${messageId} missing!`
@@ -4056,7 +4138,10 @@ export function scrollToMessage(
       throw new Error('scrollToMessage: No conversation found');
     }
 
-    const message = await __DEPRECATED$getMessageById(messageId);
+    const message = await __DEPRECATED$getMessageById(
+      messageId,
+      'scrollToMessage'
+    );
     if (!message) {
       throw new Error(`scrollToMessage: failed to load message ${messageId}`);
     }
@@ -4070,7 +4155,12 @@ export function scrollToMessage(
 
     let isInMemory = true;
 
-    if (!window.MessageCache.__DEPRECATED$getById(messageId)) {
+    if (
+      !window.MessageCache.__DEPRECATED$getById(
+        messageId,
+        'scrollToMessage/notInMemory'
+      )
+    ) {
       isInMemory = false;
     }
 
@@ -4501,7 +4591,10 @@ function onConversationOpened(
     log.info(`${logId}: Updating newly opened conversation state`);
 
     if (messageId) {
-      const message = await __DEPRECATED$getMessageById(messageId);
+      const message = await __DEPRECATED$getMessageById(
+        messageId,
+        'onConversationOpened'
+      );
 
       if (message) {
         drop(conversation.loadAndScroll(messageId));
@@ -4627,6 +4720,8 @@ function onConversationClosed(
         conversationId,
       },
     });
+
+    dispatch(searchActions.maybeRemoveReadConversations([conversationId]));
   };
 }
 
@@ -4638,7 +4733,10 @@ function showArchivedConversations(): ShowArchivedConversationsActionType {
 }
 
 function doubleCheckMissingQuoteReference(messageId: string): NoopActionType {
-  const message = window.MessageCache.__DEPRECATED$getById(messageId);
+  const message = window.MessageCache.__DEPRECATED$getById(
+    messageId,
+    'doubleCheckMissingQuoteReference'
+  );
   if (message) {
     void message.doubleCheckMissingQuoteReference();
   }

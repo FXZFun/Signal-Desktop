@@ -50,9 +50,6 @@
   "icu:privacyPolicy": {
     "messageformat": "Điều khoản và Chính sách bảo mật"
   },
-  "icu:appleSilicon": {
-    "messageformat": "Apple silicon"
-  },
   "icu:About__AppEnvironment": {
     "messageformat": "{appEnv}"
   },
@@ -815,9 +812,6 @@
   "icu:voiceNoteError": {
     "messageformat": "Có lỗi xảy ra đối với việc ghi âm tin nhắn thoại"
   },
-  "icu:attachmentSaved": {
-    "messageformat": "Đã lưu đính kèm."
-  },
   "icu:attachmentSavedPlural": {
     "messageformat": "{count, plural, other {Đã lưu {count,number} tập tin đính kèm}}"
   },
@@ -1025,18 +1019,6 @@
   "icu:MessageContextMenu__info": {
     "messageformat": "Thông tin"
   },
-  "icu:deleteMessagesInConversation": {
-    "messageformat": "Xóa tin nhắn"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__title": {
-    "messageformat": "Xóa tin nhắn?"
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description": {
-    "messageformat": "Tất cả tin nhắn trong cuộc trò chuyện này sẽ được xóa khỏi thiết bị này. Bạn vẫn có thể tìm cuộc trò chuyện này sau khi xóa tin nhắn."
-  },
-  "icu:ConversationHeader__DeleteMessagesInConversationConfirmation__description-with-sync": {
-    "messageformat": "Tất cả tin nhắn trong cuộc trò chuyện này sẽ được xóa khỏi tất cả thiết bị của bạn. Bạn vẫn có thể tìm cuộc trò chuyện này sau khi xóa tin nhắn."
-  },
   "icu:deleteConversation": {
     "messageformat": "Xóa"
   },
@@ -1141,6 +1123,24 @@
   },
   "icu:imageCaptionIconAlt": {
     "messageformat": "Biểu tượng cho biết hình ảnh này có chú thích"
+  },
+  "icu:imageOpenAlt": {
+    "messageformat": "Open this attachment in a larger view"
+  },
+  "icu:startDownload": {
+    "messageformat": "Start download"
+  },
+  "icu:cancelDownload": {
+    "messageformat": "Cancel download"
+  },
+  "icu:retryDownload": {
+    "messageformat": "Retry download"
+  },
+  "icu:retryDownloadShort": {
+    "messageformat": "Retry"
+  },
+  "icu:downloadNItems": {
+    "messageformat": "{count, plural, one {{count,number} item} other {{count,number} items}}"
   },
   "icu:save": {
     "messageformat": "Lưu"
@@ -2741,6 +2741,9 @@
   "icu:incomingGroupCall__ringing-many": {
     "messageformat": "{remaining, plural, other {{ringer} đang gọi bạn, {first}, {second}, và {remaining,number}người khác}}"
   },
+  "icu:outgoingCallConnecting": {
+    "messageformat": "Đang kết nối…"
+  },
   "icu:outgoingCallRinging": {
     "messageformat": "Đang đổ chuông…"
   },
@@ -3619,6 +3622,9 @@
   },
   "icu:BackupImportScreen__error__body": {
     "messageformat": "Tin nhắn của bạn không thể được chuyển. Kiểm tra kết nối internet của bạn và thử lại."
+  },
+  "icu:BackupImportScreen__error-fatal__body": {
+    "messageformat": "Your messages could not be transferred due to an error. Try again by re-linking this desktop."
   },
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Thử lại"
@@ -5776,16 +5782,13 @@
     "messageformat": "Các tinh chỉnh, sửa lỗi, và cải thiện hiệu năng. Cảm ơn bạn đã sử dụng Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.34--0": {
-    "messageformat": "Biểu tượng bộ lọc mới ở cạnh ô tìm kiếm giúp tìm cuộc trò chuyện chưa đọc dễ dàng hơn."
+  "icu:WhatsNew__v7.36--0": {
+    "messageformat": "Bản cập nhật này sửa lỗi liên qua đến tác vụ chia sẻ màn hình trên macOS Sonoma."
   },
-  "icu:WhatsNew__v7.34--1": {
-    "messageformat": "Bản cập nhật này bắt đầu hỗ trợ các bộ xử lý mới trên Windows như Snapdragon X Elite."
+  "icu:WhatsNew__v7.36--1": {
+    "messageformat": "Lọc theo trạng thái Chưa đọc giờ đây làm nổi bật các cuộc trò chuyện được chọn và cập nhật khi tin nhắn đã được đọc và nhận."
   },
-  "icu:WhatsNew__v7.34--2": {
-    "messageformat": "Chúng tôi cũng đã sửa lỗi ảnh hưởng đến giao diện chủ đề tối của Signal khi hệ điều hành sử dụng chủ đề sáng."
-  },
-  "icu:WhatsNew__v7.35--0": {
-    "messageformat": "The new filter icon next to the search box makes it easy to quickly find unread chats, but feel free to take your time deciding whether or not to leave them on read after seeing what they had to say."
+  "icu:WhatsNew__v7.37--0": {
+    "messageformat": "Now you can easily see the progress of attachment downloads. You can also stop and restart in-progress downloads too. So if a transfer is slowed because you're on the road (in airplane mode?) or the mediocre hotel WiFi is about to implode, you can wait to reload when more available bandwidth is bestowed."
   }
 }
